@@ -40,7 +40,11 @@ module tb;
             D <= ! D;
         end
 
-        $finish;
+        `ifdef USE_STOP_INSTEAD_OF_FINISH
+            $stop;
+        `else
+            $finish;
+        `endif
     end
 
 endmodule
