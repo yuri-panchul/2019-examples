@@ -1,5 +1,23 @@
 #!/bin/bash
 
+if command -v vsim &> /dev/null ; then
+    echo vsim
+fi
+
+if command -v iverilog &> /dev/null ; then
+    echo iverilog
+fi
+
+if command -v gtkwave &> /dev/null ; then
+    echo gtkwave
+fi
+
+if command -v iverilog &> /dev/null && command -v gtkwave  &> /dev/null ; then
+    echo iverilog and gtkwave
+fi
+
+exit
+
 set +e
 
 if ! { rm -rf sim && mkdir sim && cd sim ; }; then
