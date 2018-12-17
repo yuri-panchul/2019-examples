@@ -24,12 +24,9 @@ echo $0: Simulation successfull, starting waveform viewer
 tail -n 5 simulate.lst
 
 if [ "$OSTYPE" = "linux-gnu" ]; then
-
-    gtkwave --dump dump.vcd --script ../script_for_gtkwave.tcl  \
-        &> waveform.log &
-
-elif [ ${OSTYPE/[0-9]*/} = "darwin" ]; then
-# elif [[ "$OSTYPE" = "darwin"* ]]; then  # Alternative way
+    gtkwave --dump dump.vcd --script ../script_for_gtkwave.tcl &
+# elif [ ${OSTYPE/[0-9]*/} = "darwin" ]; then
+elif [[ "$OSTYPE" = "darwin"* ]]; then  # Alternative way
 
 	# For some reason the following way of opening the application
 	# does not read the script file:
