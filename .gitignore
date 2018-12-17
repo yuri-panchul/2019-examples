@@ -1,0 +1,7 @@
+project/
+sim/
+syn/
+*.bak
+*.swp
+*.swo
+a.out
