@@ -20,10 +20,13 @@ exit
 
 set +e
 
+prepare_simulation_directory()
+{
 if ! { rm -rf sim && mkdir sim && cd sim ; }; then
 	echo $0: Cannot prepare simulation directory
 	exit 1
 fi
+}
 
 if ! iverilog -g2005 -I .. ../*.v &> compile.log ; then
 	echo $0: Verilog compiler returned error code
