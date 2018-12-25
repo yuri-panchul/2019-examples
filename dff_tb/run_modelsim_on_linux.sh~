@@ -17,7 +17,7 @@ export MODELSIM_ROOTDIR=${QSYS_ROOTDIR}/../../../modelsim_ase
 export PATH=${PATH}:${MODELSIM_ROOTDIR}/bin
 #export MTI_VCO_MODE=64
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/lib32
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/verilog/lib/freetype2/usr/lib32
 
 which vsim
 vsim -do ../modelsim_script.tcl
