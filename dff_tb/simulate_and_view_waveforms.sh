@@ -74,7 +74,7 @@ run_gtkwave_viewer ()
             --dump dump.vcd --script ../script_for_gtkwave.tcl  \
             &> waveform.log
     else
-        echo "Don't know how to run GTKWave on your OS"
+        echo "Don't know how to run GTKWave on your OS $OSTYPE"
         exit 1
     fi
 
@@ -84,6 +84,37 @@ run_gtkwave_viewer ()
     then
         echo $0: Waveform viewer returned error code $rc
         grep -i -A 5 error waveform.log
+        exit 1
+    fi
+}
+
+#-----------------------------------------------------------------------------
+
+is_modelsim_available ()
+{
+    command -v vsim &> /dev/null
+}
+
+#-----------------------------------------------------------------------------
+
+run_modelsim ()
+{
+    if    [ "$OSTYPE" = "linux-gnu" ]  \
+       || [ "$OSTYPE" = "cygwin"    ]  \
+       || [ "$OSTYPE" = "msys"      ]
+    then
+        vsim -do ../script_for_modelsim.tcl &> modelsim.log
+    else
+        echo "Don't know how to run GTKWave on your OS $OSTYPE"
+        exit 1
+    fi
+
+    rc=$?
+
+    if [ $rc -ne 0 ]
+    then
+        echo $0: Modelsim returned error code $rc
+        grep -i -A 5 error modelsim.log
         exit 1
     fi
 }
@@ -105,6 +136,10 @@ fi
 
 if is_gtkwave_viewer_available ; then
     run_gtkwave_viewer
+fi
+
+if is_modelsim_available ; then
+    run_modelsim
 fi
 
 cleanup

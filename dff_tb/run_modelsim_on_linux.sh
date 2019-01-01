@@ -13,12 +13,12 @@ rm -rf sim
 mkdir sim
 cd sim
 
-export MODELSIM_ROOTDIR=${QSYS_ROOTDIR}/../../../modelsim_ase
-export PATH=${PATH}:${MODELSIM_ROOTDIR}/bin
+#export MODELSIM_ROOTDIR=${QSYS_ROOTDIR}/../../../modelsim_ase
+#export PATH=${PATH}:${MODELSIM_ROOTDIR}/bin
 #export MTI_VCO_MODE=64
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/lib32
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/lib32
 
-which vsim
-vsim -do ../modelsim_script.tcl
+#which vsim
+vsim -do ../script_for_modelsim.tcl
 cd .. && rm -rf sim
