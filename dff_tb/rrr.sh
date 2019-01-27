@@ -1,3 +1,5 @@
+#!/bin/sh
+
 rm -rf sim
 mkdir sim
 cd sim
