@@ -10,8 +10,8 @@ readonly program=$(basename $0)
 
 error ()
 {
-	echo "$program: $*" >&2
-	exit 1
+    echo "$program: $*" >&2
+    exit 1
 }
 
 #-----------------------------------------------------------------------------
@@ -48,8 +48,8 @@ globs=()
 
 while true
 do
-	[ $# -gt 0 ] || error "internal error parsing arguments." \
-	          "getopt should return \"--\" at the end of its result."
+    [ $# -gt 0 ] || error "internal error parsing arguments." \
+              "getopt should return \"--\" at the end of its result."
 
     case "$1" in
     -f | --file-extension ) file_ext="$2" ; shift 2 ;;
@@ -57,10 +57,10 @@ do
     -l | --list-extension ) list_ext="$2" ; shift 2 ;;
     -- ) shift ; break ;;
     *  )
-	     echo "$program: internal error parsing argument \"$1\"." \
-	          "getopt should check the options earlier." >&2
+         echo "$program: internal error parsing argument \"$1\"." \
+              "getopt should check the options earlier." >&2
 
-	     exit 1
+         exit 1
          ;;
     esac
 done
@@ -70,20 +70,22 @@ done
 while [ $# -gt 0 ]
 do
     if [ -d "$1" ]
-	then
-		echo dir
-		dirs+=($1)
-	else
-	    globs+=($1)
-	fi
+    then
+        abs_path=$(cd "$1" && /bin/pwd)
+        dirs+=($abs_path)
+    else
+        globs+=($1)
+    fi
 
-	shift
+    shift
 done
 
+#-----------------------------------------------------------------------------
 
+for glob_pattern in ${globs[@]}
+do
+    echo "find ${dirs[@]} -iname '*${glob_pattern}*.tst' -type f"
+    eval "find ${dirs[@]} -iname '*${glob_pattern}*.tst' -type f"
+done
 
-echo A ${dirs[@]}
-echo B ${globs[@]}
-echo C "${dirs[@]}"
-echo D "${globs[@]}"
 exit
