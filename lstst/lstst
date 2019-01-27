@@ -69,7 +69,7 @@ done
 
 while [ $# -gt 0 ]
 do
-	if [ -d "$1" ]
+    if [ -d "$1" ]
 	then
 		echo dir
 		dirs+=($1)
