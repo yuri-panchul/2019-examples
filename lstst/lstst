@@ -70,7 +70,7 @@ done
 
 while [ $# -gt 0 ]
 do
-    wo_single_quotes="$1"
+    wo_single_quotes=$(eval echo "$1")
 
     if [ -d "$wo_single_quotes" ]
     then
@@ -98,6 +98,8 @@ do
     tests_rel_path+=($(echo "$test" | sed -e "s:^$PWD/::"))
 done
 
+printf 'Globs    %s\n' "${globs[@]}"           | sort -u
+printf 'Dirs     %s\n' "${dirs[@]}"            | sort -u
 printf 'Full     %s\n' "${tests_full_path[@]}" | sort -u
 printf 'Relative %s\n' "${tests_rel_path[@]}"  | sort -u
 
