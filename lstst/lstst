@@ -35,7 +35,7 @@ list-extension:
 END
 )) || error "failed parsing options. Run $program -h for more information."
 
-eval set -- $getopt_result
+set -- $getopt_result
 
 #-----------------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ file_ext=.tst
 help=false
 list_ext=.lst
 
-dirs=(.)
+dirs=("$PWD")
 globs=()
 
 while true
@@ -69,12 +69,14 @@ done
 
 while [ $# -gt 0 ]
 do
-    if [ -d "$1" ]
+    wo_single_quotes=$(eval echo "$1")
+
+    if [ -d "$wo_single_quotes" ]
     then
-        abs_path=$(cd "$1" && /bin/pwd)
-        dirs+=($abs_path)
+        abs_path=$(cd "$wo_single_quotes" && /bin/pwd)
+        dirs+=("$abs_path")
     else
-        globs+=($1)
+        globs+=("$1")
     fi
 
     shift
@@ -82,10 +84,19 @@ done
 
 #-----------------------------------------------------------------------------
 
-for glob_pattern in ${globs[@]}
+declare -a tests_full_path tests_rel_path
+
+for glob_pattern in "${globs[@]}"
 do
-    echo "find ${dirs[@]} -iname '*${glob_pattern}*.tst' -type f"
-    eval "find ${dirs[@]} -iname '*${glob_pattern}*.tst' -type f"
+    tests_full_path+=($(eval find "${dirs[@]}" -iname "$glob_pattern" -type f))
 done
+
+for test in "${tests_full_path[@]}"
+do
+    tests_rel_path+=($(echo "$test" | sed -e "s:^$PWD/::"))
+done
+
+printf '%s\n' "${tests_full_path[@]}" | sort -u
+printf '%s\n' "${tests_rel_path[@]}"  | sort -u
 
 exit
