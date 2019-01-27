@@ -70,7 +70,7 @@ done
 
 while [ $# -gt 0 ]
 do
-    wo_single_quotes=$(eval echo "$1")
+    wo_single_quotes="$1"
 
     if [ -d "$wo_single_quotes" ]
     then
