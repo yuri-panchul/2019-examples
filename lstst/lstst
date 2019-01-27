@@ -1,6 +1,7 @@
 #!/bin/bash
 
-set +e
+set +e  # No exiting on first error
+set -f  # No globbing
 
 #-----------------------------------------------------------------------------
 
@@ -88,6 +89,7 @@ declare -a tests_full_path tests_rel_path
 
 for glob_pattern in "${globs[@]}"
 do
+    # Does not work without eval because getopt passes single quotes here
     tests_full_path+=($(eval find "${dirs[@]}" -iname "$glob_pattern" -type f))
 done
 
@@ -96,7 +98,7 @@ do
     tests_rel_path+=($(echo "$test" | sed -e "s:^$PWD/::"))
 done
 
-printf '%s\n' "${tests_full_path[@]}" | sort -u
-printf '%s\n' "${tests_rel_path[@]}"  | sort -u
+printf 'Full     %s\n' "${tests_full_path[@]}" | sort -u
+printf 'Relative %s\n' "${tests_rel_path[@]}"  | sort -u
 
 exit
