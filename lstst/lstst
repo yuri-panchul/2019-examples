@@ -1,0 +1,106 @@
+#!/bin/bash
+
+program=$(basename $0)
+
+
+getopt -T &>/dev/null
+
+if [ $? -ne 4 ]
+then
+	echo "Getopt is too old!" >&2
+	exit 1
+fi
+
+cmd=$(tr -d '\n' <<END
+getopt
+ --name $program
+ --options vhns:
+ --longoptions
+ verbose,
+dry-run,
+help,
+stack-size:
+ --
+ $*
+END
+)
+
+OPTS=$(eval $cmd)
+
+
+#OPTS=`getopt -o vhns: --long verbose,dry-run,help,stack-size: -n 'parse-options' -- "$@"`
+
+if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
+
+echo "$OPTS"
+eval set -- "$OPTS"
+
+VERBOSE=false
+HELP=false
+DRY_RUN=false
+STACK_SIZE=0
+
+while true; do
+  case "$1" in
+    -v | --verbose ) VERBOSE=true; shift ;;
+    -h | --help )    HELP=true; shift ;;
+    -n | --dry-run ) DRY_RUN=true; shift ;;
+    -s | --stack-size ) STACK_SIZE="$2"; shift; shift ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+echo VERBOSE=$VERBOSE
+echo HELP=$HELP
+echo DRY_RUN=$DRY_RUN
+echo STACK_SIZE=$STACK_SIZE
+
+exit
+
+
+getopt_command_line='
+getopt --options vhns:
+--longoptions verbose,dry-run,help,stack-size:
+-name '$program'
+"$@"'
+
+echo $getopt_command_line
+
+echo "$getopt_command_line"
+
+options_after_getopt=$(eval $getopt_command_line)
+
+echo $options_after_getopt
+
+echo $@
+echo "$@"
+exit
+
+
+if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
+
+echo "$OPTS"
+eval set -- "$OPTS"
+
+VERBOSE=false
+HELP=false
+DRY_RUN=false
+STACK_SIZE=0
+
+while true; do
+  case "$1" in
+    -v | --verbose ) VERBOSE=true; shift ;;
+    -h | --help )    HELP=true; shift ;;
+    -n | --dry-run ) DRY_RUN=true; shift ;;
+    -s | --stack-size ) STACK_SIZE="$2"; shift; shift ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+echo VERBOSE=$VERBOSE
+echo HELP=$HELP
+echo DRY_RUN=$DRY_RUN
+echo STACK_SIZE=$STACK_SIZE
+
