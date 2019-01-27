@@ -1,106 +1,89 @@
 #!/bin/bash
 
-program=$(basename $0)
+set +e
 
+#-----------------------------------------------------------------------------
+
+readonly program=$(basename $0)
+
+#-----------------------------------------------------------------------------
+
+error ()
+{
+	echo "$program: $*" >&2
+	exit 1
+}
+
+#-----------------------------------------------------------------------------
 
 getopt -T &>/dev/null
 
-if [ $? -ne 4 ]
-then
-	echo "Getopt is too old!" >&2
-	exit 1
-fi
+[ $? -eq 4 ] || error "getopt is too old"
 
-cmd=$(tr -d '\n' <<END
+#-----------------------------------------------------------------------------
+
+getopt_result=$(eval $(tr -d '\n' <<END
 getopt
  --name $program
- --options vhns:
+ --options f:hl:
  --longoptions
- verbose,
-dry-run,
+ file-extension:,
 help,
-stack-size:
+list-extension:
  --
  $*
 END
-)
+)) || error "failed parsing options. Run $program -h for more information."
 
-OPTS=$(eval $cmd)
+eval set -- $getopt_result
 
+#-----------------------------------------------------------------------------
 
-#OPTS=`getopt -o vhns: --long verbose,dry-run,help,stack-size: -n 'parse-options' -- "$@"`
+file_ext=.tst
+help=false
+list_ext=.lst
 
-if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
+dirs=(.)
+globs=()
 
-echo "$OPTS"
-eval set -- "$OPTS"
+while true
+do
+	[ $# -gt 0 ] || error "internal error parsing arguments." \
+	          "getopt should return \"--\" at the end of its result."
 
-VERBOSE=false
-HELP=false
-DRY_RUN=false
-STACK_SIZE=0
+    case "$1" in
+    -f | --file-extension ) file_ext="$2" ; shift 2 ;;
+    -h | --help           ) help=true     ; shift   ;;
+    -l | --list-extension ) list_ext="$2" ; shift 2 ;;
+    -- ) shift ; break ;;
+    *  )
+	     echo "$program: internal error parsing argument \"$1\"." \
+	          "getopt should check the options earlier." >&2
 
-while true; do
-  case "$1" in
-    -v | --verbose ) VERBOSE=true; shift ;;
-    -h | --help )    HELP=true; shift ;;
-    -n | --dry-run ) DRY_RUN=true; shift ;;
-    -s | --stack-size ) STACK_SIZE="$2"; shift; shift ;;
-    -- ) shift; break ;;
-    * ) break ;;
-  esac
+	     exit 1
+         ;;
+    esac
 done
 
-echo VERBOSE=$VERBOSE
-echo HELP=$HELP
-echo DRY_RUN=$DRY_RUN
-echo STACK_SIZE=$STACK_SIZE
+#-----------------------------------------------------------------------------
 
-exit
+while [ $# -gt 0 ]
+do
+	if [ -d "$1" ]
+	then
+		echo dir
+		dirs+=($1)
+	else
+	    globs+=($1)
+	fi
 
-
-getopt_command_line='
-getopt --options vhns:
---longoptions verbose,dry-run,help,stack-size:
--name '$program'
-"$@"'
-
-echo $getopt_command_line
-
-echo "$getopt_command_line"
-
-options_after_getopt=$(eval $getopt_command_line)
-
-echo $options_after_getopt
-
-echo $@
-echo "$@"
-exit
-
-
-if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
-
-echo "$OPTS"
-eval set -- "$OPTS"
-
-VERBOSE=false
-HELP=false
-DRY_RUN=false
-STACK_SIZE=0
-
-while true; do
-  case "$1" in
-    -v | --verbose ) VERBOSE=true; shift ;;
-    -h | --help )    HELP=true; shift ;;
-    -n | --dry-run ) DRY_RUN=true; shift ;;
-    -s | --stack-size ) STACK_SIZE="$2"; shift; shift ;;
-    -- ) shift; break ;;
-    * ) break ;;
-  esac
+	shift
 done
 
-echo VERBOSE=$VERBOSE
-echo HELP=$HELP
-echo DRY_RUN=$DRY_RUN
-echo STACK_SIZE=$STACK_SIZE
 
+
+echo A ${dirs[@]}
+echo B ${globs[@]}
+echo C "${dirs[@]}"
+echo D "${globs[@]}"
+exit
