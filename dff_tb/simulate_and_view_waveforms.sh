@@ -4,6 +4,12 @@ set +e
 
 #-----------------------------------------------------------------------------
 
+export MODELSIM_ROOTDIR="$HOME/intelFPGA_lite/18.1/modelsim_ase"
+export PATH="${PATH}:$MODELSIM_ROOTDIR/bin"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$MODELSIM_ROOTDIR/lib32"
+
+#-----------------------------------------------------------------------------
+
 prepare_simulation_directory ()
 {
     if ! { rm -rf sim && mkdir sim && cd sim ; }; then
