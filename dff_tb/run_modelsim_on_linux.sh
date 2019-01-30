@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#export MODELSIM_ROOTDIR=${HOME}/intelFPGA_lite/18.1/modelsim_ase
-#export PATH=${PATH}:${MODELSIM_ROOTDIR}/linux
+export MODELSIM_ROOTDIR=${HOME}/intelFPGA_lite/18.1/modelsim_ase
+export PATH=${PATH}:${MODELSIM_ROOTDIR}/bin
 
 #export QUARTUS_ROOTDIR=${HOME}/altera/13.0sp1/quartus
 #export QUARTUS_ROOTDIR=${HOME}/intelFPGA_lite/18.1/quartus
@@ -19,6 +19,5 @@ cd sim
 
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/lib32
 
-#which vsim
 vsim -do ../script_for_modelsim.tcl
 cd .. && rm -rf sim
