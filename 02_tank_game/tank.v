@@ -117,6 +117,14 @@ module tank_game_top(clk, reset, hsync, vsync, rgb, switches_p1, switches_p2);
   wire display_on;
   wire [8:0] hpos;
   wire [8:0] vpos;
+
+  // YURI
+
+  wire [9:0] hpos10;
+  wire [9:0] vpos10;
+  
+  assign hpos = hpos10 [9:1];
+  assign vpos = vpos10 [9:1];
   
   wire mine_gfx;		// minefield video
   wire playfield_gfx;		// playfield video
@@ -130,8 +138,8 @@ module tank_game_top(clk, reset, hsync, vsync, rgb, switches_p1, switches_p2);
     .hsync(hsync),
     .vsync(vsync),
     .display_on(display_on),
-    .hpos(hpos),
-    .vpos(vpos)
+    .hpos(hpos10),
+    .vpos(vpos10)
   );
   
   // minefield (video output -> mine_gfx)
