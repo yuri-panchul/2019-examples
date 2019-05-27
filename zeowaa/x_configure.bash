@@ -23,7 +23,8 @@ then
     fi
 
     info "using cable $CABLE_NAME_1"
-    guarded quartus_pgm --no_banner -c "$CABLE_NAME_1" --mode=jtag -o "P;top.sof"
+    # quartus_pgm --no_banner -c "$CABLE_NAME_1" --mode=jtag -o "P;top.sof"
+    guarded quartus_pgm --no_banner -c \""$CABLE_NAME_1"\" --mode=jtag -o \""P;top.sof"\"
 else
     error 1 "cannot detect a USB-Blaster cable connected"
 fi

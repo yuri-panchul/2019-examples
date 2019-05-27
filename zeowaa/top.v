@@ -8,7 +8,7 @@ module top
     output [ 7:0] abcdefgh,
     output [ 7:0] digit,
 
-    output        buzzer
+    output        buzzer,
 
     output        vsync,
     output        hsync,

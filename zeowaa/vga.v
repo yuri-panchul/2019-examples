@@ -30,7 +30,7 @@ parameter hsync_end   = 10'd95,
    vline_end  = 10'd524;
 
 
-always @(posedge clock)
+always @(posedge clk)
 begin
  vga_clk = ~vga_clk;
 end
@@ -62,7 +62,7 @@ assign dat_act =    ((hcount >= hdat_begin) && (hcount < hdat_end))
      && ((vcount >= vdat_begin) && (vcount < vdat_end));
 assign hsync = (hcount > hsync_end);
 assign vsync = (vcount > vsync_end);
-assign disp_RGB = (dat_act) ?  data : 3'h00;
+assign rgb = (dat_act) ?  data : 3'h00;
 
 
 
@@ -76,7 +76,7 @@ end
 
 always @(posedge vga_clk)
 begin
- case(switch[1:0])
+ case(key[1:0])
   2'd0: data <= h_dat;
   2'd1: data <= v_dat;
   2'd2: data <= (v_dat ^ h_dat);
