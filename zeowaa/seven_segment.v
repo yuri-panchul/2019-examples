@@ -8,7 +8,7 @@ module seven_segment
 )
 (
     input                   clk,
-    input                   rst_n,
+    input                   reset,
     input                   en,
     input  [w        - 1:0] num,
     input  [n_digits - 1:0] dots,
@@ -47,8 +47,8 @@ module seven_segment
     always @*
         anodes_d <= { anodes_q [0], anodes_q [n_digits - 1 : 1] };
 
-    always @ (posedge clk or negedge rst_n)
-        if (! rst_n)
+    always @ (posedge clk or posedge reset)
+        if (reset)
             anodes_q <= { { n_digits - 1 { 1'b1 } }, 1'b0 };
         else if (en)
             anodes_q <= anodes_d;

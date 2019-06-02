@@ -30,17 +30,18 @@ module testbench;
             # 10 clk = ! clk;
     end
 
-    reg rst_n;
+    reg reset;
     
     always @*
-        key [3] = rst_n;
+        key [3] = ~ reset;
 
     initial
     begin
+        reset <= 1'bx;
         repeat (2) @ (posedge clk);
-        rst_n <= 0;
+        reset <= 1;
         repeat (2) @ (posedge clk);
-        rst_n <= 1;
+        reset <= 0;
     end
 
     initial
@@ -48,7 +49,7 @@ module testbench;
         #0
         $dumpvars;
 
-        @ (posedge rst_n);
+        @ (negedge reset);
 
         repeat (1000)
         begin

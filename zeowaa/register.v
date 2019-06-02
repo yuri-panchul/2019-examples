@@ -6,14 +6,14 @@ module register
 ) 
 (
     input                clk,
-    input                rst_n,
+    input                reset,
     input                en,
     input      [w - 1:0] d,
     output reg [w - 1:0] q
 );
 
-    always @ (posedge clk or negedge rst_n)
-        if (! rst_n)
+    always @ (posedge clk or posedge reset)
+        if (reset)
             q <= { w { 1'b0 } };
         else if (en)
             q <= d;

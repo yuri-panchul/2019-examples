@@ -5,7 +5,7 @@ module hc_sr04_ultrasonic_distance_sensor
 )
 (
     input      clk,
-    input      rst_n,
+    input      reset,
     output reg trig,
     input      echo,
 
@@ -65,8 +65,8 @@ module hc_sr04_ultrasonic_distance_sensor
 
     reg [trig_cnt_width - 1:0] trig_cnt;
 
-    always @ (posedge clk or negedge rst_n)
-        if (! rst_n)
+    always @ (posedge clk or posedge reset)
+        if (reset)
             trig_cnt <= 0;
         else if (trig_cnt == measurement_cycle_time - 1)
             trig_cnt <= 0;
@@ -75,8 +75,8 @@ module hc_sr04_ultrasonic_distance_sensor
 
     // We have to wait after reset and after each measurement
 
-    always @ (posedge clk or negedge rst_n)
-        if (! rst_n)
+    always @ (posedge clk or posedge reset)
+        if (reset)
             trig <= 0;
         else if (trig_cnt == measurement_cycle_time - trig_time - 1)
             trig <= 1;
@@ -85,8 +85,8 @@ module hc_sr04_ultrasonic_distance_sensor
 
     reg prev_echo;
     
-    always @ (posedge clk or negedge rst_n)
-        if (! rst_n)
+    always @ (posedge clk or posedge reset)
+        if (reset)
             prev_echo <= 0;
         else
             prev_echo <= echo;
@@ -96,8 +96,8 @@ module hc_sr04_ultrasonic_distance_sensor
 
     reg [echo_cnt_width - 1:0] echo_cnt;
 
-    always @ (posedge clk or negedge rst_n)
-        if (! rst_n)
+    always @ (posedge clk or posedge reset)
+        if (reset)
         begin
             echo_cnt          <= 0;
             relative_distance <= 0;

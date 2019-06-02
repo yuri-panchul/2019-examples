@@ -1,7 +1,7 @@
 module pmod_als_light_sensor
 (
     input             clk,
-    input             rst_n,
+    input             reset,
     output            cs,
     output            sck,
     input             sdo,
@@ -11,9 +11,9 @@ module pmod_als_light_sensor
     reg [ 8:0] cnt;
     reg [15:0] shift;
 
-    always @ (posedge clk or negedge rst_n)
+    always @ (posedge clk or posedge reset)
     begin       
-        if (! rst_n)
+        if (reset)
             cnt <= 8'b100;
         else
             cnt <= cnt + 8'b1;
@@ -25,9 +25,9 @@ module pmod_als_light_sensor
     wire sample_bit = ( cs == 1'b0 && cnt [3:0] == 4'b1111 );
     wire value_done = ( cs == 1'b1 && cnt [7:0] == 8'b0 );
 
-    always @ (posedge clk or negedge rst_n)
+    always @ (posedge clk or posedge reset)
     begin       
-        if (! rst_n)
+        if (reset)
         begin       
             shift <= 16'h0000;
             value <= 16'h0000;

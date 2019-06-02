@@ -17,7 +17,7 @@ module top
     inout  [18:0] gpio
 );
 
-    wire rst_n = key [3];
+    wire reset = ~ key [3];
 
     //------------------------------------------------------------------------
 
@@ -35,14 +35,14 @@ module top
     wire shift_strobe;
 
     strobe_gen # (.w (23)) i_shift_strobe
-        (clk, rst_n, shift_strobe);
+        (clk, reset, shift_strobe);
 
     wire [11:0] out_reg;
 
     shift_register # (.w (12)) i_shift_reg
     (
         .clk     ( clk          ),
-        .rst_n   ( rst_n        ),
+        .reset   ( reset        ),
         .en      ( shift_strobe ),
         .in      ( key_db [1]   ),
         .out_reg ( out_reg      )
@@ -57,7 +57,7 @@ module top
     counter # (16) i_shift_strobe_counter
     (
         .clk   ( clk                ),
-        .rst_n ( rst_n              ),
+        .reset ( reset              ),
         .en    ( shift_strobe       ),
         .cnt   ( shift_strobe_count )
     );
@@ -69,7 +69,7 @@ module top
     moore_fsm i_moore_fsm
     (
         .clk   ( clk           ),
-        .rst_n ( rst_n         ),
+        .reset ( reset         ),
         .en    ( shift_strobe  ),
         .a     ( out_reg [0]   ),
         .y     ( out_moore_fsm )
@@ -80,7 +80,7 @@ module top
     counter # (8) i_moore_fsm_out_counter
     (
         .clk   ( clk                          ),
-        .rst_n ( rst_n                        ),
+        .reset ( reset                        ),
         .en    ( shift_strobe & out_moore_fsm ),
         .cnt   ( moore_fsm_out_count          )
     );
@@ -92,7 +92,7 @@ module top
     mealy_fsm i_mealy_fsm
     (
         .clk   ( clk           ),
-        .rst_n ( rst_n         ),
+        .reset ( reset         ),
         .en    ( shift_strobe  ),
         .a     ( out_reg [0]   ),
         .y     ( out_mealy_fsm )
@@ -103,7 +103,7 @@ module top
     counter # (8) i_mealy_fsm_out_counter
     (
         .clk   ( clk                          ),
-        .rst_n ( rst_n                        ),
+        .reset ( reset                        ),
         .en    ( shift_strobe & out_mealy_fsm ),
         .cnt   ( mealy_fsm_out_count          )
     );
@@ -121,7 +121,7 @@ module top
     vga i_vga
     (
         .clk        ( clk        ),
-        .reset      ( ! rst_n    ),
+        .reset      ( reset      ),
         .hsync      ( hsync      ),
         .vsync      ( vsync      ),
         .display_on ( display_on ),
@@ -161,7 +161,7 @@ module top
     pmod_enc_rotary_encoder i_pmod_enc_rotary_encoder
     (
         .clk        ( clk       ),
-        .rst_n      ( rst_n     ),
+        .reset      ( reset     ),
         .a          ( enc_a_db  ),
         .b          ( enc_b_db  ),
         .value      ( enc_value )
@@ -195,12 +195,12 @@ module top
     wire seven_segment_strobe;
 
     strobe_gen # (.w (10)) i_seven_segment_strobe
-        (clk, rst_n, seven_segment_strobe);
+        (clk, reset, seven_segment_strobe);
 
     seven_segment #(.w (32)) i_seven_segment
     (
         .clk     ( clk                  ),
-        .rst_n   ( rst_n                ),
+        .reset   ( reset                ),
         .en      ( seven_segment_strobe ),
         .num     ( number_to_display    ),
         .dots    ( sw_db                ),

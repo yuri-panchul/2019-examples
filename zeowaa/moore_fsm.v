@@ -1,7 +1,7 @@
 module moore_fsm
 (
     input  clk,
-    input  rst_n,
+    input  reset,
     input  en,
     input  a,
     output y
@@ -13,8 +13,8 @@ module moore_fsm
 
     // State register
 
-    always @ (posedge clk or negedge rst_n)
-        if (! rst_n)
+    always @ (posedge clk or posedge reset)
+        if (reset)
             state <= S0;
         else if (en)
             state <= next_state;
