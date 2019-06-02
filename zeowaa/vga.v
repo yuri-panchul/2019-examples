@@ -60,16 +60,16 @@ module vga
   always @*
     if (hpos == H_MAX)
     begin
-      d_hpos = 0;
+      d_hpos = 10'd0;
 
       if (vpos == V_MAX)
-        d_vpos = 0;
+        d_vpos = 10'd0;
       else
-        d_vpos = vpos + 1;
+        d_vpos = vpos + 10'd1;
     end
     else
     begin
-      d_hpos = hpos + 1;
+      d_hpos = hpos + 10'd1;
       d_vpos = vpos;
     end
 
@@ -79,7 +79,7 @@ module vga
 
   always @ (posedge clk or posedge reset)
     if (reset)
-      clk_en <= 0;
+      clk_en <= 1'b0;
     else
       clk_en <= ~ clk_en;
 
@@ -88,11 +88,11 @@ module vga
   always @ (posedge clk or posedge reset)
     if (reset)
     begin
-      hsync       <= 0;
-      vsync       <= 0;
-      display_on  <= 0;
-      hpos        <= 0;
-      vpos        <= 0;
+      hsync       <= 1'b0;
+      vsync       <= 1'b0;
+      display_on  <= 1'b0;
+      hpos        <= 1'b0;
+      vpos        <= 1'b0;
     end
     else if (clk_en)
     begin

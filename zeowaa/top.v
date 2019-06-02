@@ -121,7 +121,7 @@ module top
     vga i_vga
     (
         .clk        ( clk        ),
-        .reset      ( reset      ),
+        .reset      ( ! rst_n    ),
         .hsync      ( hsync      ),
         .vsync      ( vsync      ),
         .display_on ( display_on ),
@@ -142,6 +142,8 @@ module top
     wire enc_btn = gpio [16];
     wire enc_swt = gpio [17];
 
+    assign gpio [18] = 1;
+
     wire enc_a_db;
     wire enc_b_db;
     wire enc_btn_db;
@@ -154,7 +156,16 @@ module top
         { enc_a_db , enc_b_db , enc_btn_db , enc_swt_db }
     );
 
-    assign gpio [18] = 1;
+    wire [15:0] enc_value;
+
+    pmod_enc_rotary_encoder i_pmod_enc_rotary_encoder
+    (
+        .clk        ( clk       ),
+        .rst_n      ( rst_n     ),
+        .a          ( enc_a_db  ),
+        .b          ( enc_b_db  ),
+        .value      ( enc_value )
+    );
 
     //------------------------------------------------------------------------
 
@@ -167,8 +178,7 @@ module top
                  {
                      { 8 { enc_btn_db } },
                      { 8 { enc_swt_db } },
-                     { 8 { enc_a_db   } },
-                     { 8 { enc_b_db   } }
+                     enc_value
                  };
 
         default: number_to_display =
