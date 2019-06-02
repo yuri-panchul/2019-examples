@@ -1,114 +1,108 @@
+//
+//  Derived from:
+//
+//  1. Designing Video Game Hardware in Verilog by Hugg Steven
+//  https://8bitworkshop.com
+//
+//  2. ZEOWAA board examples on AliExpress
+//
+//  3. An article on VGA controller by Scott Larson
+//  https://www.digikey.com/eewiki/pages/viewpage.action?pageId=15925278
+//
+//  Video sync generator, used to drive a simulated CRT.
+//
+//  To use:
+//
+//      - Wire the hsync and vsync signals to top level outputs
+//      - Add a 3-bit (or more) "rgb" output to the top level
+//
+
 module vga
 (
-    input        clk,
-    input        rst_n,
-    input  [1:0] key,
-    output       vsync,
-    output       hsync,
-    output [2:0] rgb
+  input            clk,
+  input            reset,
+  output reg       hsync,
+  output reg       vsync,
+  output reg       display_on,
+  output reg [9:0] hpos,
+  output reg [9:0] vpos
 );
 
-    localparam hsync_end   = 10'd95,
-               hdat_begin  = 10'd143,
-               hdat_end    = 10'd783,
-               hpixel_end  = 10'd799,
-               vsync_end   = 10'd1,
-               vdat_begin  = 10'd34,
-               vdat_end    = 10'd514,
-               vline_end   = 10'd524;
+  // horizontal constants
 
-    reg [9:0] hcount;
-    reg [9:0] vcount;
-    reg [2:0] data;
-    reg [2:0] h_dat;
-    reg [2:0] v_dat;
+  parameter H_DISPLAY       = 640; // horizontal display width
+  parameter H_FRONT         =  16; // horizontal right border (front porch)
+  parameter H_SYNC          =  96; // horizontal sync width
+  parameter H_BACK          =  48; // horizontal left border (back porch)
 
-    reg  flag;
-    wire hcount_ov;
-    wire vcount_ov;
-    wire dat_act;
-    reg  vga_clk;
+  // vertical constants
 
-    always @ (posedge clk or negedge rst_n)
-        if (! rst_n)
-            vga_clk <= 1'b0;
-        else
-            vga_clk <= ~ vga_clk;
+  parameter V_DISPLAY       = 480; // vertical display height
+  parameter V_BOTTOM        =  10; // vertical bottom border
+  parameter V_SYNC          =   2; // vertical sync # lines
+  parameter V_TOP           =  33; // vertical top border
 
-    always @ (posedge vga_clk or negedge rst_n)
-        if (! rst_n)
-            hcount <= 10'd0;
-        else if (hcount_ov)
-            hcount <= 10'd0;
-        else
-            hcount <= hcount + 10'd1;
+  // derived constants
 
-    assign hcount_ov = (hcount == hpixel_end);
+  parameter H_SYNC_START    = H_DISPLAY + H_FRONT;
+  parameter H_SYNC_END      = H_DISPLAY + H_FRONT  + H_SYNC          - 1;
+  parameter H_MAX           = H_DISPLAY + H_FRONT  + H_SYNC + H_BACK - 1;
 
-    always @ (posedge vga_clk or negedge rst_n)
-        if (! rst_n)
-        begin
-            vcount <= 10'd0;
-        end
-        else if (hcount_ov)
-        begin
-            if (vcount_ov)
-                vcount <= 10'd0;
-            else
-                vcount <= vcount + 10'd1;
-        end
+  parameter V_SYNC_START    = V_DISPLAY + V_BOTTOM;
+  parameter V_SYNC_END      = V_DISPLAY + V_BOTTOM + V_SYNC          - 1;
+  parameter V_MAX           = V_DISPLAY + V_BOTTOM + V_SYNC + V_TOP  - 1;
 
-    assign vcount_ov = (vcount == vline_end);
+  // calculating next values of the counters
 
-    assign dat_act = (   hcount >= hdat_begin && hcount < hdat_end
-                      && vcount >= vdat_begin && vcount < vdat_end);
+  reg [9:0] d_hpos;
+  reg [9:0] d_vpos;
 
-    assign hsync = (hcount > hsync_end);
-    assign vsync = (vcount > vsync_end);
-    assign rgb   = dat_act ? data : 3'h00;
-
-    always @*
+  always @*
+    if (hpos == H_MAX)
     begin
-        case(key[1:0])
-        2'd0: data = h_dat;
-        2'd1: data = v_dat;
-        2'd2: data = v_dat ^  h_dat;
-        2'd3: data = v_dat ~^ h_dat;
-        endcase
+      d_hpos = 0;
 
-        if(hcount < 223)
-            v_dat = 3'h7;
-        else if(hcount < 303)
-            v_dat = 3'h6;
-        else if(hcount < 383)
-            v_dat = 3'h5;
-        else if(hcount < 463)
-            v_dat = 3'h4;
-        else if(hcount < 543)
-            v_dat = 3'h3;
-        else if(hcount < 623)
-            v_dat = 3'h2;
-        else if(hcount < 703)
-            v_dat = 3'h1;
-        else
-            v_dat = 3'h0;
+      if (vpos == V_MAX)
+        d_vpos = 0;
+      else
+        d_vpos = vpos + 1;
+    end
+    else
+    begin
+      d_hpos = hpos + 1;
+      d_vpos = vpos;
+    end
 
-        if(vcount < 94)
-            h_dat = 3'h7;
-        else if(vcount < 154)
-            h_dat = 3'h6;
-        else if(vcount < 214)
-            h_dat = 3'h5;
-        else if(vcount < 274)
-            h_dat = 3'h4;
-        else if(vcount < 334)
-            h_dat = 3'h3;
-        else if(vcount < 394)
-            h_dat = 3'h2;
-        else if(vcount < 454)
-            h_dat = 3'h1;
-        else
-            h_dat = 3'h0;
+  // enable to divide clock from 50 MHz to 25 MHz
+
+  reg clk_en;
+
+  always @ (posedge clk or posedge reset)
+    if (reset)
+      clk_en <= 0;
+    else
+      clk_en <= ~ clk_en;
+
+  // making all outputs registered
+
+  always @ (posedge clk or posedge reset)
+    if (reset)
+    begin
+      hsync       <= 0;
+      vsync       <= 0;
+      display_on  <= 0;
+      hpos        <= 0;
+      vpos        <= 0;
+    end
+    else if (clk_en)
+    begin
+      hsync       <= ~ ( d_hpos >= H_SYNC_START && d_hpos <= H_SYNC_END );
+      vsync       <= ~ ( d_vpos >= V_SYNC_START && d_vpos <= V_SYNC_END );
+
+      display_on  <=   ( d_hpos <  H_DISPLAY    && d_vpos <  V_DISPLAY  );
+
+      hpos        <= d_hpos;
+      vpos        <= d_vpos;
     end
 
 endmodule
