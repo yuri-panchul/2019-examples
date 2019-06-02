@@ -12,7 +12,9 @@ module top
 
     output        vsync,
     output        hsync,
-    output [ 2:0] rgb
+    output [ 2:0] rgb,
+
+    inout  [18:0] gpio
 );
 
     wire rst_n = key [3];
@@ -30,7 +32,7 @@ module top
 
     //------------------------------------------------------------------------
 
-    wire shift_register_strobe;
+    wire shift_strobe;
 
     strobe_gen # (.w (23)) i_shift_strobe
         (clk, rst_n, shift_strobe);
@@ -51,17 +53,6 @@ module top
     //------------------------------------------------------------------------
 
     wire [15:0] shift_strobe_count;
-    wire [ 7:0] moore_fsm_out_count;
-    wire [ 7:0] mealy_fsm_out_count;
-    
-    wire [31:0] number_to_display =
-    {
-        shift_strobe_count,
-        moore_fsm_out_count,
-        mealy_fsm_out_count
-    };
-
-    //------------------------------------------------------------------------
 
     counter # (16) i_shift_strobe_counter
     (
@@ -84,6 +75,8 @@ module top
         .y     ( out_moore_fsm )
     );
     
+    wire [7:0] moore_fsm_out_count;
+
     counter # (8) i_moore_fsm_out_counter
     (
         .clk   ( clk                          ),
@@ -105,31 +98,14 @@ module top
         .y     ( out_mealy_fsm )
     );
     
+    wire [7:0] mealy_fsm_out_count;
+
     counter # (8) i_mealy_fsm_out_counter
     (
         .clk   ( clk                          ),
         .rst_n ( rst_n                        ),
         .en    ( shift_strobe & out_mealy_fsm ),
         .cnt   ( mealy_fsm_out_count          )
-    );
-
-    //------------------------------------------------------------------------
-
-    wire seven_segment_strobe;
-
-    strobe_gen # (.w (10)) i_seven_segment_strobe
-        (clk, rst_n, seven_segment_strobe);
-
-    seven_segment #(.w (32)) i_seven_segment
-    (
-        .clk     ( clk                  ),
-        .rst_n   ( rst_n                ),
-        .en      ( seven_segment_strobe ),
-        .num     ( number_to_display    ),
-        .dots    ( sw_db                ),
-        .abcdefg ( abcdefgh [7:1]       ),
-        .dot     ( abcdefgh [0]         ),
-        .anodes  ( digit                )
     );
 
     //------------------------------------------------------------------------
@@ -158,5 +134,69 @@ module top
                  hpos == 10 || hpos == 629 || vpos == 10 || vpos == 469 ? 3'b001 :
                  hpos <  20 || hpos >  619 || vpos <  20 || vpos >= 459 ? 3'b000 :
                  { hpos [4], vpos [4], hpos [3] ^ vpos [3] };
+
+    //------------------------------------------------------------------------
+
+    wire enc_a   = gpio [14];
+    wire enc_b   = gpio [15];
+    wire enc_btn = gpio [16];
+    wire enc_swt = gpio [17];
+
+    wire enc_a_db;
+    wire enc_b_db;
+    wire enc_btn_db;
+    wire enc_swt_db;
+
+    sync_and_debounce # (.w (4)) i_sync_and_debounce_enc
+    (
+        clk,
+        { enc_a    , enc_b    , enc_btn    , enc_swt    },
+        { enc_a_db , enc_b_db , enc_btn_db , enc_swt_db }
+    );
+
+    assign gpio [18] = 1;
+
+    //------------------------------------------------------------------------
+
+    reg [31:0] number_to_display;
+
+    always @*
+        case (sw_db [0])
+
+        1'b1:    number_to_display =
+                 {
+                     { 8 { enc_btn_db } },
+                     { 8 { enc_swt_db } },
+                     { 8 { enc_a_db   } },
+                     { 8 { enc_b_db   } }
+                 };
+
+        default: number_to_display =
+                 {
+                     shift_strobe_count,
+                     moore_fsm_out_count,
+                     mealy_fsm_out_count
+                 };
+
+        endcase
+
+    //------------------------------------------------------------------------
+
+    wire seven_segment_strobe;
+
+    strobe_gen # (.w (10)) i_seven_segment_strobe
+        (clk, rst_n, seven_segment_strobe);
+
+    seven_segment #(.w (32)) i_seven_segment
+    (
+        .clk     ( clk                  ),
+        .rst_n   ( rst_n                ),
+        .en      ( seven_segment_strobe ),
+        .num     ( number_to_display    ),
+        .dots    ( sw_db                ),
+        .abcdefg ( abcdefgh [7:1]       ),
+        .dot     ( abcdefgh [0]         ),
+        .anodes  ( digit                )
+    );
 
 endmodule
