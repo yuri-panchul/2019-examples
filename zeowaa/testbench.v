@@ -10,7 +10,13 @@ module testbench;
     wire [ 7:0] digit;
     wire        buzzer;
 
-    top i_top
+    top
+    # (
+        .debounce_depth             ( 1 ),
+        .shift_strobe_width         ( 1 ),
+        .seven_segment_strobe_width ( 1 )
+    )
+    i_top
     (
         .clk      ( clk      ),
         .key      ( key      ),
@@ -37,7 +43,7 @@ module testbench;
 
     initial
     begin
-        reset <= 1'bx;
+        reset <= 'bx;
         repeat (2) @ (posedge clk);
         reset <= 1;
         repeat (2) @ (posedge clk);
@@ -49,14 +55,17 @@ module testbench;
         #0
         $dumpvars;
 
+        key [2:0] <= 'b0;
+        sw        <= 'b0;
+
         @ (negedge reset);
 
         repeat (1000)
         begin
             @ (posedge clk);
 
-            key <= $random;
-            sw  <= $random;
+            key [2:0] <= $random;
+            sw        <= 8'b00000001; // $random;
         end
 
         `ifdef MODEL_TECH  // Mentor ModelSim and Questa

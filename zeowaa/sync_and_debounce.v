@@ -6,6 +6,7 @@ module sync_and_debounce_one
 )
 (   
     input      clk,
+    input      reset,
     input      sw_in,
     output reg sw_out
 );
@@ -16,17 +17,24 @@ module sync_and_debounce_one
 
     assign sw_in_s = sync [2];
 
-    always @ (posedge clk)
-        sync <= { sync [1:0], sw_in };
+    always @ (posedge clk or posedge reset)
+        if (reset)
+            sync <= 3'b0;
+        else
+            sync <= { sync [1:0], sw_in };
 
-    always @ (posedge clk)
-        if (sw_out ^ sw_in_s)
+    always @ (posedge clk or posedge reset)
+        if (reset)
+            cnt <= { depth { 1'b0 } };
+        else if (sw_out ^ sw_in_s)
             cnt <= cnt + 1'b1;
         else
             cnt <= { depth { 1'b0 } };
 
-    always @ (posedge clk)
-        if (cnt == { depth { 1'b1 } })
+    always @ (posedge clk or posedge reset)
+        if (reset)
+            sw_out <= 1'b0;
+        else if (cnt == { depth { 1'b1 } })
             sw_out <= sw_in_s;
 
 endmodule
@@ -39,6 +47,7 @@ module sync_and_debounce
 )
 (   
     input            clk,
+    input            reset,
     input  [w - 1:0] sw_in,
     output [w - 1:0] sw_out
 );
@@ -54,6 +63,7 @@ module sync_and_debounce
            i_sync_and_debounce_one
            (    
               .clk    ( clk             ),
+              .reset  ( reset           ),
               .sw_in  ( sw_in  [sw_cnt] ),
               .sw_out ( sw_out [sw_cnt] )
            );

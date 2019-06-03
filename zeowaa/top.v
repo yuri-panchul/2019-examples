@@ -1,4 +1,9 @@
 module top
+# (
+    parameter debounce_depth             = 8,
+              shift_strobe_width         = 23,
+              seven_segment_strobe_width = 10
+)
 (
     input         clk,
     input  [ 3:0] key,
@@ -24,17 +29,19 @@ module top
     wire [3:0] key_db;
     wire [7:0] sw_db;
 
-    sync_and_debounce # (.w (4)) i_sync_and_debounce_key
-        (clk, ~ key, key_db);
+    sync_and_debounce # (.w (4), .depth (debounce_depth))
+        i_sync_and_debounce_key
+            (clk, reset, ~ key, key_db);
     
-    sync_and_debounce # (.w (8)) i_sync_and_debounce_sw
-        (clk, ~ sw, sw_db);
+    sync_and_debounce # (.w (8), .depth (debounce_depth))
+        i_sync_and_debounce_sw
+            (clk, reset, ~ sw, sw_db);
 
     //------------------------------------------------------------------------
 
     wire shift_strobe;
 
-    strobe_gen # (.w (23)) i_shift_strobe
+    strobe_gen # (.w (shift_strobe_width)) i_shift_strobe
         (clk, reset, shift_strobe);
 
     wire [11:0] out_reg;
@@ -149,12 +156,14 @@ module top
     wire enc_btn_db;
     wire enc_swt_db;
 
-    sync_and_debounce # (.w (4)) i_sync_and_debounce_enc
-    (
-        clk,
-        { enc_a    , enc_b    , enc_btn    , enc_swt    },
-        { enc_a_db , enc_b_db , enc_btn_db , enc_swt_db }
-    );
+    sync_and_debounce # (.w (4), .depth (debounce_depth))
+        i_sync_and_debounce_enc
+        (
+            clk,
+            reset,
+            { enc_a    , enc_b    , enc_btn    , enc_swt    },
+            { enc_a_db , enc_b_db , enc_btn_db , enc_swt_db }
+        );
 
     wire [15:0] enc_value;
 
@@ -194,8 +203,9 @@ module top
 
     wire seven_segment_strobe;
 
-    strobe_gen # (.w (10)) i_seven_segment_strobe
-        (clk, reset, seven_segment_strobe);
+    strobe_gen # (.w (seven_segment_strobe_width))
+        i_seven_segment_strobe
+            (clk, reset, seven_segment_strobe);
 
     seven_segment #(.w (32)) i_seven_segment
     (
