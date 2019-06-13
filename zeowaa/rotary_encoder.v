@@ -1,4 +1,6 @@
-module pmod_enc_rotary_encoder
+// Digilent Pmod ENC: Rotary Encoder
+
+module rotary_encoder
 (
     input             clk,
     input             reset,

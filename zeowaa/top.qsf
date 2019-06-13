@@ -11,18 +11,18 @@ set_global_assignment   -name VERILOG_FILE ../top.v
 set_global_assignment   -name SDC_FILE     ../top.sdc
 
 set_global_assignment   -name VERILOG_FILE ../counter.v
-set_global_assignment   -name VERILOG_FILE ../hc_sr04_ultrasonic_distance_sensor.v
+set_global_assignment   -name VERILOG_FILE ../light_sensor.v
 set_global_assignment   -name VERILOG_FILE ../mealy_fsm.v
 set_global_assignment   -name VERILOG_FILE ../moore_fsm.v
-set_global_assignment   -name VERILOG_FILE ../pmod_als_light_sensor.v
-set_global_assignment   -name VERILOG_FILE ../pmod_enc_rotary_encoder.v
 set_global_assignment   -name VERILOG_FILE ../register_no_rst.v
 set_global_assignment   -name VERILOG_FILE ../register.v
+set_global_assignment   -name VERILOG_FILE ../rotary_encoder.v
 set_global_assignment   -name VERILOG_FILE ../selector.v
 set_global_assignment   -name VERILOG_FILE ../seven_segment.v
 set_global_assignment   -name VERILOG_FILE ../shift_register.v
 set_global_assignment   -name VERILOG_FILE ../strobe_gen.v
 set_global_assignment   -name VERILOG_FILE ../sync_and_debounce.v
+set_global_assignment   -name VERILOG_FILE ../ultrasonic_distance_sensor.v
 set_global_assignment   -name VERILOG_FILE ../vga.v
 
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *

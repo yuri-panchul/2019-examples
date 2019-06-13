@@ -1,4 +1,6 @@
-module hc_sr04_ultrasonic_distance_sensor
+// HC-SR04 Ultrasonic Distance Sensor
+
+module ultrasonic_distance_sensor
 # (
     parameter clk_frequency           = 50000000,
               relative_distance_width = 8
