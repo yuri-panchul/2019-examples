@@ -1,3 +1,5 @@
+`include "config.vh"
+
 // Digilent Pmod ALS Light Sensor
 
 module light_sensor

@@ -1,3 +1,5 @@
+`include "config.vh"
+
 // Digilent Pmod ENC: Rotary Encoder
 
 module rotary_encoder

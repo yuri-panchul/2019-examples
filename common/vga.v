@@ -1,3 +1,5 @@
+`include "config.vh"
+
 module vga
 # (
     parameter HPOS_WIDTH  = 10,

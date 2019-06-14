@@ -1,3 +1,5 @@
+`include "config.vh"
+
 module moore_fsm
 (
     input  clk,

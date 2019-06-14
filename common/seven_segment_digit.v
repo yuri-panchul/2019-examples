@@ -1,3 +1,5 @@
+`include "config.vh"
+
 module seven_segment_digit
 (
     input      [3:0] dig,

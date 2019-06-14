@@ -1,4 +1,6 @@
-module moore_fsm
+`include "config.vh"
+
+module mealy_fsm
 (
     input  clk,
     input  reset,
@@ -7,9 +9,9 @@ module moore_fsm
     output y
 );
 
-    parameter [1:0] S0 = 0, S1 = 1, S2 = 2;
+    parameter [0:0] S0 = 1'b0, S1 = 1'b1;
 
-    reg [1:0] state, next_state;
+    reg state, next_state;
 
     // State register
 
@@ -32,12 +34,6 @@ module moore_fsm
 
         S1:
             if (a)
-                next_state = S2;
-            else
-                next_state = S1;
-
-        S2:
-            if (a)
                 next_state = S0;
             else
                 next_state = S1;
@@ -48,8 +44,8 @@ module moore_fsm
 
         endcase
 
-    // Output logic based on current state
+    // Output logic based on current state and inputs
 
-    assign y = (state == S2);
+    assign y = (a & state == S1);
 
 endmodule

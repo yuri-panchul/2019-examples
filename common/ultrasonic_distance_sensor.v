@@ -1,3 +1,5 @@
+`include "config.vh"
+
 // HC-SR04 Ultrasonic Distance Sensor
 
 module ultrasonic_distance_sensor
