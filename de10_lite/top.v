@@ -1,39 +1,69 @@
 module top
-# (
-    parameter debounce_depth             = 8,
-              shift_strobe_width         = 23,
-              seven_segment_strobe_width = 10
-)
 (
-    input         clk,
-    input  [ 3:0] key,
-    input  [ 7:0] sw,
-    output [11:0] led,
+    input           adc_clk_10,
+    input           max10_clk1_50,
+    input           max10_clk2_50,
 
-    output [ 7:0] abcdefgh,
-    output [ 7:0] digit,
+    input   [ 1:0]  key,
+    input   [ 9:0]  sw,
+    output  [ 9:0]  ledr,
 
-    output        buzzer,
+    output  [ 7:0]  hex0,
+    output  [ 7:0]  hex1,
+    output  [ 7:0]  hex2,
+    output  [ 7:0]  hex3,
+    output  [ 7:0]  hex4,
+    output  [ 7:0]  hex5,
 
-    output        vsync,
-    output        hsync,
-    output [ 2:0] rgb,
+    output  [ 3:0]  vga_b,
+    output  [ 3:0]  vga_g,
+    output          vga_hs,
+    output  [ 3:0]  vga_r,
+    output          vga_vs,
 
-    inout  [18:0] gpio
+    output  [12:0]  dram_addr,
+    output  [ 1:0]  dram_ba,
+    output          dram_cas_n,
+    output          dram_cke,
+    output          dram_clk,
+    output          dram_cs_n,
+    inout   [15:0]  dram_dq,
+    output          dram_ldqm,
+    output          dram_ras_n,
+    output          dram_udqm,
+    output          dram_we_n,
+
+    output          gsensor_cs_n,
+    input   [ 2:1]  gsensor_int,
+    output          gsensor_sclk,
+    inout           gsensor_sdi,
+    inout           gsensor_sdo,
+
+    inout   [15:0]  arduino_io,
+    inout           arduino_reset_n,
+
+    inout   [35:0]  gpio
 );
-
-    wire reset = ~ key [3];
 
     //------------------------------------------------------------------------
 
-    wire [3:0] key_db;
-    wire [7:0] sw_db;
+    localparam debounce_depth             = 8,
+               shift_strobe_width         = 23,
+               seven_segment_strobe_width = 10;
+               
+    wire clk   = max10_clk1_50;
+    wire reset = ~ key [0];
 
-    sync_and_debounce # (.w (4), .depth (debounce_depth))
+    //------------------------------------------------------------------------
+
+    wire [1:0] key_db;
+    wire [9:0] sw_db;
+
+    sync_and_debounce # (.w (2), .depth (debounce_depth))
         i_sync_and_debounce_key
             (clk, reset, ~ key, key_db);
     
-    sync_and_debounce # (.w (8), .depth (debounce_depth))
+    sync_and_debounce # (.w (10), .depth (debounce_depth))
         i_sync_and_debounce_sw
             (clk, reset, ~ sw, sw_db);
 
@@ -44,9 +74,9 @@ module top
     strobe_gen # (.w (shift_strobe_width)) i_shift_strobe
         (clk, reset, shift_strobe);
 
-    wire [11:0] out_reg;
+    wire [9:0] out_reg;
 
-    shift_register # (.w (12)) i_shift_reg
+    shift_register # (.w (10)) i_shift_reg
     (
         .clk     ( clk          ),
         .reset   ( reset        ),
@@ -55,7 +85,7 @@ module top
         .out_reg ( out_reg      )
     );
 
-    assign led = ~ out_reg;
+    assign ledr = ~ out_reg;
 
     //------------------------------------------------------------------------
 
@@ -144,6 +174,8 @@ module top
 
     //------------------------------------------------------------------------
 
+    /*
+
     wire enc_a   = gpio [14];
     wire enc_b   = gpio [15];
     wire enc_btn = gpio [16];
@@ -167,7 +199,7 @@ module top
 
     wire [15:0] enc_value;
 
-    pmod_enc_rotary_encoder i_pmod_enc_rotary_encoder
+    rotary_encoder i_rotary_encoder
     (
         .clk        ( clk       ),
         .reset      ( reset     ),
@@ -175,6 +207,8 @@ module top
         .b          ( enc_b_db  ),
         .value      ( enc_value )
     );
+
+    */
 
     //------------------------------------------------------------------------
 
