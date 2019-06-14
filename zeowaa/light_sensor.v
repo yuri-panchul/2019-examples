@@ -1,6 +1,6 @@
 // Digilent Pmod ALS Light Sensor
 
-module pmod_als_light_sensor
+module light_sensor
 (
     input             clk,
     input             reset,

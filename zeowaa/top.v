@@ -167,7 +167,7 @@ module top
 
     wire [15:0] enc_value;
 
-    pmod_enc_rotary_encoder i_pmod_enc_rotary_encoder
+    rotary_encoder i_rotary_encoder
     (
         .clk        ( clk       ),
         .reset      ( reset     ),
