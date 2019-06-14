@@ -178,14 +178,12 @@ module top
 
     //------------------------------------------------------------------------
 
-    /*
+    wire enc_a   = gpio [34];
+    wire enc_b   = gpio [32];
+    wire enc_btn = gpio [30];
+    wire enc_swt = gpio [28];
 
-    wire enc_a   = gpio [14];
-    wire enc_b   = gpio [15];
-    wire enc_btn = gpio [16];
-    wire enc_swt = gpio [17];
-
-    assign gpio [18] = 1;
+    assign gpio [26] = 0;
 
     wire enc_a_db;
     wire enc_b_db;
@@ -211,8 +209,6 @@ module top
         .b          ( enc_b_db  ),
         .value      ( enc_value )
     );
-
-    */
 
     //------------------------------------------------------------------------
 
