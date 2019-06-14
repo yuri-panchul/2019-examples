@@ -65,7 +65,7 @@ module top
     
     sync_and_debounce # (.w (10), .depth (debounce_depth))
         i_sync_and_debounce_sw
-            (clk, reset, ~ sw, sw_db);
+            (clk, reset, sw, sw_db);
 
     //------------------------------------------------------------------------
 
@@ -85,7 +85,7 @@ module top
         .out_reg ( out_reg      )
     );
 
-    assign ledr = ~ out_reg;
+    assign ledr = out_reg;
 
     //------------------------------------------------------------------------
 
@@ -144,10 +144,6 @@ module top
         .en    ( shift_strobe & out_mealy_fsm ),
         .cnt   ( mealy_fsm_out_count          )
     );
-
-    //------------------------------------------------------------------------
-
-    assign buzzer = 1'b1; // ~ key_db [0];
 
     //------------------------------------------------------------------------
 
@@ -243,6 +239,6 @@ module top
     seven_segment_digit i_digit_5 ( number_to_display [23:20], hex5 [6:0]);
 
     assign { hex5 [7], hex4 [7], hex3 [7], hex2 [7], hex1 [7], hex0 [7] }
-        = sw [5:0];
+        = ~ sw_db [5:0];
 
 endmodule
