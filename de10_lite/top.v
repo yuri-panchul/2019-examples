@@ -159,18 +159,22 @@ module top
     (
         .clk        ( clk        ),
         .reset      ( reset      ),
-        .hsync      ( hsync      ),
-        .vsync      ( vsync      ),
+        .hsync      ( vga_hs     ),
+        .vsync      ( vga_vs     ),
         .display_on ( display_on ),
         .hpos       ( hpos       ),
         .vpos       ( vpos       )
     );
 
-    assign rgb = hpos ==  0 || hpos == 639 || vpos ==  0 || vpos == 479 ? 3'b100 :
-                 hpos ==  5 || hpos == 634 || vpos ==  5 || vpos == 474 ? 3'b010 :
-                 hpos == 10 || hpos == 629 || vpos == 10 || vpos == 469 ? 3'b001 :
-                 hpos <  20 || hpos >  619 || vpos <  20 || vpos >= 459 ? 3'b000 :
-                 { hpos [4], vpos [4], hpos [3] ^ vpos [3] };
+    wire [2:0] rgb = hpos ==  0 || hpos == 639 || vpos ==  0 || vpos == 479 ? 3'b100 :
+                     hpos ==  5 || hpos == 634 || vpos ==  5 || vpos == 474 ? 3'b010 :
+                     hpos == 10 || hpos == 629 || vpos == 10 || vpos == 469 ? 3'b001 :
+                     hpos <  20 || hpos >  619 || vpos <  20 || vpos >= 459 ? 3'b000 :
+                     { hpos [4], vpos [4], hpos [3] ^ vpos [3] };
+
+    assign vga_r = { 4 { rgb [0] } };
+    assign vga_g = { 4 { rgb [1] } };
+    assign vga_b = { 4 { rgb [2] } };
 
     //------------------------------------------------------------------------
 
@@ -235,22 +239,14 @@ module top
 
     //------------------------------------------------------------------------
 
-    wire seven_segment_strobe;
+    seven_segment_digit i_digit_0 ( number_to_display [ 3: 0], hex0 [6:0]);
+    seven_segment_digit i_digit_1 ( number_to_display [ 7: 4], hex1 [6:0]);
+    seven_segment_digit i_digit_2 ( number_to_display [11: 8], hex2 [6:0]);
+    seven_segment_digit i_digit_3 ( number_to_display [15:12], hex3 [6:0]);
+    seven_segment_digit i_digit_4 ( number_to_display [19:16], hex4 [6:0]);
+    seven_segment_digit i_digit_5 ( number_to_display [23:20], hex5 [6:0]);
 
-    strobe_gen # (.w (seven_segment_strobe_width))
-        i_seven_segment_strobe
-            (clk, reset, seven_segment_strobe);
-
-    seven_segment #(.w (32)) i_seven_segment
-    (
-        .clk     ( clk                  ),
-        .reset   ( reset                ),
-        .en      ( seven_segment_strobe ),
-        .num     ( number_to_display    ),
-        .dots    ( sw_db                ),
-        .abcdefg ( abcdefgh [7:1]       ),
-        .dot     ( abcdefgh [0]         ),
-        .anodes  ( digit                )
-    );
+    assign { hex5 [7], hex4 [7], hex3 [7], hex2 [7], hex1 [7], hex0 [7] }
+        = sw [5:0];
 
 endmodule
