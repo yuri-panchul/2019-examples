@@ -1,4 +1,5 @@
 set_global_assignment   -name DEVICE 10M50DAF484C7G
+set_global_assignment -name FAMILY "MAX 10"
 
 set_global_assignment   -name NUM_PARALLEL_PROCESSORS   4
 set_global_assignment   -name PROJECT_OUTPUT_DIRECTORY  .
@@ -9,6 +10,7 @@ set_global_assignment   -name SEARCH_PATH  ..
 set_global_assignment   -name SEARCH_PATH  ../../common
 
 set_global_assignment   -name VERILOG_FILE ../top.v
+#set_global_assignment   -name VERILOG_FILE ../../common/lfsr.v
 set_global_assignment   -name SDC_FILE     ../top.sdc
 
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
@@ -210,3 +212,5 @@ set_location_assignment PIN_AB3  -to gpio[32]
 set_location_assignment PIN_Y3   -to gpio[33]
 set_location_assignment PIN_AB2  -to gpio[34]
 set_location_assignment PIN_AA2  -to gpio[35]
+
+set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
