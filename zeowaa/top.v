@@ -156,9 +156,9 @@ module top
 
     wire star_on = & lfsr_out [15:9];
 
-    wire [2:0] rgb = lfsr_enable ?
-                         (star_on ? lfsr_out [2:0] : 3'b0)
-                       : rgb_squares;
+    assign rgb = lfsr_enable ?
+                     (star_on ? lfsr_out [2:0] : 3'b0)
+                   : rgb_squares;
 
     //------------------------------------------------------------------------
 
