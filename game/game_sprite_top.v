@@ -56,7 +56,7 @@ module game_sprite_top
         .Y_WIDTH               ( Y_WIDTH               ),
 
         .DX_WIDTH              ( DX_WIDTH              ),
-        .DY_WIDTH              ( DY_WIDTH              ),
+        .DY_WIDTH              ( DY_WIDTH              )
     )
     sprite_control
     (
@@ -72,7 +72,7 @@ module game_sprite_top
         .sprite_write_dy       ( sprite_write_dy       ),
 
         .sprite_x              ( sprite_x              ),
-        .sprite_y              ( sprite_y              ),
+        .sprite_y              ( sprite_y              )
     );
 
     game_sprite_display
@@ -95,7 +95,7 @@ module game_sprite_top
         .ROW_4                 ( ROW_4                 ),
         .ROW_5                 ( ROW_5                 ),
         .ROW_6                 ( ROW_6                 ),
-        .ROW_7                 ( ROW_7                 ),
+        .ROW_7                 ( ROW_7                 )
     )
     sprite_display
     (

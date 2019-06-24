@@ -29,7 +29,7 @@ module game_sprite_control
     game_strobe # (.width (20)) (clk, reset, strobe_to_update_xy);
 
     reg [X_WIDTH  - 1:0] x;
-    reg [Y_WIDTH  - 1:0] y,
+    reg [Y_WIDTH  - 1:0] y;
 
     reg [DX_WIDTH - 1:0] dx;
     reg [DY_WIDTH - 1:0] dy;

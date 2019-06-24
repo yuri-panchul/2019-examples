@@ -9,7 +9,7 @@ module game_timer # ( parameter width = 32 )
 
     reg [width - 1:0] counter;
 
-    always @(posedge clk or negedge reset)
+    always @(posedge clk or posedge reset)
         if (reset)
         begin
             running <= 1'b0;
