@@ -51,7 +51,7 @@ module game_sprite_display
     wire [X_WIDTH:0] x_sprite_plus_w_1
         = { 1'b0, sprite_x } + SPRITE_WIDTH - 1;
 
-    wire x_out_of_screen
+    wire x_sprite_out_of_screen
         =    screen_w_1_minus_sprite [X_WIDTH] == 1'b0
           && x_sprite_plus_w_1       [X_WIDTH] == 1'b0;
 
@@ -74,7 +74,7 @@ module game_sprite_display
     wire [Y_WIDTH:0] y_sprite_plus_h_1
         = { 1'b0, sprite_y } + SPRITE_HEIGHT - 1;
 
-    wire y_out_of_screen
+    wire y_sprite_out_of_screen
         =    screen_h_1_minus_sprite [Y_WIDTH] == 1'b0
           && y_sprite_plus_h_1       [Y_WIDTH] == 1'b0;
 
@@ -91,17 +91,26 @@ module game_sprite_display
 
     //------------------------------------------------------------------------
 
-    wire [SPRITE_COLUMN_INDEX_WIDTH - 1:0] column_index
-        = x_pixel_minus_sprite [SPRITE_COLUMN_INDEX_WIDTH - 1:0];
-
-    wire [SPRITE_ROW_INDEX_WIDTH - 1:0] row_index
-        = y_pixel_minus_sprite [SPRITE_ROW_INDEX_WIDTH    - 1:0];
-
-    wire [SPRITE_WIDTH * ERGB_WIDTH - 1:0] row = rows [row_index];
-
     // Here we assume that SPRITE_WIDTH == 8 and ERGB_WIDTH == 4
     // TODO: instantiate here a more generic mux that is handled by all
     // synthesis tools well
+
+    wire [2:0] row_index    = y_pixel_minus_sprite [2:0];
+    wire [2:0] column_index = x_pixel_minus_sprite [2:0];
+
+    reg [SPRITE_WIDTH * ERGB_WIDTH - 1:0] row;
+
+    always @*
+        case (row_index)
+        3'd0: row = ROW_0;
+        3'd1: row = ROW_1;
+        3'd2: row = ROW_2;
+        3'd3: row = ROW_3;
+        3'd4: row = ROW_4;
+        3'd5: row = ROW_5;
+        3'd6: row = ROW_6;
+        3'd7: row = ROW_7;
+        endcase
 
     reg [ERGB_WIDTH - 1:0] ergb;
     
@@ -126,5 +135,12 @@ module game_sprite_display
             { rgb_en, rgb } <= ergb;
         else
             rgb_en <= 1'b0;
+
+    always @ (posedge clk or posedge reset)
+        if (reset)
+            sprite_out_of_screen <= 1'b0;
+        else
+            sprite_out_of_screen
+                <= x_sprite_out_of_screen || y_sprite_out_of_screen;
 
 endmodule
