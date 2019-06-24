@@ -1,4 +1,4 @@
-module game_sprite_display
+module game_sprite_top
 #(
     parameter SCREEN_WIDTH  = 640,
               SCREEN_HEIGHT = 480,
@@ -27,22 +27,27 @@ module game_sprite_display
 //----------------------------------------------------------------------------
 
 (
-    input                        clk,
-    input                        reset,
+    input                    clk,
+    input                    reset,
 
-    input      [X_WIDTH   - 1:0] pixel_x,
-    input      [Y_WIDTH   - 1:0] pixel_y,
+    input  [X_WIDTH   - 1:0] pixel_x,
+    input  [Y_WIDTH   - 1:0] pixel_y,
 
-    input                        sprite_we,
+    input                    sprite_write,
 
-    input      [X_WIDTH   - 1:0] sprite_x,
-    input      [Y_WIDTH   - 1:0] sprite_y,
-    
-    input      [X_WIDTH   - 1:0] sprite_dx,
-    input      [Y_WIDTH   - 1:0] sprite_dy,
+    input  [X_WIDTH   - 1:0] sprite_write_x,
+    input  [Y_WIDTH   - 1:0] sprite_write_y,
 
-    output reg                   rgb_en,
-    output reg [RGB_WIDTH - 1:0] rgb
+    input  [X_WIDTH   - 1:0] sprite_write_dx,
+    input  [Y_WIDTH   - 1:0] sprite_write_dy,
+
+    output [X_WIDTH   - 1:0] sprite_out_x,
+    output [Y_WIDTH   - 1:0] sprite_out_y,
+
+    output                   sprite_out_of_screen,
+
+    output                   rgb_en,
+    output [RGB_WIDTH - 1:0] rgb
 );
 
     //------------------------------------------------------------------------
@@ -50,6 +55,7 @@ module game_sprite_display
     localparam ERGB_WIDTH = 1 + RGB_WIDTH;
 
     //------------------------------------------------------------------------
+
 
     reg sprite_en;
     reg use_as_tile;
