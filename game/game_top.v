@@ -66,6 +66,44 @@ module game_top
     );
 
     //------------------------------------------------------------------------
+/*
+game_sprite_top
+#(
+              ROW_0         = 32'h000cc000,
+              ROW_1         = 32'h000cc000,
+              ROW_2         = 32'h000cc000,
+              ROW_3         = 32'hcccccccc,
+              ROW_4         = 32'hcccccccc,
+              ROW_5         = 32'h000cc000,
+              ROW_6         = 32'h000cc000,
+              ROW_7         = 32'h000cc000
+)
+sprite_target
+(
+    input                    clk,
+    input                    reset,
+
+    input  [X_WIDTH   - 1:0] pixel_x,
+    input  [Y_WIDTH   - 1:0] pixel_y,
+
+    input                    sprite_write,
+
+    input  [X_WIDTH   - 1:0] sprite_write_x,
+    input  [Y_WIDTH   - 1:0] sprite_write_y,
+
+    input  [X_WIDTH   - 1:0] sprite_write_dx,
+    input  [Y_WIDTH   - 1:0] sprite_write_dy,
+
+    output [X_WIDTH   - 1:0] sprite_x,
+    output [Y_WIDTH   - 1:0] sprite_y,
+
+    output                   sprite_out_of_screen,
+
+    output                   rgb_en,
+    output [RGB_WIDTH - 1:0] rgb
+);
+*/
+    //------------------------------------------------------------------------
 
     wire [15:0] random;
 
@@ -87,8 +125,6 @@ module game_top
 
     //------------------------------------------------------------------------
 
-    //------------------------------------------------------------------------
-
     game_mixer mixer
     (
         .clk                        ( clk                        ),
@@ -102,7 +138,7 @@ module game_top
 
         .game_won                   ( game_won                   ),
         .end_of_game_timer_running  ( end_of_game_timer_running  ),
-        .random                     ( random                     ),
+        .random                     ( random [0]                 ),
 
         .rgb                        ( rgb                        )
     );
