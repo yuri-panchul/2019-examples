@@ -39,161 +39,71 @@ module game_sprite_display
     output [RGB_WIDTH - 1:0] rgb
 );
 
-
-
-module game_sprite_control
-#(
-    parameter X_WIDTH  = 10,  // X coordinate width in bits
-              Y_WIDTH  = 10,  // Y coordinate width in bits
-
-              DX_WIDTH = 2,   // X speed width in bits
-              DY_WIDTH = 2    // Y speed width in bits
-)
-
-//----------------------------------------------------------------------------
-
-(
-    input                   clk,
-    input                   reset,
-
-    input                   sprite_write,
-
-    input  [X_WIDTH  - 1:0] sprite_write_x,
-    input  [Y_WIDTH  - 1:0] sprite_write_y,
-
-    input  [DX_WIDTH - 1:0] sprite_write_dx,
-    input  [DY_WIDTH - 1:0] sprite_write_dy,
-
-    output [X_WIDTH  - 1:0] sprite_x,
-    output [Y_WIDTH  - 1:0] sprite_y
-);
-module game_sprite_display
-#(
-    parameter SCREEN_WIDTH  = 640,
-              SCREEN_HEIGHT = 480,
-
-              SPRITE_WIDTH  = 8,
-              SPRITE_HEIGHT = 8,
-
-              X_WIDTH       = 10,   // X coordinate width in bits
-              Y_WIDTH       = 10,   // Y coordinate width in bits
-
-              DX_WIDTH      = 2,    // X speed width in bits
-              DY_WIDTH      = 2,    // Y speed width in bits
-
-              RGB_WIDTH     = 3,
-
-              ROW_0         = 32'h000cc000,
-              ROW_1         = 32'h000cc000,
-              ROW_2         = 32'h000cc000,
-              ROW_3         = 32'hcccccccc,
-              ROW_4         = 32'hcccccccc,
-              ROW_5         = 32'h000cc000,
-              ROW_6         = 32'h000cc000,
-              ROW_7         = 32'h000cc000
-)
-
-//----------------------------------------------------------------------------
-
-(
-    input                        clk,
-    input                        reset,
-
-    input      [X_WIDTH   - 1:0] pixel_x,
-    input      [Y_WIDTH   - 1:0] pixel_y,
-
-    input                        sprite_we,
-
-    input      [X_WIDTH   - 1:0] sprite_x,
-    input      [Y_WIDTH   - 1:0] sprite_y,
-    
-    input      [X_WIDTH   - 1:0] sprite_dx,
-    input      [Y_WIDTH   - 1:0] sprite_dy,
-
-    output reg                   rgb_en,
-    output reg [RGB_WIDTH - 1:0] rgb
-);
-
     //------------------------------------------------------------------------
 
     localparam ERGB_WIDTH = 1 + RGB_WIDTH;
 
     //------------------------------------------------------------------------
 
-    reg sprite_en;
-    reg use_as_tile;
+    wire [X_WIDTH:0] screen_w_1_minus_sprite
+        = SCREEN_WIDTH - 1 - { 1'b0, sprite_x };
 
-    reg [`VDP_X_WIDTH - 1:0] sprite_x;
-    reg [`VDP_Y_WIDTH - 1:0] sprite_y;
+    wire [X_WIDTH:0] x_sprite_plus_w_1
+        = { 1'b0, sprite_x } + SPRITE_WIDTH - 1;
 
-    reg [`VDP_SPRITE_WIDTH * `VDP_ERGB_WIDTH - 1:0]
-        rows [0:`VDP_SPRITE_HEIGHT - 1];
-
-    //------------------------------------------------------------------------
-
-    always @ (posedge clk or posedge reset)
-        if (reset)
-            sprite_en <= 1'b0;
-        else if (xy_we)
-            sprite_en <= wr_data [`VDP_SPRITE_XY_ENABLE_BIT];
-            
-    always @ (posedge clk)
-        if (xy_we)
-        begin
-            use_as_tile <= wr_data [`VDP_SPRITE_XY_TILE_BIT];
-            sprite_x    <= wr_data [`VDP_SPRITE_XY_X_RANGE];
-            sprite_y    <= wr_data [`VDP_SPRITE_XY_Y_RANGE];
-        end
-
-    always @ (posedge clk)
-        if (row_we)
-            rows [wr_row_index] <= wr_data;
+    wire x_out_of_screen
+        =    screen_w_1_minus_sprite [X_WIDTH] == 1'b0
+          && x_sprite_plus_w_1       [X_WIDTH] == 1'b0;
 
     //------------------------------------------------------------------------
 
-    wire [`VDP_X_WIDTH:0] x_pixel_minus_sprite
+    wire [X_WIDTH:0] x_pixel_minus_sprite
         = { 1'b0, pixel_x } - { 1'b0, sprite_x };
 
-    wire [`VDP_X_WIDTH:0] x_sprite_plus_w_minus_pixel
-        = { 1'b0, sprite_x } + `VDP_SPRITE_WIDTH - 1 - { 1'b0, pixel_x };
-        
-    wire [`VDP_Y_WIDTH:0] y_pixel_minus_sprite
+    wire [X_WIDTH:0] x_sprite_plus_w_1_minus_pixel
+        = x_sprite_plus_w_1 - { 1'b0, pixel_x };
+
+    wire x_hit =    x_pixel_minus_sprite        [X_WIDTH] == 1'b0
+                 && x_sprite_plus_w_minus_pixel [X_WIDTH] == 1'b0;
+
+    //------------------------------------------------------------------------
+
+    wire [Y_WIDTH:0] screen_h_1_minus_sprite
+        = SCREEN_HEIGHT - 1 - { 1'b0, sprite_y };
+
+    wire [Y_WIDTH:0] y_sprite_plus_h_1
+        = { 1'b0, sprite_y } + SPRITE_HEIGHT - 1;
+
+    wire y_out_of_screen
+        =    screen_h_1_minus_sprite [Y_WIDTH] == 1'b0
+          && y_sprite_plus_h_1       [Y_WIDTH] == 1'b0;
+
+    //------------------------------------------------------------------------
+
+    wire [Y_WIDTH:0] y_pixel_minus_sprite
         = { 1'b0, pixel_y } - { 1'b0, sprite_y };
 
-    wire [`VDP_Y_WIDTH:0] y_sprite_plus_h_minus_pixel
-        = { 1'b0, sprite_y } + `VDP_SPRITE_HEIGHT - 1 - { 1'b0, pixel_y };
+    wire [Y_WIDTH:0] y_sprite_plus_h_1_minus_pixel
+        = y_sprite_plus_h_1 - { 1'b0, pixel_y };
+
+    wire y_hit =    y_pixel_minus_sprite        [Y_WIDTH] == 1'b0
+                 && y_sprite_plus_h_minus_pixel [Y_WIDTH] == 1'b0;
 
     //------------------------------------------------------------------------
 
-    wire x_hit =    use_as_tile
-                 ||
-                       x_pixel_minus_sprite        [`VDP_X_WIDTH] == 1'b0
-                    && x_sprite_plus_w_minus_pixel [`VDP_X_WIDTH] == 1'b0;
+    wire [SPRITE_COLUMN_INDEX_WIDTH - 1:0] column_index
+        = x_pixel_minus_sprite [SPRITE_COLUMN_INDEX_WIDTH - 1:0];
 
-    wire y_hit =    use_as_tile
-                 ||
-                       y_pixel_minus_sprite        [`VDP_Y_WIDTH] == 1'b0
-                    && y_sprite_plus_h_minus_pixel [`VDP_Y_WIDTH] == 1'b0;
+    wire [SPRITE_ROW_INDEX_WIDTH - 1:0] row_index
+        = y_pixel_minus_sprite [SPRITE_ROW_INDEX_WIDTH    - 1:0];
 
-    //------------------------------------------------------------------------
+    wire [SPRITE_WIDTH * ERGB_WIDTH - 1:0] row = rows [row_index];
 
-    wire [`VDP_SPRITE_COLUMN_INDEX_WIDTH - 1:0] column_index
-        = use_as_tile ?
-              pixel_x              [`VDP_SPRITE_COLUMN_INDEX_WIDTH - 1:0]
-            : x_pixel_minus_sprite [`VDP_SPRITE_COLUMN_INDEX_WIDTH - 1:0];
-
-    wire [`VDP_SPRITE_ROW_INDEX_WIDTH - 1:0] row_index
-        = use_as_tile ?
-              pixel_y              [`VDP_SPRITE_ROW_INDEX_WIDTH    - 1:0]
-            : y_pixel_minus_sprite [`VDP_SPRITE_ROW_INDEX_WIDTH    - 1:0];
-
-    wire [`VDP_SPRITE_WIDTH * `VDP_ERGB_WIDTH - 1:0] row = rows [row_index];
-
-    // Here we assume that `VDP_SPRITE_WIDTH == 8 and `VDP_ERGB_WIDTH == 4
+    // Here we assume that SPRITE_WIDTH == 8 and ERGB_WIDTH == 4
     // TODO: instantiate here a more generic mux that is handled by all
     // synthesis tools well
 
-    reg [`VDP_ERGB_WIDTH - 1:0] ergb;
+    reg [ERGB_WIDTH - 1:0] ergb;
     
     always @*
         case (column_index)
