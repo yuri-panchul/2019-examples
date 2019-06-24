@@ -26,7 +26,9 @@ module game_sprite_control
 );
 
     wire strobe_to_update_xy;
-    game_strobe # (.width (20)) (clk, reset, strobe_to_update_xy);
+
+    game_strobe # (.width (20)) strobe_generator
+        (clk, reset, strobe_to_update_xy);
 
     reg [X_WIDTH  - 1:0] x;
     reg [Y_WIDTH  - 1:0] y;

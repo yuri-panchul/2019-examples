@@ -1,3 +1,4 @@
+/*
 module top
 (
     input           adc_clk_10,
@@ -260,3 +261,4 @@ module top
         = ~ sw_db [5:0];
 
 endmodule
+*/

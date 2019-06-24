@@ -74,7 +74,9 @@ module game_top
     //------------------------------------------------------------------------
 
     wire strobe_to_restart;
-    game_strobe # (.width (28)) (clk, reset, strobe_to_restart);
+
+    game_strobe # (.width (28)) strobe_generator
+        (clk, reset, strobe_to_restart);
 
     //------------------------------------------------------------------------
 

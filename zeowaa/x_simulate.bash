@@ -54,7 +54,11 @@ fi
 
 if [ $run_iverilog = 1 ]
 then
-    iverilog -g2005 -I .. ../*.v ../../common/*.v ../../game/*.v &> icarus.compile.log 
+    iverilog -g2005  \
+        -I .. -I ../../common -I ../../game  \
+        ../*.v ../../common/*.v ../../game/*.v  \
+        &> icarus.compile.log 
+        
     ec=$?
 
     if [ $ec != 0 ]
