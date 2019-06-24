@@ -147,6 +147,26 @@ module top
 
     //------------------------------------------------------------------------
 
+    wire [2:0] rgb;
+
+    assign vga_r = { 4 { rgb [2] } };
+    assign vga_g = { 4 { rgb [1] } };
+    assign vga_b = { 4 { rgb [0] } };
+
+    game_top i_game_top
+    (
+        .clk   (   clk       ),
+        .reset (   reset     ),
+
+        .key   ( ~ key [1]   ),
+        .sw    (   sw  [1:0] ),
+
+        .vsync (   vsync     ),
+        .hsync (   hsync     ),
+        .rgb   (   rgb       )
+    );
+
+    /*
     wire       display_on;
     wire [9:0] hpos;
     wire [9:0] vpos;
@@ -189,6 +209,7 @@ module top
     assign vga_r = { 4 { rgb [2] } };
     assign vga_g = { 4 { rgb [1] } };
     assign vga_b = { 4 { rgb [0] } };
+    */
 
     //------------------------------------------------------------------------
 

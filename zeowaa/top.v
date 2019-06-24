@@ -123,15 +123,15 @@ module top
 
     game_top i_game_top
     (
-        .clk   ( clk   ),
-        .reset ( reset ),
+        .clk   (   clk       ),
+        .reset (   reset     ),
 
-        .key   ( key   ),
-        .sw    ( sw    ),
+        .key   ( ~ key [1]   ),
+        .sw    ( ~ sw  [1:0] ),
 
-        .vsync ( vsync ),
-        .hsync ( hsync ),
-        .rgb   ( rgb   )
+        .vsync (   vsync     ),
+        .hsync (   hsync     ),
+        .rgb   (   rgb       )
     );
 
     /*
