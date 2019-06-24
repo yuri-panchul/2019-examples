@@ -38,8 +38,8 @@ module game_sprite_top
     input  [X_WIDTH   - 1:0] sprite_write_x,
     input  [Y_WIDTH   - 1:0] sprite_write_y,
 
-    input  [X_WIDTH   - 1:0] sprite_write_dx,
-    input  [Y_WIDTH   - 1:0] sprite_write_dy,
+    input  [DX_WIDTH  - 1:0] sprite_write_dx,
+    input  [DY_WIDTH  - 1:0] sprite_write_dy,
 
     output [X_WIDTH   - 1:0] sprite_x,
     output [Y_WIDTH   - 1:0] sprite_y,
