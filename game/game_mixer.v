@@ -26,6 +26,6 @@ module game_mixer
         else if (sprite_target_en)
             rgb <= sprite_target_rgb;
         else
-            rgb <= 3'b0;
+            rgb <= 3'b101;
 
 endmodule

@@ -39,7 +39,7 @@ module game_top
 
     game_hvsync
     # (
-        .N_PIPE_STAGES ( 1             ),
+        .N_PIPE_STAGES ( 2             ),
 
         .X_WIDTH       ( X_WIDTH       ),
         .Y_WIDTH       ( Y_WIDTH       ),
