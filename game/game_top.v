@@ -18,15 +18,15 @@ module game_top
               V_TOP         =  33   // Vertical top border
 )
 (
-    input            clk,
-    input            reset,
+    input        clk,
+    input        reset,
 
-    input            key,
-    input      [1:0] sw,
+    input        key,
+    input  [1:0] sw,
 
-    output           vsync,
-    output           hsync,
-    output reg [2:0] rgb
+    output       vsync,
+    output       hsync,
+    output [2:0] rgb
 );
 
     localparam N_PIPE_STAGES = 1;
@@ -92,7 +92,7 @@ module game_top
     wire                   sprite_target_out_of_screen;
 
     wire                   sprite_target_rgb_en;
-    wire [RGB_WIDTH - 1:0] sprite_target_rgb;
+    wire [            2:0] sprite_target_rgb;
 
     //------------------------------------------------------------------------
 
@@ -120,7 +120,7 @@ module game_top
         .DX_WIDTH      ( 2             ),
         .DY_WIDTH      ( 1             ),
 
-        .RGB_WIDTH     ( 3             )
+        .RGB_WIDTH     ( 3             ),
 
         .ROW_0 ( 32'h00099000 ),
         .ROW_1 ( 32'h00099000 ),
@@ -172,7 +172,7 @@ module game_top
     wire                   sprite_torpedo_out_of_screen;
 
     wire                   sprite_torpedo_rgb_en;
-    wire [RGB_WIDTH - 1:0] sprite_torpedo_rgb;
+    wire [            2:0] sprite_torpedo_rgb;
 
     //------------------------------------------------------------------------
 
@@ -212,7 +212,7 @@ module game_top
         .DX_WIDTH      ( 2             ),
         .DY_WIDTH      ( 2             ),
 
-        .RGB_WIDTH     ( 3             )
+        .RGB_WIDTH     ( 3             ),
 
         .ROW_0 ( 32'h000cc000 ),
         .ROW_1 ( 32'h00cccc00 ),
@@ -283,6 +283,5 @@ module game_top
 
         .rgb                        ( rgb                        )
     );
-);
 
 endmodule
