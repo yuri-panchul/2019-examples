@@ -67,4 +67,6 @@ module game_top
 
     game_random random_generator (clk, reset, random);
 
+    assign rgb = { x [5], y [5], random [0] };
+
 endmodule

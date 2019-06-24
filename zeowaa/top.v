@@ -121,6 +121,21 @@ module top
 
     //------------------------------------------------------------------------
 
+    game_top i_game_top
+    (
+        .clk   ( clk   ),
+        .reset ( reset ),
+
+        .key   ( key   ),
+        .sw    ( sw    ),
+
+        .vsync ( vsync ),
+        .hsync ( hsync ),
+        .rgb   ( rgb   )
+    );
+
+    /*
+
     wire       display_on;
     wire [9:0] hpos;
     wire [9:0] vpos;
@@ -159,6 +174,8 @@ module top
     assign rgb = lfsr_enable ?
                      (star_on ? lfsr_out [2:0] : 3'b0)
                    : rgb_squares;
+                   
+    */
 
     //------------------------------------------------------------------------
 
