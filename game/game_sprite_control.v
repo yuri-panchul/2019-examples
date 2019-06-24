@@ -55,8 +55,8 @@ module game_sprite_control
         begin
             // Add with signed-extended dx and dy
 
-            x <= x + { { X_WIDTH - DX_WIDTH { dx [DX_WIDTH - 1] }, dx };
-            y <= y + { { Y_WIDTH - DY_WIDTH { dy [DY_WIDTH - 1] }, dy };
+            x <= x + { { X_WIDTH - DX_WIDTH { dx [DX_WIDTH - 1] } }, dx };
+            y <= y + { { Y_WIDTH - DY_WIDTH { dy [DY_WIDTH - 1] } }, dy };
         end
 
     assign sprite_x = x;

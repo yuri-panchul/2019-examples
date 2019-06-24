@@ -24,19 +24,19 @@ module game_sprite_display
 //----------------------------------------------------------------------------
 
 (
-    input                    clk,
-    input                    reset,
+    input                        clk,
+    input                        reset,
 
-    input  [X_WIDTH   - 1:0] pixel_x,
-    input  [Y_WIDTH   - 1:0] pixel_y,
+    input      [X_WIDTH   - 1:0] pixel_x,
+    input      [Y_WIDTH   - 1:0] pixel_y,
 
-    input  [X_WIDTH   - 1:0] sprite_x,
-    input  [Y_WIDTH   - 1:0] sprite_y,
+    input      [X_WIDTH   - 1:0] sprite_x,
+    input      [Y_WIDTH   - 1:0] sprite_y,
 
-    output                   sprite_out_of_screen,
+    output reg                   sprite_out_of_screen,
 
-    output                   rgb_en,
-    output [RGB_WIDTH - 1:0] rgb
+    output reg                   rgb_en,
+    output reg [RGB_WIDTH - 1:0] rgb
 );
 
     //------------------------------------------------------------------------
@@ -63,8 +63,8 @@ module game_sprite_display
     wire [X_WIDTH:0] x_sprite_plus_w_1_minus_pixel
         = x_sprite_plus_w_1 - { 1'b0, pixel_x };
 
-    wire x_hit =    x_pixel_minus_sprite        [X_WIDTH] == 1'b0
-                 && x_sprite_plus_w_minus_pixel [X_WIDTH] == 1'b0;
+    wire x_hit =    x_pixel_minus_sprite          [X_WIDTH] == 1'b0
+                 && x_sprite_plus_w_1_minus_pixel [X_WIDTH] == 1'b0;
 
     //------------------------------------------------------------------------
 
@@ -86,8 +86,8 @@ module game_sprite_display
     wire [Y_WIDTH:0] y_sprite_plus_h_1_minus_pixel
         = y_sprite_plus_h_1 - { 1'b0, pixel_y };
 
-    wire y_hit =    y_pixel_minus_sprite        [Y_WIDTH] == 1'b0
-                 && y_sprite_plus_h_minus_pixel [Y_WIDTH] == 1'b0;
+    wire y_hit =    y_pixel_minus_sprite          [Y_WIDTH] == 1'b0
+                 && y_sprite_plus_h_1_minus_pixel [Y_WIDTH] == 1'b0;
 
     //------------------------------------------------------------------------
 
