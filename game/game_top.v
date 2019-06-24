@@ -12,24 +12,26 @@ module game_top
 
               // Vertical constants
 
-              SCREEN_HIGHT  = 480,  // Screen height
+              SCREEN_HEIGHT = 480,  // Screen height
               V_BOTTOM      =  10,  // Vertical bottom border
               V_SYNC        =   2,  // Vertical sync # lines
               V_TOP         =  33   // Vertical top border
 )
 (
-    input        clk,
-    input        reset,
+    input            clk,
+    input            reset,
 
-    input        key,
-    input  [1:0] sw,
+    input            key,
+    input      [1:0] sw,
 
-    output       vsync,
-    output       hsync,
-    output [2:0] rgb
+    output           vsync,
+    output           hsync,
+    output reg [2:0] rgb
 );
 
     localparam N_PIPE_STAGES = 1;
+
+    //------------------------------------------------------------------------
 
     wire                 display_on;
     wire [X_WIDTH - 1:0] x;
@@ -42,12 +44,12 @@ module game_top
         .X_WIDTH       ( X_WIDTH       ),
         .Y_WIDTH       ( Y_WIDTH       ),
 
-        .SCREEN_WIDTH  ( SCREEN_WIDTH  ),
+        .H_DISPLAY     ( SCREEN_WIDTH  ),
         .H_FRONT       ( H_FRONT       ),
         .H_SYNC        ( H_SYNC        ),
         .H_BACK        ( H_BACK        ),
 
-        .SCREEN_HIGHT  ( SCREEN_HIGHT  ),
+        .V_DISPLAY     ( SCREEN_HEIGHT ),
         .V_BOTTOM      ( V_BOTTOM      ),
         .V_SYNC        ( V_SYNC        ),
         .V_TOP         ( V_TOP         )
@@ -63,10 +65,47 @@ module game_top
         .y          ( y          )
     );
 
+    //------------------------------------------------------------------------
+
     wire [15:0] random;
 
     game_random random_generator (clk, reset, random);
 
-    assign rgb = { x [5], y [5], random [0] };
+    //------------------------------------------------------------------------
+
+    wire end_of_game_timer_start;
+    wire end_of_game_timer_running;
+
+    game_timer # (.width (24)) timer
+    (
+        .clk     ( clk                       ),
+        .reset   ( reset                     ),
+        .value   ( 24'hf00000                ),
+        .start   ( end_of_game_timer_start   ),
+        .running ( end_of_game_timer_running )
+    );
+
+    //------------------------------------------------------------------------
+
+    //------------------------------------------------------------------------
+
+    game_mixer mixer
+    (
+        .clk                        ( clk                        ),
+        .reset                      ( reset                      ),
+
+        .sprite_target_en           ( sprite_target_en           ),
+        .sprite_target_rgb          ( sprite_target_rgb          ),
+
+        .sprite_torpedo_en          ( sprite_torpedo_en          ),
+        .sprite_torpedo_rgb         ( sprite_torpedo_rgb         ),
+
+        .game_won                   ( game_won                   ),
+        .end_of_game_timer_running  ( end_of_game_timer_running  ),
+        .random                     ( random                     ),
+
+        .rgb                        ( rgb                        )
+    );
+);
 
 endmodule

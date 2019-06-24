@@ -1,19 +1,53 @@
-module vdp_sprite
+module game_sprite_display
+#(
+    parameter SCREEN_WIDTH  = 640,
+              SCREEN_HEIGHT = 480,
+
+              SPRITE_WIDTH  = 8,
+              SPRITE_HEIGHT = 8,
+
+              X_WIDTH       = 10,   // X coordinate width in bits
+              Y_WIDTH       = 10,   // Y coordinate width in bits
+
+              DX_WIDTH      = 2,    // X speed width in bits
+              DY_WIDTH      = 2,    // Y speed width in bits
+
+              RGB_WIDTH     = 3,
+
+              ROW_0         = 32'h000cc000,
+              ROW_1         = 32'h000cc000,
+              ROW_2         = 32'h000cc000,
+              ROW_3         = 32'hcccccccc,
+              ROW_4         = 32'hcccccccc,
+              ROW_5         = 32'h000cc000,
+              ROW_6         = 32'h000cc000,
+              ROW_7         = 32'h000cc000
+)
+
+//----------------------------------------------------------------------------
+
 (
-    input                                          clk,
-    input                                          reset,
+    input                        clk,
+    input                        reset,
 
-    input      [`VDP_X_WIDTH                - 1:0] pixel_x,
-    input      [`VDP_Y_WIDTH                - 1:0] pixel_y,
+    input      [X_WIDTH   - 1:0] pixel_x,
+    input      [Y_WIDTH   - 1:0] pixel_y,
 
-    input      [`VDP_WR_DATA_WIDTH          - 1:0] wr_data,
-    input                                          xy_we,
-    input                                          row_we,
-    input      [`VDP_SPRITE_ROW_INDEX_WIDTH - 1:0] wr_row_index,
+    input                        sprite_we,
 
-    output reg                                     rgb_en,
-    output reg [`VDP_RGB_WIDTH              - 1:0] rgb
+    input      [X_WIDTH   - 1:0] sprite_x,
+    input      [Y_WIDTH   - 1:0] sprite_y,
+    
+    input      [X_WIDTH   - 1:0] sprite_dx,
+    input      [Y_WIDTH   - 1:0] sprite_dy,
+
+    output reg                   rgb_en,
+    output reg [RGB_WIDTH - 1:0] rgb
 );
+
+    //------------------------------------------------------------------------
+
+    localparam ERGB_WIDTH = 1 + RGB_WIDTH;
 
     //------------------------------------------------------------------------
 

@@ -1,4 +1,4 @@
-module game_random_generator
+module game_random
 (
     input             clk,
     input             reset,
@@ -7,15 +7,11 @@ module game_random_generator
 
     // Uses LFSR, Linear Feedback Shift Register
 
-    localparam WIDTH = 16,
-               TAPS  = 16'b1000000001011;
-
-    lfsr #(16, 16'b1000000001011, 0) i_lfsr
-    (
-        .clk    ( clk    ),
-        .reset  ( reset  ),
-        .enable ( 1'b1   ),
-        .out    ( random )
-    );
+    always @(posedge clk or negedge reset)
+        if (reset)
+            random <= 16'b1111111111111;
+        else
+            random <=   { random [14:0], 1'b0 }
+                      ^ ( random [15] ? 16'b1000000001011 : 16'b0);
 
 endmodule
