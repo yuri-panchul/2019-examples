@@ -24,8 +24,8 @@ module game_top
     input        key,
     input  [1:0] sw,
 
-    output       vsync,
     output       hsync,
+    output       vsync,
     output [2:0] rgb
 );
 
@@ -267,7 +267,7 @@ module game_top
     //------------------------------------------------------------------------
 
     wire game_won = 1'b0;
-
+/*
     game_mixer mixer
     (
         .clk                        ( clk                        ),
@@ -285,5 +285,8 @@ module game_top
 
         .rgb                        ( rgb                        )
     );
+*/
+
+    assign rgb = 3'b111;
 
 endmodule
