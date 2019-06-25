@@ -5,10 +5,6 @@ module testbench;
     reg         clk;
     reg  [ 3:0] key;
     reg  [ 7:0] sw;
-    wire [11:0] led;
-    wire [ 7:0] abcdefgh;
-    wire [ 7:0] digit;
-    wire        buzzer;
 
     top
     # (

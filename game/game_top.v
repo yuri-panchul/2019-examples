@@ -91,7 +91,12 @@ module game_top
     wire [X_WIDTH   - 1:0] sprite_target_x;
     wire [Y_WIDTH   - 1:0] sprite_target_y;
 
-    wire                   sprite_target_out_of_screen;
+    wire                   sprite_target_within_screen;
+
+    wire [X_WIDTH   - 1:0] sprite_target_out_left;
+    wire [X_WIDTH   - 1:0] sprite_target_out_right;
+    wire [Y_WIDTH   - 1:0] sprite_target_out_top;
+    wire [Y_WIDTH   - 1:0] sprite_target_out_bottom;
 
     wire                   sprite_target_rgb_en;
     wire [            2:0] sprite_target_rgb;
@@ -161,7 +166,12 @@ module game_top
         .sprite_x              ( sprite_target_x              ),
         .sprite_y              ( sprite_target_y              ),
 
-        .sprite_out_of_screen  ( sprite_target_out_of_screen  ),
+        .sprite_within_screen  ( sprite_target_within_screen  ),
+
+        .sprite_out_left       ( sprite_target_out_left       ),
+        .sprite_out_right      ( sprite_target_out_right      ),
+        .sprite_out_top        ( sprite_target_out_top        ),
+        .sprite_out_bottom     ( sprite_target_out_bottom     ),
 
         .rgb_en                ( sprite_target_rgb_en         ),
         .rgb                   ( sprite_target_rgb            )
@@ -180,7 +190,12 @@ module game_top
     wire [X_WIDTH   - 1:0] sprite_torpedo_x;
     wire [Y_WIDTH   - 1:0] sprite_torpedo_y;
 
-    wire                   sprite_torpedo_out_of_screen;
+    wire                   sprite_torpedo_within_screen;
+
+    wire [X_WIDTH   - 1:0] sprite_torpedo_out_left;
+    wire [X_WIDTH   - 1:0] sprite_torpedo_out_right;
+    wire [Y_WIDTH   - 1:0] sprite_torpedo_out_top;
+    wire [Y_WIDTH   - 1:0] sprite_torpedo_out_bottom;
 
     wire                   sprite_torpedo_rgb_en;
     wire [            2:0] sprite_torpedo_rgb;
@@ -253,51 +268,46 @@ module game_top
         .sprite_x              ( sprite_torpedo_x              ),
         .sprite_y              ( sprite_torpedo_y              ),
 
-        .sprite_out_of_screen  ( sprite_torpedo_out_of_screen  ),
+        .sprite_within_screen  ( sprite_torpedo_within_screen  ),
+
+        .sprite_out_left       ( sprite_torpedo_out_left       ),
+        .sprite_out_right      ( sprite_torpedo_out_right      ),
+        .sprite_out_top        ( sprite_torpedo_out_top        ),
+        .sprite_out_bottom     ( sprite_torpedo_out_bottom     ),
 
         .rgb_en                ( sprite_torpedo_rgb_en         ),
         .rgb                   ( sprite_torpedo_rgb            )
     );
 
     //------------------------------------------------------------------------
-/*
-    game_collision
+
+    wire collision;
+
+    game_overlap
     #(
-        .X_WIDTH         ( X_WIDTH       ),
-        .Y_WIDTH         ( Y_WIDTH       ),
-
-        .SPRITE_1_WIDTH  ( 8             ),
-        .SPRITE_1_HEIGHT ( 8             ),
-
-        .SPRITE_1_WIDTH  ( 8             ),
-        .SPRITE_1_HEIGHT ( 8             ),
+        .X_WIDTH ( X_WIDTH ),
+        .Y_WIDTH ( Y_WIDTH )
+    )
     (
-        .clk                   ( clk                           ),
-        .reset                 ( reset                         ),
+        .clk       ( clk                        ),
+        .reset     ( reset                      ),
 
-        .pixel_x               ( pixel_x                       ),
-        .pixel_y               ( pixel_y                       ),
+        .left_1    ( sprite_target_out_left     ),
+        .right_1   ( sprite_target_out_right    ),
+        .top_1     ( sprite_target_out_top      ),
+        .bottom_1  ( sprite_target_out_bottom   ),
 
-        .sprite_write          ( sprite_torpedo_write          ),
+        .left_2    ( sprite_torpedo_out_left    ),
+        .right_2   ( sprite_torpedo_out_right   ),
+        .top_2     ( sprite_torpedo_out_top     ),
+        .bottom_2  ( sprite_torpedo_out_bottom  ),
 
-        .sprite_write_x        ( sprite_torpedo_write_x        ),
-        .sprite_write_y        ( sprite_torpedo_write_y        ),
-
-        .sprite_write_dx       ( sprite_torpedo_write_dx       ),
-        .sprite_write_dy       ( sprite_torpedo_write_dy       ),
-
-        .sprite_x              ( sprite_torpedo_x              ),
-        .sprite_y              ( sprite_torpedo_y              ),
-
-        .sprite_out_of_screen  ( sprite_torpedo_out_of_screen  ),
-
-        .rgb_en                ( sprite_torpedo_rgb_en         ),
-        .rgb                   ( sprite_torpedo_rgb            )
+        .overlap   ( collision                  )
     );
-*/
+
     //------------------------------------------------------------------------
 
-    wire end_of_game_timer_start = 1'b0;
+    wire end_of_game_timer_start;
     wire end_of_game_timer_running;
 
     game_timer # (.width (24)) timer
@@ -311,7 +321,7 @@ module game_top
 
     //------------------------------------------------------------------------
 
-    wire game_won = 1'b0;
+    wire game_won;
 
     game_mixer mixer
     (

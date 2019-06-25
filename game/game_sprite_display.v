@@ -33,7 +33,12 @@ module game_sprite_display
     input      [X_WIDTH   - 1:0] sprite_x,
     input      [Y_WIDTH   - 1:0] sprite_y,
 
-    output reg                   sprite_out_of_screen,
+    output reg                   sprite_within_screen,
+ 
+    output reg [X_WIDTH   - 1:0] sprite_out_left,
+    output reg [X_WIDTH   - 1:0] sprite_out_right,
+    output reg [Y_WIDTH   - 1:0] sprite_out_top,
+    output reg [Y_WIDTH   - 1:0] sprite_out_bottom,
 
     output reg                   rgb_en,
     output reg [RGB_WIDTH - 1:0] rgb
@@ -51,7 +56,7 @@ module game_sprite_display
     wire [X_WIDTH:0] x_sprite_plus_w_1
         = { 1'b0, sprite_x } + SPRITE_WIDTH - 1;
 
-    wire x_sprite_out_of_screen
+    wire x_sprite_within_screen
         =    screen_w_1_minus_sprite [X_WIDTH] == 1'b0
           && x_sprite_plus_w_1       [X_WIDTH] == 1'b0;
 
@@ -74,7 +79,7 @@ module game_sprite_display
     wire [Y_WIDTH:0] y_sprite_plus_h_1
         = { 1'b0, sprite_y } + SPRITE_HEIGHT - 1;
 
-    wire y_sprite_out_of_screen
+    wire y_sprite_within_screen
         =    screen_h_1_minus_sprite [Y_WIDTH] == 1'b0
           && y_sprite_plus_h_1       [Y_WIDTH] == 1'b0;
 
@@ -138,9 +143,23 @@ module game_sprite_display
 
     always @ (posedge clk or posedge reset)
         if (reset)
-            sprite_out_of_screen <= 1'b0;
+        begin
+            sprite_within_screen <= 1'b0;
+ 
+            sprite_out_left      <= 1'b0;
+            sprite_out_right     <= 1'b0;
+            sprite_out_top       <= 1'b0;
+            sprite_out_bottom    <= 1'b0;
+        end
         else
-            sprite_out_of_screen
-                <= x_sprite_out_of_screen || y_sprite_out_of_screen;
+        begin
+            sprite_within_screen
+                <= x_sprite_within_screen || y_sprite_within_screen;
+
+            sprite_out_left      <= sprite_x;
+            sprite_out_right     <= x_sprite_plus_w_1;
+            sprite_out_top       <= sprite_y;
+            sprite_out_bottom    <= y_sprite_plus_h_1;
+        end
 
 endmodule

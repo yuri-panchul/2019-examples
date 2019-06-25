@@ -44,7 +44,12 @@ module game_sprite_top
     output [X_WIDTH   - 1:0] sprite_x,
     output [Y_WIDTH   - 1:0] sprite_y,
 
-    output                   sprite_out_of_screen,
+    output                   sprite_within_screen,
+
+    output [X_WIDTH   - 1:0] sprite_out_left,
+    output [X_WIDTH   - 1:0] sprite_out_right,
+    output [Y_WIDTH   - 1:0] sprite_out_top,
+    output [Y_WIDTH   - 1:0] sprite_out_bottom,
 
     output                   rgb_en,
     output [RGB_WIDTH - 1:0] rgb
@@ -108,7 +113,12 @@ module game_sprite_top
         .sprite_x              ( sprite_x              ),
         .sprite_y              ( sprite_y              ),
 
-        .sprite_out_of_screen  ( sprite_out_of_screen  ),
+        .sprite_within_screen  ( sprite_within_screen  ),
+
+        .sprite_out_left       ( sprite_out_left       ),
+        .sprite_out_right      ( sprite_out_right      ),
+        .sprite_out_top        ( sprite_out_top        ),
+        .sprite_out_bottom     ( sprite_out_bottom     ),
 
         .rgb_en                ( rgb_en                ),
         .rgb                   ( rgb                   )
