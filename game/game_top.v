@@ -75,17 +75,17 @@ module game_top
 
     wire strobe_to_restart;
 
-    game_strobe # (.width (28)) strobe_generator
+    game_strobe # (.width (29)) strobe_generator
         (clk, reset, strobe_to_restart);
 
     //------------------------------------------------------------------------
 
     wire                   sprite_target_write = strobe_to_restart;
 
-    wire [X_WIDTH   - 1:0] sprite_target_write_x;
+    reg  [X_WIDTH   - 1:0] sprite_target_write_x;
     wire [Y_WIDTH   - 1:0] sprite_target_write_y;
 
-    wire [            1:0] sprite_target_write_dx;
+    reg  [            1:0] sprite_target_write_dx;
     wire                   sprite_target_write_dy;
 
     wire [X_WIDTH   - 1:0] sprite_target_x;
@@ -98,12 +98,21 @@ module game_top
 
     //------------------------------------------------------------------------
 
-    assign sprite_target_write_x  = 10'd0;
+    always @*
+    begin
+        if (random [7])
+        begin
+            sprite_target_write_x  = 10'd0;
+            sprite_target_write_dx = 2'b01;
+        end
+        else
+        begin
+            sprite_target_write_x  = SCREEN_WIDTH - 8;
+            sprite_target_write_dx = { 1'b1, random [6] };
+        end
+    end
+    
     assign sprite_target_write_y  = SCREEN_HEIGHT / 10 + random [5:0];
-
-    assign sprite_target_write_dx
-        = random [7] ? 2'b01 : { 1'b1, random [6] };
-        
     assign sprite_target_write_dy = 1'd0;
 
     //------------------------------------------------------------------------
@@ -124,14 +133,14 @@ module game_top
 
         .RGB_WIDTH     ( 3             ),
 
-        .ROW_0 ( 32'h00099000 ),
+        .ROW_0 ( 32'h000bb000 ),
         .ROW_1 ( 32'h00099000 ),
         .ROW_2 ( 32'h00099000 ),
-        .ROW_3 ( 32'h99999999 ),
-        .ROW_4 ( 32'h99999999 ),
+        .ROW_3 ( 32'hb99ff99b ),
+        .ROW_4 ( 32'hb99ff99b ),
         .ROW_5 ( 32'h00099000 ),
         .ROW_6 ( 32'h00099000 ),
-        .ROW_7 ( 32'h00099000 )
+        .ROW_7 ( 32'h000bb000 )
     )
     sprite_target
     (
@@ -178,7 +187,7 @@ module game_top
 
     //------------------------------------------------------------------------
 
-    assign sprite_torpedo_write_x  = SCREEN_WIDTH  / 2 + random [15:10];
+    assign sprite_torpedo_write_x  = SCREEN_WIDTH / 2 + random [15:10];
     assign sprite_torpedo_write_y  = SCREEN_HEIGHT - 16;
 
     always @*
@@ -191,10 +200,10 @@ module game_top
         endcase
 
         case (sw)
-        2'b00: sprite_torpedo_write_dy = 3'b001;
-        2'b01: sprite_torpedo_write_dy = 3'b000;
-        2'b10: sprite_torpedo_write_dy = 3'b000;
-        2'b11: sprite_torpedo_write_dy = 3'b010;
+        2'b00: sprite_torpedo_write_dy = 3'b111;
+        2'b01: sprite_torpedo_write_dy = 3'b110;
+        2'b10: sprite_torpedo_write_dy = 3'b110;
+        2'b11: sprite_torpedo_write_dy = 3'b110;
         endcase
     end
 
@@ -212,13 +221,13 @@ module game_top
         .Y_WIDTH       ( Y_WIDTH       ),
 
         .DX_WIDTH      ( 2             ),
-        .DY_WIDTH      ( 2             ),
+        .DY_WIDTH      ( 3             ),
 
         .RGB_WIDTH     ( 3             ),
 
         .ROW_0 ( 32'h000cc000 ),
         .ROW_1 ( 32'h00cccc00 ),
-        .ROW_2 ( 32'h0cccccc0 ),
+        .ROW_2 ( 32'h0cceecc0 ),
         .ROW_3 ( 32'hcccccccc ),
         .ROW_4 ( 32'hcc0cc0cc ),
         .ROW_5 ( 32'hcc0cc0cc ),
