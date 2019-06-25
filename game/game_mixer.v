@@ -3,10 +3,12 @@ module game_mixer
     input            clk,
     input            reset,
 
-    input            sprite_target_en,
+    input            display_on,
+
+    input            sprite_target_rgb_en,
     input      [2:0] sprite_target_rgb,
 
-    input            sprite_torpedo_en,
+    input            sprite_torpedo_rgb_en,
     input      [2:0] sprite_torpedo_rgb,
 
     input            game_won,
@@ -18,14 +20,16 @@ module game_mixer
 
     always @ (posedge clk or posedge reset)
         if (reset)
-            rgb <= 3'b0;
+            rgb <= 3'b000;
+        else if (! display_on)
+            rgb <= 3'b000;
         else if (end_of_game_timer_running)
             rgb <= { 1'b1, game_won, random };
-        else if (sprite_torpedo_en)
+        else if (sprite_torpedo_rgb_en)
             rgb <= sprite_torpedo_rgb;
-        else if (sprite_target_en)
+        else if (sprite_target_rgb_en)
             rgb <= sprite_target_rgb;
         else
-            rgb <= 3'b101;
+            rgb <= 3'b000;
 
 endmodule

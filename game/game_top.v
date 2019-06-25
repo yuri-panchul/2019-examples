@@ -34,12 +34,12 @@ module game_top
     //------------------------------------------------------------------------
 
     wire                 display_on;
-    wire [X_WIDTH - 1:0] x;
-    wire [Y_WIDTH - 1:0] y;
+    wire [X_WIDTH - 1:0] pixel_x;
+    wire [Y_WIDTH - 1:0] pixel_y;
 
     game_hvsync
     # (
-        .N_PIPE_STAGES ( 2             ),
+        .N_PIPE_STAGES ( 3             ),
 
         .X_WIDTH       ( X_WIDTH       ),
         .Y_WIDTH       ( Y_WIDTH       ),
@@ -61,8 +61,8 @@ module game_top
         .hsync      ( hsync      ),
         .vsync      ( vsync      ),
         .display_on ( display_on ),
-        .x          ( x          ),
-        .y          ( y          )
+        .x          ( pixel_x    ),
+        .y          ( pixel_y    )
     );
 
     //------------------------------------------------------------------------
@@ -179,7 +179,7 @@ module game_top
     //------------------------------------------------------------------------
 
     assign sprite_torpedo_write_x  = SCREEN_WIDTH  / 2 + random [15:10];
-    assign sprite_torpedo_write_y  = SCREEN_HEIGHT - 8;
+    assign sprite_torpedo_write_y  = SCREEN_HEIGHT - 16;
 
     always @*
     begin
@@ -267,16 +267,18 @@ module game_top
     //------------------------------------------------------------------------
 
     wire game_won = 1'b0;
-/*
+
     game_mixer mixer
     (
         .clk                        ( clk                        ),
         .reset                      ( reset                      ),
 
-        .sprite_target_en           ( sprite_target_en           ),
+        .display_on                 ( display_on                 ),
+
+        .sprite_target_rgb_en       ( sprite_target_rgb_en       ),
         .sprite_target_rgb          ( sprite_target_rgb          ),
 
-        .sprite_torpedo_en          ( sprite_torpedo_en          ),
+        .sprite_torpedo_rgb_en      ( sprite_torpedo_rgb_en      ),
         .sprite_torpedo_rgb         ( sprite_torpedo_rgb         ),
 
         .game_won                   ( game_won                   ),
@@ -285,8 +287,5 @@ module game_top
 
         .rgb                        ( rgb                        )
     );
-*/
-
-    assign rgb = 3'b111;
 
 endmodule
