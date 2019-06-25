@@ -260,6 +260,42 @@ module game_top
     );
 
     //------------------------------------------------------------------------
+/*
+    game_collision
+    #(
+        .X_WIDTH         ( X_WIDTH       ),
+        .Y_WIDTH         ( Y_WIDTH       ),
+
+        .SPRITE_1_WIDTH  ( 8             ),
+        .SPRITE_1_HEIGHT ( 8             ),
+
+        .SPRITE_1_WIDTH  ( 8             ),
+        .SPRITE_1_HEIGHT ( 8             ),
+    (
+        .clk                   ( clk                           ),
+        .reset                 ( reset                         ),
+
+        .pixel_x               ( pixel_x                       ),
+        .pixel_y               ( pixel_y                       ),
+
+        .sprite_write          ( sprite_torpedo_write          ),
+
+        .sprite_write_x        ( sprite_torpedo_write_x        ),
+        .sprite_write_y        ( sprite_torpedo_write_y        ),
+
+        .sprite_write_dx       ( sprite_torpedo_write_dx       ),
+        .sprite_write_dy       ( sprite_torpedo_write_dy       ),
+
+        .sprite_x              ( sprite_torpedo_x              ),
+        .sprite_y              ( sprite_torpedo_y              ),
+
+        .sprite_out_of_screen  ( sprite_torpedo_out_of_screen  ),
+
+        .rgb_en                ( sprite_torpedo_rgb_en         ),
+        .rgb                   ( sprite_torpedo_rgb            )
+    );
+*/
+    //------------------------------------------------------------------------
 
     wire end_of_game_timer_start = 1'b0;
     wire end_of_game_timer_running;
@@ -296,5 +332,7 @@ module game_top
 
         .rgb                        ( rgb                        )
     );
+
+    //------------------------------------------------------------------------
 
 endmodule
