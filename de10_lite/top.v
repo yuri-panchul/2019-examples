@@ -21,8 +21,6 @@ module top
     output  [ 3:0]  vga_r,
     output          vga_vs,
 
-`ifdef UNUSED
-
     output  [12:0]  dram_addr,
     output  [ 1:0]  dram_ba,
     output          dram_cas_n,
@@ -44,10 +42,7 @@ module top
     inout   [15:0]  arduino_io,
     inout           arduino_reset_n,
 
-`endif
-
     inout   [35:0]  gpio
-
 );
 
     //------------------------------------------------------------------------
@@ -152,28 +147,6 @@ module top
 
     //------------------------------------------------------------------------
 /*
-    wire       display_on;
-    wire [9:0] hpos;
-    wire [9:0] vpos;
-
-    game_hvsync
-    # (.N_PIPE_STAGES (1))
-    i_game_hvsync
-    (
-        .clk        ( clk        ),
-        .reset      ( reset      ),
-        .hsync      ( vga_hs     ),
-        .vsync      ( vga_vs     ),
-        .display_on ( display_on ),
-        .x          ( hpos       ),
-        .y          ( vpos       )
-    );
-
-    assign vga_r = 4'b1111;
-    assign vga_g = { 4 { hpos [5] } };
-    assign vga_b = { 4 { hpos [5] } };
-*/
-
     wire [2:0] rgb;
 
     assign vga_r = { 4 { rgb [2] } };
@@ -192,8 +165,8 @@ module top
         .hsync (   vga_vs    ),
         .rgb   (   rgb       )
     );
+*/
 
-/*
     wire       display_on;
     wire [9:0] hpos;
     wire [9:0] vpos;
@@ -236,7 +209,7 @@ module top
     assign vga_r = { 4 { rgb [2] } };
     assign vga_g = { 4 { rgb [1] } };
     assign vga_b = { 4 { rgb [0] } };
-*/
+
     //------------------------------------------------------------------------
 
     wire enc_a   = gpio [34];
