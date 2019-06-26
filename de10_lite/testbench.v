@@ -3,8 +3,8 @@
 module testbench;
 
     reg         clk;
-    reg  [ 3:0] key;
-    reg  [ 7:0] sw;
+    reg  [ 1:0] key;
+    reg  [ 9:0] sw;
 
     top
     # (
@@ -14,15 +14,10 @@ module testbench;
     )
     i_top
     (
-        .clk      ( clk      ),
-        .key      ( key      ),
-        .sw       ( sw       ),
-        .led      ( led      ),
-        .abcdefgh ( abcdefgh ),
-        .digit    ( digit    ),
-        .buzzer   ( buzzer   )
+        .max10_clk1_50 ( clk ),
+        .key           ( key ),
+        .sw            ( sw  )
     );
-
 
     initial
     begin
@@ -35,7 +30,7 @@ module testbench;
     reg reset;
     
     always @*
-        key [3] = ~ reset;
+        key [0] = ~ reset;
 
     initial
     begin
@@ -51,17 +46,17 @@ module testbench;
         #0
         $dumpvars;
 
-        key [2:0] <= 'b0;
-        sw        <= 'b0;
+        key [1] <= 'b0;
+        sw      <= 'b0;
 
         @ (negedge reset);
 
-        repeat (1000)
+        repeat (100000)
         begin
             @ (posedge clk);
 
-            key [2:0] <= $random;
-            sw        <= 8'b00000001; // $random;
+            key [1] <= $random;
+            sw      <= $random;
         end
 
         `ifdef MODEL_TECH  // Mentor ModelSim and Questa

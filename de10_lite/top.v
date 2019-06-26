@@ -1,4 +1,9 @@
 module top
+#(
+    parameter debounce_depth             = 8,
+              shift_strobe_width         = 23,
+              seven_segment_strobe_width = 10
+)
 (
     input           adc_clk_10,
     input           max10_clk1_50,
@@ -47,10 +52,6 @@ module top
 
     //------------------------------------------------------------------------
 
-    localparam debounce_depth             = 8,
-               shift_strobe_width         = 23,
-               seven_segment_strobe_width = 10;
-               
     wire clk   = max10_clk1_50;
     wire reset = ~ key [0];
 

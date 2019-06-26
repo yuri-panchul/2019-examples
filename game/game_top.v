@@ -29,7 +29,7 @@ module game_top
     output [2:0] rgb
 );
 
-    localparam N_PIPE_STAGES = 1;
+    localparam N_PIPE_STAGES = 3;
 
     //------------------------------------------------------------------------
 
@@ -39,7 +39,7 @@ module game_top
 
     game_hvsync
     # (
-        .N_PIPE_STAGES ( 3             ),
+        .N_PIPE_STAGES ( N_PIPE_STAGES ),
 
         .X_WIDTH       ( X_WIDTH       ),
         .Y_WIDTH       ( Y_WIDTH       ),
@@ -281,6 +281,7 @@ module game_top
         .X_WIDTH ( X_WIDTH ),
         .Y_WIDTH ( Y_WIDTH )
     )
+    overlap
     (
         .clk       ( clk                        ),
         .reset     ( reset                      ),
@@ -318,22 +319,22 @@ module game_top
 
     game_mixer mixer
     (
-        .clk                        ( clk                        ),
-        .reset                      ( reset                      ),
+        .clk                           ( clk                           ),
+        .reset                         ( reset                         ),
 
-        .display_on                 ( display_on                 ),
+        .display_on                    ( display_on                    ),
 
-        .sprite_target_rgb_en       ( sprite_target_rgb_en       ),
-        .sprite_target_rgb          ( sprite_target_rgb          ),
+        .sprite_target_rgb_en          ( sprite_target_rgb_en          ),
+        .sprite_target_rgb             ( sprite_target_rgb             ),
 
-        .sprite_torpedo_rgb_en      ( sprite_torpedo_rgb_en      ),
-        .sprite_torpedo_rgb         ( sprite_torpedo_rgb         ),
+        .sprite_torpedo_rgb_en         ( sprite_torpedo_rgb_en         ),
+        .sprite_torpedo_rgb            ( sprite_torpedo_rgb            ),
 
-        .game_won                   ( game_won                   ),
-        .end_of_game_timer_running  ( end_of_game_timer_running  ),
-        .random                     ( random [0]                 ),
+        .game_won                      ( game_won                      ),
+        .end_of_game_timer_running     ( end_of_game_timer_running     ),
+        .random                        ( random [0]                    ),
 
-        .rgb                        ( rgb                        )
+        .rgb                           ( rgb                           )
     );
 
     //------------------------------------------------------------------------
