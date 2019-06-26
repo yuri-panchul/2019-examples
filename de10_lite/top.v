@@ -156,15 +156,15 @@ module top
 
     game_top i_game_top
     (
-        .clk   (   clk       ),
-        .reset (   reset     ),
+        .clk   (   clk        ),
+        .reset (   reset      ),
 
-        .key   ( ~ key [1]   ),
-        .sw    (   sw  [1:0] ),
+        .key   ( ~ key  [1]   ),
+        .sw    (   sw   [1:0] ),
 
-        .hsync (   vga_hs    ),
-        .vsync (   vga_vs    ),
-        .rgb   (   rgb       )
+        .hsync (   vga_hs     ),
+        .vsync (   vga_vs     ),
+        .rgb   (   rgb        )
     );
 
     /*

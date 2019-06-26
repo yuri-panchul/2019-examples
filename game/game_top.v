@@ -73,13 +73,16 @@ module game_top
 
     //------------------------------------------------------------------------
 
-    wire                   sprite_target_write;
+    wire                   sprite_target_write_xy;
+    wire                   sprite_target_write_dxy;
 
     reg  [X_WIDTH   - 1:0] sprite_target_write_x;
     wire [Y_WIDTH   - 1:0] sprite_target_write_y;
 
     reg  [            1:0] sprite_target_write_dx;
     wire                   sprite_target_write_dy;
+
+    wire                   sprite_target_enable_update;
 
     wire [X_WIDTH   - 1:0] sprite_target_x;
     wire [Y_WIDTH   - 1:0] sprite_target_y;
@@ -109,7 +112,7 @@ module game_top
             sprite_target_write_dx = { 1'b1, random [6] };
         end
     end
-    
+
     assign sprite_target_write_y  = SCREEN_HEIGHT / 10 + random [5:0];
     assign sprite_target_write_dy = 1'd0;
 
@@ -148,13 +151,16 @@ module game_top
         .pixel_x               ( pixel_x                      ),
         .pixel_y               ( pixel_y                      ),
 
-        .sprite_write          ( sprite_target_write          ),
+        .sprite_write_xy       ( sprite_target_write_xy       ),
+        .sprite_write_dxy      ( sprite_target_write_dxy      ),
 
         .sprite_write_x        ( sprite_target_write_x        ),
         .sprite_write_y        ( sprite_target_write_y        ),
 
         .sprite_write_dx       ( sprite_target_write_dx       ),
         .sprite_write_dy       ( sprite_target_write_dy       ),
+
+        .sprite_enable_update  ( sprite_target_enable_update  ),
 
         .sprite_x              ( sprite_target_x              ),
         .sprite_y              ( sprite_target_y              ),
@@ -172,13 +178,16 @@ module game_top
 
     //------------------------------------------------------------------------
 
-    wire                   sprite_torpedo_write;
+    wire                   sprite_torpedo_write_xy;
+    wire                   sprite_torpedo_write_dxy;
 
     wire [X_WIDTH   - 1:0] sprite_torpedo_write_x;
     wire [Y_WIDTH   - 1:0] sprite_torpedo_write_y;
 
     reg  [            1:0] sprite_torpedo_write_dx;
     reg  [            2:0] sprite_torpedo_write_dy;
+
+    wire                   sprite_torpedo_enable_update;
 
     wire [X_WIDTH   - 1:0] sprite_torpedo_x;
     wire [Y_WIDTH   - 1:0] sprite_torpedo_y;
@@ -250,13 +259,16 @@ module game_top
         .pixel_x               ( pixel_x                       ),
         .pixel_y               ( pixel_y                       ),
 
-        .sprite_write          ( sprite_torpedo_write          ),
+        .sprite_write_xy       ( sprite_torpedo_write_xy       ),
+        .sprite_write_dxy      ( sprite_torpedo_write_dxy      ),
 
         .sprite_write_x        ( sprite_torpedo_write_x        ),
         .sprite_write_y        ( sprite_torpedo_write_y        ),
 
         .sprite_write_dx       ( sprite_torpedo_write_dx       ),
         .sprite_write_dy       ( sprite_torpedo_write_dy       ),
+
+        .sprite_enable_update  ( sprite_torpedo_enable_update  ),
 
         .sprite_x              ( sprite_torpedo_x              ),
         .sprite_y              ( sprite_torpedo_y              ),
@@ -346,8 +358,14 @@ module game_top
 
         .key                           ( key                           ),
 
-        .sprite_target_write           ( sprite_target_write           ),
-        .sprite_torpedo_write          ( sprite_torpedo_write          ),
+        .sprite_target_write_xy        ( sprite_target_write_xy        ),
+        .sprite_torpedo_write_xy       ( sprite_torpedo_write_xy       ),
+
+        .sprite_target_write_dxy       ( sprite_target_write_dxy       ),
+        .sprite_torpedo_write_dxy      ( sprite_torpedo_write_dxy      ),
+
+        .sprite_target_enable_update   ( sprite_target_enable_update   ),
+        .sprite_torpedo_enable_update  ( sprite_torpedo_enable_update  ),
 
         .sprite_target_within_screen   ( sprite_target_within_screen   ),
         .sprite_torpedo_within_screen  ( sprite_torpedo_within_screen  ),

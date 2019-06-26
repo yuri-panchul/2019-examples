@@ -33,13 +33,16 @@ module game_sprite_top
     input  [X_WIDTH   - 1:0] pixel_x,
     input  [Y_WIDTH   - 1:0] pixel_y,
 
-    input                    sprite_write,
+    input                    sprite_write_xy,
+    input                    sprite_write_dxy,
 
     input  [X_WIDTH   - 1:0] sprite_write_x,
     input  [Y_WIDTH   - 1:0] sprite_write_y,
 
     input  [DX_WIDTH  - 1:0] sprite_write_dx,
     input  [DY_WIDTH  - 1:0] sprite_write_dy,
+
+    input                    sprite_enable_update,
 
     output [X_WIDTH   - 1:0] sprite_x,
     output [Y_WIDTH   - 1:0] sprite_y,
@@ -68,13 +71,16 @@ module game_sprite_top
         .clk                   ( clk                   ),
         .reset                 ( reset                 ),
 
-        .sprite_write          ( sprite_write          ),
+        .sprite_write_xy       ( sprite_write_xy       ),
+        .sprite_write_dxy      ( sprite_write_dxy      ),
 
         .sprite_write_x        ( sprite_write_x        ),
         .sprite_write_y        ( sprite_write_y        ),
 
         .sprite_write_dx       ( sprite_write_dx       ),
         .sprite_write_dy       ( sprite_write_dy       ),
+
+        .sprite_enable_update  ( sprite_enable_update  ),
 
         .sprite_x              ( sprite_x              ),
         .sprite_y              ( sprite_y              )

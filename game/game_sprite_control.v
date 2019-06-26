@@ -13,13 +13,16 @@ module game_sprite_control
     input                   clk,
     input                   reset,
 
-    input                   sprite_write,
+    input                   sprite_write_xy,
+    input                   sprite_write_dxy,
 
     input  [X_WIDTH  - 1:0] sprite_write_x,
     input  [Y_WIDTH  - 1:0] sprite_write_y,
 
     input  [DX_WIDTH - 1:0] sprite_write_dx,
     input  [DY_WIDTH - 1:0] sprite_write_dy,
+
+    input                   sprite_enable_update,
 
     output [X_WIDTH  - 1:0] sprite_x,
     output [Y_WIDTH  - 1:0] sprite_y
@@ -41,25 +44,32 @@ module game_sprite_control
         begin
             x  <= { X_WIDTH  , 1'b0 };
             y  <= { Y_WIDTH  , 1'b0 };
-
-            dx <= { DX_WIDTH , 1'b0 };
-            dy <= { DY_WIDTH , 1'b0 };
         end
-        else if (sprite_write)
+        else if (sprite_write_xy)
         begin
             x  <= sprite_write_x;
             y  <= sprite_write_y;
-
-            dx <= sprite_write_dx;
-            dy <= sprite_write_dy;
         end
-        else if (strobe_to_update_xy)
+        else if (sprite_enable_update && strobe_to_update_xy)
         begin
             // Add with signed-extended dx and dy
 
             x <= x + { { X_WIDTH - DX_WIDTH { dx [DX_WIDTH - 1] } }, dx };
             y <= y + { { Y_WIDTH - DY_WIDTH { dy [DY_WIDTH - 1] } }, dy };
         end
+
+    always @ (posedge clk or posedge reset)
+        if (reset)
+        begin
+            dx <= { DX_WIDTH , 1'b0 };
+            dy <= { DY_WIDTH , 1'b0 };
+        end
+        else if (sprite_write_dxy)
+        begin
+            dx <= sprite_write_dx;
+            dy <= sprite_write_dy;
+        end
+
 
     assign sprite_x = x;
     assign sprite_y = y;

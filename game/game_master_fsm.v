@@ -5,8 +5,14 @@ module game_master_fsm
 
     input  key,
 
-    output sprite_target_write,
-    output sprite_torpedo_write,
+    output sprite_target_write_xy,
+    output sprite_torpedo_write_xy,
+
+    output sprite_target_write_dxy,
+    output sprite_torpedo_write_dxy,
+
+    output sprite_target_enable_update,
+    output sprite_torpedo_enable_update,
 
     input  sprite_target_within_screen,
     input  sprite_torpedo_within_screen,
@@ -47,7 +53,7 @@ module game_master_fsm
     reg collision_reg;
 
     always @ (posedge clk)
-        collision_reg <= collision; 
+        collision_reg <= collision;
 
     //------------------------------------------------------------------------
 
@@ -134,9 +140,20 @@ module game_master_fsm
 
     //------------------------------------------------------------------------
 
-    assign sprite_target_write     = state [ STATE_START_TARGET    ];
-    assign sprite_torpedo_write    = state [ STATE_START_TORPEDO   ];
-    assign end_of_game_timer_start = state [ STATE_START_END_TIMER ];
-    assign game_won                = state [ STATE_GAME_WON        ];
+    assign sprite_target_write_xy       =   state [ STATE_START_TARGET    ];
+    assign sprite_torpedo_write_xy      =   state [ STATE_START_TARGET    ];
+
+    assign sprite_target_write_dxy      =   state [ STATE_START_TARGET    ];
+
+    assign sprite_torpedo_write_dxy     =   state [ STATE_WAIT_KEY        ]
+                                          | state [ STATE_WAIT_COLLISION  ];
+
+    assign sprite_target_enable_update  =   state [ STATE_WAIT_KEY        ]
+                                          | state [ STATE_WAIT_COLLISION  ];
+
+    assign sprite_torpedo_enable_update =   state [ STATE_WAIT_COLLISION  ];
+
+    assign end_of_game_timer_start      =   state [ STATE_START_END_TIMER ];
+    assign game_won                     =   state [ STATE_GAME_WON        ];
 
 endmodule
