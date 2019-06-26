@@ -57,8 +57,9 @@ module game_sprite_display
         = { 1'b0, sprite_x } + SPRITE_WIDTH - 1;
 
     wire x_sprite_within_screen
-        =    screen_w_1_minus_sprite [X_WIDTH] == 1'b0
-          && x_sprite_plus_w_1       [X_WIDTH] == 1'b0;
+        = sprite_x < SCREEN_WIDTH;
+          //   screen_w_1_minus_sprite [X_WIDTH] == 1'b0
+          //&& x_sprite_plus_w_1       [X_WIDTH] == 1'b0;
 
     //------------------------------------------------------------------------
 
@@ -80,8 +81,9 @@ module game_sprite_display
         = { 1'b0, sprite_y } + SPRITE_HEIGHT - 1;
 
     wire y_sprite_within_screen
-        =    screen_h_1_minus_sprite [Y_WIDTH] == 1'b0
-          && y_sprite_plus_h_1       [Y_WIDTH] == 1'b0;
+        = sprite_y < SCREEN_HEIGHT;
+        //=    screen_h_1_minus_sprite [Y_WIDTH] == 1'b0
+        //  && y_sprite_plus_h_1       [Y_WIDTH] == 1'b0;
 
     //------------------------------------------------------------------------
 
@@ -154,7 +156,7 @@ module game_sprite_display
         else
         begin
             sprite_within_screen
-                <= x_sprite_within_screen || y_sprite_within_screen;
+                <= x_sprite_within_screen && y_sprite_within_screen;
 
             sprite_out_left      <= sprite_x;
             sprite_out_right     <= x_sprite_plus_w_1;

@@ -72,6 +72,8 @@ module game_master_fsm
        begin
             if ( key )
                     d_state [ STATE_START_TORPEDO   ] = 1;
+            else if ( end_of_game )
+                    d_state [ STATE_START_END_TIMER ] = 1;
             else
                     d_state [ STATE_WAIT_KEY        ] = 1;
        end
@@ -109,9 +111,9 @@ module game_master_fsm
        begin
 
             if ( end_of_game_timer_running )
-                    d_state [ STATE_START_TARGET    ] = 1;
-            else
                     d_state [ STATE_GAME_WON        ] = 1;
+            else
+                    d_state [ STATE_START_TARGET    ] = 1;
        end
 
        //---------------------------------------------------------------------
@@ -120,9 +122,9 @@ module game_master_fsm
        begin
 
             if ( end_of_game_timer_running )
-                    d_state [ STATE_START_TARGET    ] = 1;
-            else
                     d_state [ STATE_GAME_LOST       ] = 1;
+            else
+                    d_state [ STATE_START_TARGET    ] = 1;
        end
        else
        begin

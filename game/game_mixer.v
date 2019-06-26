@@ -24,7 +24,7 @@ module game_mixer
         else if (! display_on)
             rgb <= 3'b000;
         else if (end_of_game_timer_running)
-            rgb <= { 1'b1, game_won, random };
+            rgb <= { 1'b1, ~ game_won, random };
         else if (sprite_torpedo_rgb_en)
             rgb <= sprite_torpedo_rgb;
         else if (sprite_target_rgb_en)
