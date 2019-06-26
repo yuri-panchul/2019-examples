@@ -24,9 +24,9 @@ module game_overlap
         if (reset)
             overlap <= 1'b0;
         else
-            overlap <=    right_1  < left_2
-                       || right_2  < left_1
-                       || bottom_1 < top_2
-                       || bottom_2 < top_1;
+            overlap <= ! (    right_1  < left_2
+                           || right_2  < left_1
+                           || bottom_1 < top_2
+                           || bottom_2 < top_1  );
 
 endmodule
