@@ -27,7 +27,7 @@ module game_master_fsm
                STATE_WAIT_KEY         = 1,
                STATE_START_TORPEDO    = 2,
                STATE_WAIT_COLLISION   = 3,
-               STATE_START_END_TIMER  = 4
+               STATE_START_END_TIMER  = 4,
                STATE_GAME_WON         = 5,
                STATE_GAME_LOST        = 6;
 
@@ -36,9 +36,9 @@ module game_master_fsm
     //------------------------------------------------------------------------
 
     wire end_of_game
-        =    sprite_target_within_screen,
-          || sprite_torpedo_within_screen
-          || collision;
+        =   sprite_target_within_screen
+          | sprite_torpedo_within_screen
+          | collision;
 
     //------------------------------------------------------------------------
 
@@ -106,7 +106,7 @@ module game_master_fsm
 
     //------------------------------------------------------------------------
 
-    always @ (posedge cll or posedge reset)
+    always @ (posedge clk or posedge reset)
         if (reset)
             state <= (1 << STATE_START_TARGET);
         else
