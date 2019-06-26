@@ -73,14 +73,7 @@ module game_top
 
     //------------------------------------------------------------------------
 
-    wire strobe_to_restart;
-
-    game_strobe # (.width (29)) strobe_generator
-        (clk, reset, strobe_to_restart);
-
-    //------------------------------------------------------------------------
-
-    wire                   sprite_target_write = strobe_to_restart;
+    wire                   sprite_target_write;
 
     reg  [X_WIDTH   - 1:0] sprite_target_write_x;
     wire [Y_WIDTH   - 1:0] sprite_target_write_y;
@@ -179,7 +172,7 @@ module game_top
 
     //------------------------------------------------------------------------
 
-    wire                   sprite_torpedo_write = strobe_to_restart;
+    wire                   sprite_torpedo_write;
 
     wire [X_WIDTH   - 1:0] sprite_torpedo_write_x;
     wire [Y_WIDTH   - 1:0] sprite_torpedo_write_y;
@@ -344,5 +337,26 @@ module game_top
     );
 
     //------------------------------------------------------------------------
+
+    game_master_fsm master_fsm
+    (
+        .clk                           ( clk                           ),
+        .reset                         ( reset                         ),
+
+        .key                           ( key                           ),
+
+        .sprite_target_write           ( sprite_target_write           ),
+        .sprite_torpedo_write          ( sprite_torpedo_write          ),
+
+        .sprite_target_within_screen   ( sprite_target_within_screen   ),
+        .sprite_torpedo_within_screen  ( sprite_torpedo_within_screen  ),
+
+        .collision                     ( collision                     ),
+
+        .game_won                      ( game_won                      ),
+        .end_of_game_timer_start       ( end_of_game_timer_start       ),
+
+        .end_of_game_timer_running     ( end_of_game_timer_running     )
+    );
 
 endmodule
