@@ -31,7 +31,7 @@ module game_top
     output [2:0] rgb
 );
 
-    localparam N_PIPE_STAGES = 3;
+    localparam N_MIXER_PIPE_STAGES = 3;
 
     //------------------------------------------------------------------------
 
@@ -41,20 +41,10 @@ module game_top
 
     vga
     # (
-        .N_PIPE_STAGES ( N_PIPE_STAGES ),
+        .N_MIXER_PIPE_STAGES ( N_MIXER_PIPE_STAGES ),
 
-        .X_WIDTH       ( X_WIDTH       ),
-        .Y_WIDTH       ( Y_WIDTH       ),
-
-        .H_DISPLAY     ( SCREEN_WIDTH  ),
-        .H_FRONT       ( H_FRONT       ),
-        .H_SYNC        ( H_SYNC        ),
-        .H_BACK        ( H_BACK        ),
-
-        .V_DISPLAY     ( SCREEN_HEIGHT ),
-        .V_BOTTOM      ( V_BOTTOM      ),
-        .V_SYNC        ( V_SYNC        ),
-        .V_TOP         ( V_TOP         )
+        .HPOS_WIDTH          ( X_WIDTH             ),
+        .VPOS_WIDTH          ( Y_WIDTH             )
     )
     i_vga
     (
@@ -63,8 +53,8 @@ module game_top
         .hsync      ( hsync      ),
         .vsync      ( vsync      ),
         .display_on ( display_on ),
-        .x          ( pixel_x    ),
-        .y          ( pixel_y    )
+        .hpos       ( pixel_x    ),
+        .vpos       ( pixel_y    )
     );
 
     //------------------------------------------------------------------------
