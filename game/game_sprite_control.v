@@ -1,3 +1,5 @@
+`include "game_config.vh"
+
 module game_sprite_control
 #(
     parameter X_WIDTH  = 10,  // X coordinate width in bits

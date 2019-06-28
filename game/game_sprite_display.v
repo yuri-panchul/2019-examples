@@ -1,3 +1,5 @@
+`include "game_config.vh"
+
 module game_sprite_display
 #(
     parameter SCREEN_WIDTH  = 640,

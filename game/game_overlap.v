@@ -1,3 +1,5 @@
+`include "game_config.vh"
+
 module game_overlap
 # (
     parameter X_WIDTH = 10,

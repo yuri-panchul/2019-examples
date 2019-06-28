@@ -1,3 +1,5 @@
+`include "game_config.vh"
+
 module game_top
 # (
     parameter X_WIDTH       = 10,   // Width in bits of horizontal position
@@ -37,7 +39,7 @@ module game_top
     wire [X_WIDTH - 1:0] pixel_x;
     wire [Y_WIDTH - 1:0] pixel_y;
 
-    game_hvsync
+    vga
     # (
         .N_PIPE_STAGES ( N_PIPE_STAGES ),
 
@@ -54,7 +56,7 @@ module game_top
         .V_SYNC        ( V_SYNC        ),
         .V_TOP         ( V_TOP         )
     )
-    hvsync
+    i_vga
     (
         .clk        ( clk        ),
         .reset      ( reset      ),

@@ -1,3 +1,5 @@
+`include "game_config.vh"
+
 module game_timer # ( parameter width = 32 )
 (
     input                    clk,

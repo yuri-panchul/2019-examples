@@ -1,3 +1,5 @@
+`include "config.vh"
+
 module lfsr
 # (
     parameter WIDTH  = 8,
