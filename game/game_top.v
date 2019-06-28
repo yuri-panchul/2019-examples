@@ -304,7 +304,7 @@ module game_top
 
     //------------------------------------------------------------------------
 
-    game_master_fsm master_fsm
+    `GAME_MASTER_FSM_MODULE master_fsm
     (
         .clk                           ( clk                           ),
         .reset                         ( reset                         ),

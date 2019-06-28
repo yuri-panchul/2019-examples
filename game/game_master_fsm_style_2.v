@@ -1,6 +1,6 @@
 `include "game_config.vh"
 
-module game_master_fsm
+module game_master_fsm_style_2
 (
     input  clk,
     input  reset,
@@ -31,14 +31,14 @@ module game_master_fsm
 
     // One-hot state machine
 
-    localparam [2:0] STATE_START_TARGET     = 0,
-                     STATE_WAIT_KEY         = 1,
-                     STATE_START_TORPEDO    = 2,
-                     STATE_WAIT_COLLISION   = 3,
-                     STATE_START_END_TIMER  = 4,
-                     STATE_GAME_WON         = 5,
-                     STATE_GAME_LOST        = 6,
-                     N_STATES               = 7;
+    localparam STATE_START_TARGET     = 0,
+               STATE_WAIT_KEY         = 1,
+               STATE_START_TORPEDO    = 2,
+               STATE_WAIT_COLLISION   = 3,
+               STATE_START_END_TIMER  = 4,
+               STATE_GAME_WON         = 5,
+               STATE_GAME_LOST        = 6,
+               N_STATES               = 7;
 
     reg [N_STATES - 1:0] state;
     reg [N_STATES - 1:0] d_state;
