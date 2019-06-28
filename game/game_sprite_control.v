@@ -2,32 +2,29 @@
 
 module game_sprite_control
 #(
-    parameter X_WIDTH  = 10,  // X coordinate width in bits
-              Y_WIDTH  = 10,  // Y coordinate width in bits
-
-              DX_WIDTH = 2,   // X speed width in bits
-              DY_WIDTH = 2    // Y speed width in bits
+    parameter DX_WIDTH = 2,  // X speed width in bits
+              DY_WIDTH = 2   // Y speed width in bits
 )
 
 //----------------------------------------------------------------------------
 
 (
-    input                   clk,
-    input                   reset,
+    input                    clk,
+    input                    reset,
 
-    input                   sprite_write_xy,
-    input                   sprite_write_dxy,
+    input                    sprite_write_xy,
+    input                    sprite_write_dxy,
 
-    input  [X_WIDTH  - 1:0] sprite_write_x,
-    input  [Y_WIDTH  - 1:0] sprite_write_y,
+    input  [`X_WIDTH  - 1:0] sprite_write_x,
+    input  [`Y_WIDTH  - 1:0] sprite_write_y,
 
-    input  [DX_WIDTH - 1:0] sprite_write_dx,
-    input  [DY_WIDTH - 1:0] sprite_write_dy,
+    input  [ DX_WIDTH - 1:0] sprite_write_dx,
+    input  [ DY_WIDTH - 1:0] sprite_write_dy,
 
-    input                   sprite_enable_update,
+    input                    sprite_enable_update,
 
-    output [X_WIDTH  - 1:0] sprite_x,
-    output [Y_WIDTH  - 1:0] sprite_y
+    output [`X_WIDTH  - 1:0] sprite_x,
+    output [`Y_WIDTH  - 1:0] sprite_y
 );
 
     wire strobe_to_update_xy;
@@ -35,17 +32,17 @@ module game_sprite_control
     game_strobe # (.width (20)) strobe_generator
         (clk, reset, strobe_to_update_xy);
 
-    reg [X_WIDTH  - 1:0] x;
-    reg [Y_WIDTH  - 1:0] y;
+    reg [`X_WIDTH  - 1:0] x;
+    reg [`Y_WIDTH  - 1:0] y;
 
-    reg [DX_WIDTH - 1:0] dx;
-    reg [DY_WIDTH - 1:0] dy;
+    reg [ DX_WIDTH - 1:0] dx;
+    reg [ DY_WIDTH - 1:0] dy;
 
     always @ (posedge clk or posedge reset)
         if (reset)
         begin
-            x  <= { X_WIDTH  , 1'b0 };
-            y  <= { Y_WIDTH  , 1'b0 };
+            x  <= 1'b0;
+            y  <= 1'b0;
         end
         else if (sprite_write_xy)
         begin
@@ -56,15 +53,15 @@ module game_sprite_control
         begin
             // Add with signed-extended dx and dy
 
-            x <= x + { { X_WIDTH - DX_WIDTH { dx [DX_WIDTH - 1] } }, dx };
-            y <= y + { { Y_WIDTH - DY_WIDTH { dy [DY_WIDTH - 1] } }, dy };
+            x <= x + { { `X_WIDTH - DX_WIDTH { dx [DX_WIDTH - 1] } }, dx };
+            y <= y + { { `Y_WIDTH - DY_WIDTH { dy [DY_WIDTH - 1] } }, dy };
         end
 
     always @ (posedge clk or posedge reset)
         if (reset)
         begin
-            dx <= { DX_WIDTH , 1'b0 };
-            dy <= { DY_WIDTH , 1'b0 };
+            dx <= 1'b0;
+            dy <= 1'b0;
         end
         else if (sprite_write_dxy)
         begin

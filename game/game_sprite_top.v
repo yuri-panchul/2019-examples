@@ -2,19 +2,11 @@
 
 module game_sprite_top
 #(
-    parameter SCREEN_WIDTH  = 640,
-              SCREEN_HEIGHT = 480,
-
-              SPRITE_WIDTH  = 8,
+    parameter SPRITE_WIDTH  = 8,
               SPRITE_HEIGHT = 8,
 
-              X_WIDTH       = 10,   // X coordinate width in bits
-              Y_WIDTH       = 10,   // Y coordinate width in bits
-
-              DX_WIDTH      = 2,    // X speed width in bits
-              DY_WIDTH      = 2,    // Y speed width in bits
-
-              RGB_WIDTH     = 3,
+              DX_WIDTH      = 2,  // X speed width in bits
+              DY_WIDTH      = 2,  // Y speed width in bits
 
               ROW_0         = 32'h000cc000,
               ROW_1         = 32'h000cc000,
@@ -29,42 +21,39 @@ module game_sprite_top
 //----------------------------------------------------------------------------
 
 (
-    input                    clk,
-    input                    reset,
+    input                     clk,
+    input                     reset,
 
-    input  [X_WIDTH   - 1:0] pixel_x,
-    input  [Y_WIDTH   - 1:0] pixel_y,
+    input  [`X_WIDTH   - 1:0] pixel_x,
+    input  [`Y_WIDTH   - 1:0] pixel_y,
 
-    input                    sprite_write_xy,
-    input                    sprite_write_dxy,
+    input                     sprite_write_xy,
+    input                     sprite_write_dxy,
 
-    input  [X_WIDTH   - 1:0] sprite_write_x,
-    input  [Y_WIDTH   - 1:0] sprite_write_y,
+    input  [`X_WIDTH   - 1:0] sprite_write_x,
+    input  [`Y_WIDTH   - 1:0] sprite_write_y,
 
-    input  [DX_WIDTH  - 1:0] sprite_write_dx,
-    input  [DY_WIDTH  - 1:0] sprite_write_dy,
+    input  [ DX_WIDTH  - 1:0] sprite_write_dx,
+    input  [ DY_WIDTH  - 1:0] sprite_write_dy,
 
-    input                    sprite_enable_update,
+    input                     sprite_enable_update,
 
-    output [X_WIDTH   - 1:0] sprite_x,
-    output [Y_WIDTH   - 1:0] sprite_y,
+    output [`X_WIDTH   - 1:0] sprite_x,
+    output [`Y_WIDTH   - 1:0] sprite_y,
 
-    output                   sprite_within_screen,
+    output                    sprite_within_screen,
 
-    output [X_WIDTH   - 1:0] sprite_out_left,
-    output [X_WIDTH   - 1:0] sprite_out_right,
-    output [Y_WIDTH   - 1:0] sprite_out_top,
-    output [Y_WIDTH   - 1:0] sprite_out_bottom,
+    output [`X_WIDTH   - 1:0] sprite_out_left,
+    output [`X_WIDTH   - 1:0] sprite_out_right,
+    output [`Y_WIDTH   - 1:0] sprite_out_top,
+    output [`Y_WIDTH   - 1:0] sprite_out_bottom,
 
-    output                   rgb_en,
-    output [RGB_WIDTH - 1:0] rgb
+    output                    rgb_en,
+    output [`RGB_WIDTH - 1:0] rgb
 );
 
     game_sprite_control
     #(
-        .X_WIDTH               ( X_WIDTH               ),
-        .Y_WIDTH               ( Y_WIDTH               ),
-
         .DX_WIDTH              ( DX_WIDTH              ),
         .DY_WIDTH              ( DY_WIDTH              )
     )
@@ -90,16 +79,8 @@ module game_sprite_top
 
     game_sprite_display
     #(
-        .SCREEN_WIDTH          ( SCREEN_WIDTH          ),
-        .SCREEN_HEIGHT         ( SCREEN_HEIGHT         ),
-
         .SPRITE_WIDTH          ( SPRITE_WIDTH          ),
         .SPRITE_HEIGHT         ( SPRITE_HEIGHT         ),
-
-        .X_WIDTH               ( X_WIDTH               ),
-        .Y_WIDTH               ( Y_WIDTH               ),
-
-        .RGB_WIDTH             ( RGB_WIDTH             ),
 
         .ROW_0                 ( ROW_0                 ),
         .ROW_1                 ( ROW_1                 ),

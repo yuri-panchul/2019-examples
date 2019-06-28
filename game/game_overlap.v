@@ -1,25 +1,21 @@
 `include "game_config.vh"
 
 module game_overlap
-# (
-    parameter X_WIDTH = 10,
-              Y_WIDTH = 10
-)
 (
-    input                      clk,
-    input                      reset,
+    input                       clk,
+    input                       reset,
 
-    input      [X_WIDTH - 1:0] left_1,
-    input      [X_WIDTH - 1:0] right_1,
-    input      [Y_WIDTH - 1:0] top_1,
-    input      [Y_WIDTH - 1:0] bottom_1,
+    input      [`X_WIDTH - 1:0] left_1,
+    input      [`X_WIDTH - 1:0] right_1,
+    input      [`Y_WIDTH - 1:0] top_1,
+    input      [`Y_WIDTH - 1:0] bottom_1,
 
-    input      [X_WIDTH - 1:0] left_2,
-    input      [X_WIDTH - 1:0] right_2,
-    input      [Y_WIDTH - 1:0] top_2,
-    input      [Y_WIDTH - 1:0] bottom_2,
+    input      [`X_WIDTH - 1:0] left_2,
+    input      [`X_WIDTH - 1:0] right_2,
+    input      [`Y_WIDTH - 1:0] top_2,
+    input      [`Y_WIDTH - 1:0] bottom_2,
 
-    output reg                 overlap
+    output reg                  overlap
 );
 
     always @ (posedge clk or posedge reset)

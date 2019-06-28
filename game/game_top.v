@@ -1,24 +1,6 @@
 `include "game_config.vh"
 
 module game_top
-# (
-    parameter X_WIDTH       = 10,   // Width in bits of horizontal position
-              Y_WIDTH       = 10,   // Width in bits of vertical position
-
-              // Horizontal constants
-
-              SCREEN_WIDTH  = 640,  // Screen width
-              H_FRONT       =  16,  // Horizontal right border (front porch)
-              H_SYNC        =  96,  // Horizontal sync width
-              H_BACK        =  48,  // Horizontal left border (back porch)
-
-              // Vertical constants
-
-              SCREEN_HEIGHT = 480,  // Screen height
-              V_BOTTOM      =  10,  // Vertical bottom border
-              V_SYNC        =   2,  // Vertical sync # lines
-              V_TOP         =  33   // Vertical top border
-)
 (
     input        clk,
     input        reset,
@@ -35,16 +17,16 @@ module game_top
 
     //------------------------------------------------------------------------
 
-    wire                 display_on;
-    wire [X_WIDTH - 1:0] pixel_x;
-    wire [Y_WIDTH - 1:0] pixel_y;
+    wire                  display_on;
+    wire [`X_WIDTH - 1:0] pixel_x;
+    wire [`Y_WIDTH - 1:0] pixel_y;
 
     vga
     # (
         .N_MIXER_PIPE_STAGES ( N_MIXER_PIPE_STAGES ),
 
-        .HPOS_WIDTH          ( X_WIDTH             ),
-        .VPOS_WIDTH          ( Y_WIDTH             )
+        .HPOS_WIDTH          ( `X_WIDTH            ),
+        .VPOS_WIDTH          ( `Y_WIDTH            )
     )
     i_vga
     (
@@ -65,29 +47,29 @@ module game_top
 
     //------------------------------------------------------------------------
 
-    wire                   sprite_target_write_xy;
-    wire                   sprite_target_write_dxy;
+    wire                    sprite_target_write_xy;
+    wire                    sprite_target_write_dxy;
 
-    reg  [X_WIDTH   - 1:0] sprite_target_write_x;
-    wire [Y_WIDTH   - 1:0] sprite_target_write_y;
+    reg  [`X_WIDTH   - 1:0] sprite_target_write_x;
+    wire [`Y_WIDTH   - 1:0] sprite_target_write_y;
 
-    reg  [            1:0] sprite_target_write_dx;
-    wire                   sprite_target_write_dy;
+    reg  [             1:0] sprite_target_write_dx;
+    wire                    sprite_target_write_dy;
 
-    wire                   sprite_target_enable_update;
+    wire                    sprite_target_enable_update;
 
-    wire [X_WIDTH   - 1:0] sprite_target_x;
-    wire [Y_WIDTH   - 1:0] sprite_target_y;
+    wire [`X_WIDTH   - 1:0] sprite_target_x;
+    wire [`Y_WIDTH   - 1:0] sprite_target_y;
 
-    wire                   sprite_target_within_screen;
+    wire                    sprite_target_within_screen;
 
-    wire [X_WIDTH   - 1:0] sprite_target_out_left;
-    wire [X_WIDTH   - 1:0] sprite_target_out_right;
-    wire [Y_WIDTH   - 1:0] sprite_target_out_top;
-    wire [Y_WIDTH   - 1:0] sprite_target_out_bottom;
+    wire [`X_WIDTH   - 1:0] sprite_target_out_left;
+    wire [`X_WIDTH   - 1:0] sprite_target_out_right;
+    wire [`Y_WIDTH   - 1:0] sprite_target_out_top;
+    wire [`Y_WIDTH   - 1:0] sprite_target_out_bottom;
 
-    wire                   sprite_target_rgb_en;
-    wire [            2:0] sprite_target_rgb;
+    wire                    sprite_target_rgb_en;
+    wire [             2:0] sprite_target_rgb;
 
     //------------------------------------------------------------------------
 
@@ -100,31 +82,23 @@ module game_top
         end
         else
         begin
-            sprite_target_write_x  = SCREEN_WIDTH - 8;
+            sprite_target_write_x  = `SCREEN_WIDTH - 8;
             sprite_target_write_dx = { 1'b1, random [6] };
         end
     end
 
-    assign sprite_target_write_y  = SCREEN_HEIGHT / 10 + random [5:0];
+    assign sprite_target_write_y  = `SCREEN_HEIGHT / 10 + random [5:0];
     assign sprite_target_write_dy = 1'd0;
 
     //------------------------------------------------------------------------
 
     game_sprite_top
     #(
-        .SCREEN_WIDTH  ( SCREEN_WIDTH  ),
-        .SCREEN_HEIGHT ( SCREEN_HEIGHT ),
+        .SPRITE_WIDTH  ( 8 ),
+        .SPRITE_HEIGHT ( 8 ),
 
-        .SPRITE_WIDTH  ( 8             ),
-        .SPRITE_HEIGHT ( 8             ),
-
-        .X_WIDTH       ( X_WIDTH       ),
-        .Y_WIDTH       ( Y_WIDTH       ),
-
-        .DX_WIDTH      ( 2             ),
-        .DY_WIDTH      ( 1             ),
-
-        .RGB_WIDTH     ( 3             ),
+        .DX_WIDTH      ( 2 ),
+        .DY_WIDTH      ( 1 ),
 
         .ROW_0 ( 32'h000bb000 ),
         .ROW_1 ( 32'h00099000 ),
@@ -170,34 +144,34 @@ module game_top
 
     //------------------------------------------------------------------------
 
-    wire                   sprite_torpedo_write_xy;
-    wire                   sprite_torpedo_write_dxy;
+    wire                    sprite_torpedo_write_xy;
+    wire                    sprite_torpedo_write_dxy;
 
-    wire [X_WIDTH   - 1:0] sprite_torpedo_write_x;
-    wire [Y_WIDTH   - 1:0] sprite_torpedo_write_y;
+    wire [`X_WIDTH   - 1:0] sprite_torpedo_write_x;
+    wire [`Y_WIDTH   - 1:0] sprite_torpedo_write_y;
 
-    reg  [            1:0] sprite_torpedo_write_dx;
-    reg  [            2:0] sprite_torpedo_write_dy;
+    reg  [             1:0] sprite_torpedo_write_dx;
+    reg  [             2:0] sprite_torpedo_write_dy;
 
-    wire                   sprite_torpedo_enable_update;
+    wire                    sprite_torpedo_enable_update;
 
-    wire [X_WIDTH   - 1:0] sprite_torpedo_x;
-    wire [Y_WIDTH   - 1:0] sprite_torpedo_y;
+    wire [`X_WIDTH   - 1:0] sprite_torpedo_x;
+    wire [`Y_WIDTH   - 1:0] sprite_torpedo_y;
 
-    wire                   sprite_torpedo_within_screen;
+    wire                    sprite_torpedo_within_screen;
 
-    wire [X_WIDTH   - 1:0] sprite_torpedo_out_left;
-    wire [X_WIDTH   - 1:0] sprite_torpedo_out_right;
-    wire [Y_WIDTH   - 1:0] sprite_torpedo_out_top;
-    wire [Y_WIDTH   - 1:0] sprite_torpedo_out_bottom;
+    wire [`X_WIDTH   - 1:0] sprite_torpedo_out_left;
+    wire [`X_WIDTH   - 1:0] sprite_torpedo_out_right;
+    wire [`Y_WIDTH   - 1:0] sprite_torpedo_out_top;
+    wire [`Y_WIDTH   - 1:0] sprite_torpedo_out_bottom;
 
-    wire                   sprite_torpedo_rgb_en;
-    wire [            2:0] sprite_torpedo_rgb;
+    wire                    sprite_torpedo_rgb_en;
+    wire [             2:0] sprite_torpedo_rgb;
 
     //------------------------------------------------------------------------
 
-    assign sprite_torpedo_write_x  = SCREEN_WIDTH / 2 + random [15:10];
-    assign sprite_torpedo_write_y  = SCREEN_HEIGHT - 16;
+    assign sprite_torpedo_write_x  = `SCREEN_WIDTH / 2 + random [15:10];
+    assign sprite_torpedo_write_y  = `SCREEN_HEIGHT - 16;
 
     always @*
     begin
@@ -220,19 +194,11 @@ module game_top
 
     game_sprite_top
     #(
-        .SCREEN_WIDTH  ( SCREEN_WIDTH  ),
-        .SCREEN_HEIGHT ( SCREEN_HEIGHT ),
+        .SPRITE_WIDTH  ( 8 ),
+        .SPRITE_HEIGHT ( 8 ),
 
-        .SPRITE_WIDTH  ( 8             ),
-        .SPRITE_HEIGHT ( 8             ),
-
-        .X_WIDTH       ( X_WIDTH       ),
-        .Y_WIDTH       ( Y_WIDTH       ),
-
-        .DX_WIDTH      ( 2             ),
-        .DY_WIDTH      ( 3             ),
-
-        .RGB_WIDTH     ( 3             ),
+        .DX_WIDTH      ( 2 ),
+        .DY_WIDTH      ( 3 ),
 
         .ROW_0 ( 32'h000cc000 ),
         .ROW_1 ( 32'h00cccc00 ),
@@ -280,12 +246,7 @@ module game_top
 
     wire collision;
 
-    game_overlap
-    #(
-        .X_WIDTH ( X_WIDTH ),
-        .Y_WIDTH ( Y_WIDTH )
-    )
-    overlap
+    game_overlap overlap
     (
         .clk       ( clk                        ),
         .reset     ( reset                      ),
