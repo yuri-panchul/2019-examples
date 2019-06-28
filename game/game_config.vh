@@ -11,6 +11,6 @@
 
 `define RGB_WIDTH      3
 
-`define GAME_MASTER_FSM_MODULE  game_master_fsm_style_1
+`define GAME_MASTER_FSM_MODULE  game_master_fsm
 
 `endif

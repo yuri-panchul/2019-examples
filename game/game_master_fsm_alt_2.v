@@ -1,6 +1,6 @@
 `include "game_config.vh"
 
-module game_master_fsm_style_2
+module game_master_fsm_alt_2
 (
     input  clk,
     input  reset,

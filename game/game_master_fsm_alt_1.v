@@ -1,6 +1,6 @@
 `include "game_config.vh"
 
-module game_master_fsm_style_1
+module game_master_fsm_alt_1
 (
     input  clk,
     input  reset,
@@ -91,16 +91,12 @@ module game_master_fsm_style_1
 
         STATE_GAME_WON:
 
-            if (end_of_game_timer_running)
-                d_state = STATE_GAME_WON;
-            else
+            if (! end_of_game_timer_running)
                 d_state = STATE_START_TARGET;
 
         STATE_GAME_LOST:
 
-            if (end_of_game_timer_running)
-                d_state = STATE_GAME_LOST;
-            else
+            if (! end_of_game_timer_running)
                 d_state = STATE_START_TARGET;
                 
         endcase
