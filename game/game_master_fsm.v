@@ -111,7 +111,8 @@ module game_master_fsm
             d_sprite_target_enable_update   = 1'b1;
             d_sprite_torpedo_enable_update  = 1'b1;
 
-            d_game_won = collision;
+            if (collision)
+                d_game_won = 1'b1;
 
             if (end_of_game)
             begin
@@ -132,20 +133,20 @@ module game_master_fsm
 
     //------------------------------------------------------------------------
 
-    reg collision_reg;
+    //reg collision_reg;
 
     always @ (posedge clk or posedge reset)
         if (reset)
-            collision_reg <= 1'b0;
+            game_won <= 1'b0;
         else if (state == STATE_START)
-            collision_reg <= 1'b0;
-        else if (key)
-            collision_reg <= 1'b0;
+            game_won <= 1'b0;
+//        else if (key)
+//            game_won <= 1'b0;
         else if (collision)
-            collision_reg <= 1'b1;
+            game_won <= 1'b1;
 
-    always @*
-        game_won = collision_reg;
+//    always @*
+//        game_won = collision_reg;
 
     //------------------------------------------------------------------------
 
