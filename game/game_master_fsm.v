@@ -27,7 +27,7 @@ module game_master_fsm
     input      end_of_game_timer_running
 );
 
-    localparam [2:0] STATE_START  = 0,
+    localparam [1:0] STATE_START  = 0,
                      STATE_AIM    = 1,
                      STATE_SHOOT  = 2,
                      STATE_END    = 3;
@@ -133,6 +133,29 @@ module game_master_fsm
 
     //------------------------------------------------------------------------
 
+    // This is not working
+
+    always @ (state, collision, game_won)
+    begin
+        // d_game_won = game_won;
+
+        if (state == STATE_START)
+            d_game_won = 1'b0;
+        else if (/* state == STATE_SHOOT && */ collision)
+            d_game_won = 1'b1;
+        else
+            d_game_won = game_won;
+    end
+
+    always @ (posedge clk or posedge reset)
+        if (reset)
+            game_won <= 1'b0;
+        else
+            game_won <= d_game_won;
+            
+    // This is working
+
+    /*
     always @ (posedge clk or posedge reset)
         if (reset)
             game_won <= 1'b0;
@@ -140,6 +163,7 @@ module game_master_fsm
             game_won <= 1'b0;
         else if (collision)
             game_won <= 1'b1;
+    */
 
     //------------------------------------------------------------------------
 
