@@ -64,7 +64,7 @@ module top
     sync_and_debounce # (.w (2), .depth (debounce_depth))
         i_sync_and_debounce_key
             (clk, reset, ~ key, key_db);
-    
+
     sync_and_debounce # (.w (10), .depth (debounce_depth))
         i_sync_and_debounce_sw
             (clk, reset, sw, sw_db);
@@ -113,7 +113,7 @@ module top
         .a     ( out_reg [0]   ),
         .y     ( out_moore_fsm )
     );
-    
+
     wire [7:0] moore_fsm_out_count;
 
     counter # (8) i_moore_fsm_out_counter
@@ -136,7 +136,7 @@ module top
         .a     ( out_reg [0]   ),
         .y     ( out_mealy_fsm )
     );
-    
+
     wire [7:0] mealy_fsm_out_count;
 
     counter # (8) i_mealy_fsm_out_counter

@@ -111,7 +111,7 @@ module game_master_fsm
             d_sprite_target_enable_update   = 1'b1;
             d_sprite_torpedo_enable_update  = 1'b1;
 
-            d_game_won = 1'b1;  // collision;
+            d_game_won = collision;
 
             if (end_of_game)
             begin

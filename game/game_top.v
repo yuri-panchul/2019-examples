@@ -2,7 +2,7 @@
 
 module game_top
 # (
-    strobe_to_update_xy_counter_width = 20
+    parameter strobe_to_update_xy_counter_width = 20
 )
 (
     input        clk,
@@ -278,11 +278,11 @@ module game_top
     wire end_of_game_timer_start;
     wire end_of_game_timer_running;
 
-    game_timer # (.width (24)) timer
+    game_timer # (.width (25)) timer
     (
         .clk     ( clk                       ),
         .reset   ( reset                     ),
-        .value   ( 24'hf00000                ),
+        .value   ( 25'h1000000               ),
         .start   ( end_of_game_timer_start   ),
         .running ( end_of_game_timer_running )
     );
