@@ -70,7 +70,7 @@ module game_master_fsm
         d_sprite_torpedo_enable_update  = 1'b0;
 
         d_end_of_game_timer_start       = 1'b0;
-//        d_game_won                      = game_won;
+        d_game_won                      = game_won;
 
         //--------------------------------------------------------------------
 
@@ -83,7 +83,7 @@ module game_master_fsm
 
             d_sprite_target_write_dxy       = 1'b1;
 
-//            d_game_won                      = 1'b0;
+            d_game_won                      = 1'b0;
 
             d_state = STATE_AIM;
         end
@@ -111,8 +111,8 @@ module game_master_fsm
             d_sprite_target_enable_update   = 1'b1;
             d_sprite_torpedo_enable_update  = 1'b1;
 
-//            if (collision)
-//                d_game_won = 1'b1;
+            if (collision)
+                d_game_won = 1'b1;
 
             if (end_of_game)
             begin
@@ -124,46 +124,15 @@ module game_master_fsm
 
         STATE_END:
         begin
+            if (collision)
+                d_game_won = 1'b1;
+
             if (! end_of_game_timer_running)
                 d_state = STATE_START;
         end
 
         endcase
     end
-
-    //------------------------------------------------------------------------
-
-    // This is not working
-`ifdef UNDEFINED
-    always @ (state, collision, game_won)
-    begin
-        d_game_won = game_won;
-
-        if (state == STATE_START)
-            d_game_won = 1'b0;
-        else if (/* state == STATE_SHOOT && */ collision)
-            d_game_won = 1'b1;
-    end
-
-    always @ (posedge clk or posedge reset)
-        if (reset)
-            game_won <= 1'b0;
-        else
-            game_won <= d_game_won;
-`endif            
-    // This is working
-
-    always @ (posedge clk or posedge reset)
-        if (reset)
-            game_won <= 1'b0;
-        else if (state == STATE_START)
-            game_won <= 1'b0;
-        else if (state == STATE_AIM && collision)
-            game_won <= 1'b0;
-        else if (state == STATE_SHOOT && collision)
-            game_won <= 1'b1;
-        else if (state == STATE_END && collision)
-            game_won <= 1'b1;
 
     //------------------------------------------------------------------------
 
@@ -182,7 +151,7 @@ module game_master_fsm
             sprite_torpedo_enable_update  <= 1'b0;
 
             end_of_game_timer_start       <= 1'b0;
-//            game_won                      <= 1'b0;
+            game_won                      <= 1'b0;
         end
         else
         begin
@@ -198,7 +167,7 @@ module game_master_fsm
             sprite_torpedo_enable_update  <= d_sprite_torpedo_enable_update;
 
             end_of_game_timer_start       <= d_end_of_game_timer_start;
-//            game_won                      <= d_game_won;
+            game_won                      <= d_game_won;
         end
 
 endmodule
