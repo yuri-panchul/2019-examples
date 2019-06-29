@@ -15,7 +15,9 @@ module game_sprite_top
               ROW_4         = 32'hcccccccc,
               ROW_5         = 32'h000cc000,
               ROW_6         = 32'h000cc000,
-              ROW_7         = 32'h000cc000
+              ROW_7         = 32'h000cc000,
+
+              strobe_to_update_xy_counter_width = 20
 )
 
 //----------------------------------------------------------------------------
@@ -55,7 +57,10 @@ module game_sprite_top
     game_sprite_control
     #(
         .DX_WIDTH              ( DX_WIDTH              ),
-        .DY_WIDTH              ( DY_WIDTH              )
+        .DY_WIDTH              ( DY_WIDTH              ),
+
+        .strobe_to_update_xy_counter_width
+        (strobe_to_update_xy_counter_width)
     )
     sprite_control
     (

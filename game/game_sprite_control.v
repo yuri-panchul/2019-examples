@@ -3,7 +3,9 @@
 module game_sprite_control
 #(
     parameter DX_WIDTH = 2,  // X speed width in bits
-              DY_WIDTH = 2   // Y speed width in bits
+              DY_WIDTH = 2,  // Y speed width in bits
+
+              strobe_to_update_xy_counter_width = 20
 )
 
 //----------------------------------------------------------------------------
@@ -29,8 +31,10 @@ module game_sprite_control
 
     wire strobe_to_update_xy;
 
-    game_strobe # (.width (20)) strobe_generator
-        (clk, reset, strobe_to_update_xy);
+    game_strobe
+    # (.width (strobe_to_update_xy_counter_width))
+    strobe_generator
+    (clk, reset, strobe_to_update_xy);
 
     reg [`X_WIDTH  - 1:0] x;
     reg [`Y_WIDTH  - 1:0] y;

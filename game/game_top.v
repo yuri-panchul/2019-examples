@@ -1,6 +1,9 @@
 `include "game_config.vh"
 
 module game_top
+# (
+    strobe_to_update_xy_counter_width = 20
+)
 (
     input        clk,
     input        reset,
@@ -107,7 +110,10 @@ module game_top
         .ROW_4 ( 32'hb99ff99b ),
         .ROW_5 ( 32'h00099000 ),
         .ROW_6 ( 32'h00099000 ),
-        .ROW_7 ( 32'h000bb000 )
+        .ROW_7 ( 32'h000bb000 ),
+
+        .strobe_to_update_xy_counter_width
+        (strobe_to_update_xy_counter_width)
     )
     sprite_target
     (
@@ -207,7 +213,10 @@ module game_top
         .ROW_4 ( 32'hcc0cc0cc ),
         .ROW_5 ( 32'hcc0cc0cc ),
         .ROW_6 ( 32'hcc0cc0cc ),
-        .ROW_7 ( 32'hcc0cc0cc )
+        .ROW_7 ( 32'hcc0cc0cc ),
+
+        .strobe_to_update_xy_counter_width
+        (strobe_to_update_xy_counter_width)
     )
     sprite_torpedo
     (

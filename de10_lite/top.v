@@ -1,8 +1,9 @@
 module top
 #(
-    parameter debounce_depth             = 8,
-              shift_strobe_width         = 23,
-              seven_segment_strobe_width = 10
+    parameter debounce_depth                     = 8,
+              shift_strobe_width                 = 23,
+              seven_segment_strobe_width         = 10,
+              strobe_to_update_xy_counter_width  = 20
 )
 (
     input           adc_clk_10,
@@ -154,17 +155,22 @@ module top
     assign vga_g = { 4 { rgb [1] } };
     assign vga_b = { 4 { rgb [0] } };
 
-    game_top i_game_top
+    game_top
+    # (
+        .strobe_to_update_xy_counter_width
+        (strobe_to_update_xy_counter_width)
+    )
+    i_game_top
     (
-        .clk   (   clk        ),
-        .reset (   reset      ),
+        .clk   (   clk       ),
+        .reset (   reset     ),
 
-        .key   ( ~ key  [1]   ),
-        .sw    (   sw   [1:0] ),
+        .key   ( ~ key [1]   ),
+        .sw    (   sw  [1:0] ),
 
-        .hsync (   vga_hs     ),
-        .vsync (   vga_vs     ),
-        .rgb   (   rgb        )
+        .hsync (   vga_hs    ),
+        .vsync (   vga_vs    ),
+        .rgb   (   rgb       )
     );
 
     /*

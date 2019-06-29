@@ -1,8 +1,9 @@
 module top
 # (
-    parameter debounce_depth             = 8,
-              shift_strobe_width         = 23,
-              seven_segment_strobe_width = 10
+    parameter debounce_depth                     = 8,
+              shift_strobe_width                 = 23,
+              seven_segment_strobe_width         = 10,
+              strobe_to_update_xy_counter_width  = 20
 )
 (
     input         clk,
@@ -121,7 +122,12 @@ module top
 
     //------------------------------------------------------------------------
 
-    game_top i_game_top
+    game_top
+    # (
+        .strobe_to_update_xy_counter_width
+        (strobe_to_update_xy_counter_width)
+    )
+    i_game_top
     (
         .clk   (   clk       ),
         .reset (   reset     ),
@@ -129,11 +135,12 @@ module top
         .key   ( ~ key [1]   ),
         .sw    ( ~ sw  [1:0] ),
 
-        .vsync (   vsync     ),
         .hsync (   hsync     ),
+        .vsync (   vsync     ),
         .rgb   (   rgb       )
     );
-/*
+
+    /*
     wire       display_on;
     wire [9:0] hpos;
     wire [9:0] vpos;
@@ -172,7 +179,8 @@ module top
     assign rgb = lfsr_enable ?
                      (star_on ? lfsr_out [2:0] : 3'b0)
                    : rgb_squares;
-*/
+    */
+
     //------------------------------------------------------------------------
 
     wire enc_a   = gpio [14];

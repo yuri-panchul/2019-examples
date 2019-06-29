@@ -3,30 +3,22 @@
 module testbench;
 
     reg         clk;
-    reg  [ 3:0] key;
-    reg  [ 7:0] sw;
-    wire [11:0] led;
-    wire [ 7:0] abcdefgh;
-    wire [ 7:0] digit;
-    wire        buzzer;
+    reg  [ 1:0] key;
+    reg  [ 9:0] sw;
 
     top
     # (
-        .debounce_depth             ( 1 ),
-        .shift_strobe_width         ( 1 ),
-        .seven_segment_strobe_width ( 1 )
+        .debounce_depth                    ( 1 ),
+        .shift_strobe_width                ( 1 ),
+        .seven_segment_strobe_width        ( 1 ),
+        .strobe_to_update_xy_counter_width ( 1 )
     )
     i_top
     (
-        .clk      ( clk      ),
-        .key      ( key      ),
-        .sw       ( sw       ),
-        .led      ( led      ),
-        .abcdefgh ( abcdefgh ),
-        .digit    ( digit    ),
-        .buzzer   ( buzzer   )
+        .max10_clk1_50 ( clk ),
+        .key           ( key ),
+        .sw            ( sw  )
     );
-
 
     initial
     begin
@@ -60,12 +52,12 @@ module testbench;
 
         @ (negedge reset);
 
-        repeat (1000)
+        repeat (100000)
         begin
             @ (posedge clk);
 
             key [2:0] <= $random;
-            sw        <= 8'b00000001; // $random;
+            sw        <= $random;
         end
 
         `ifdef MODEL_TECH  // Mentor ModelSim and Questa

@@ -28,7 +28,7 @@ module game_sprite_display
     input      [`Y_WIDTH   - 1:0] sprite_y,
 
     output reg                    sprite_within_screen,
- 
+
     output reg [`X_WIDTH   - 1:0] sprite_out_left,
     output reg [`X_WIDTH   - 1:0] sprite_out_right,
     output reg [`Y_WIDTH   - 1:0] sprite_out_top,
@@ -52,7 +52,7 @@ module game_sprite_display
 
     wire x_sprite_within_screen
         = // sprite_x < `SCREEN_WIDTH;
-        
+
              screen_w_1_minus_sprite [`X_WIDTH] == 1'b0
           && x_sprite_plus_w_1       [`X_WIDTH] == 1'b0;
 
@@ -77,7 +77,7 @@ module game_sprite_display
 
     wire y_sprite_within_screen
         = // sprite_y < `SCREEN_HEIGHT;
-        
+
              screen_h_1_minus_sprite [`Y_WIDTH] == 1'b0
           && y_sprite_plus_h_1       [`Y_WIDTH] == 1'b0;
 
@@ -116,7 +116,7 @@ module game_sprite_display
         endcase
 
     reg [ERGB_WIDTH - 1:0] ergb;
-    
+
     always @*
         case (column_index)
         3'd0: ergb = row [31:28];
@@ -143,7 +143,7 @@ module game_sprite_display
         if (reset)
         begin
             sprite_within_screen <= 1'b0;
- 
+
             sprite_out_left      <= 1'b0;
             sprite_out_right     <= 1'b0;
             sprite_out_top       <= 1'b0;

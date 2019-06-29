@@ -60,35 +60,37 @@ module game_master_fsm
     begin
         d_state = state;
 
-        d_sprite_target_write_xy        <= 1'b0;
-        d_sprite_torpedo_write_xy       <= 1'b0;
+        d_sprite_target_write_xy        = 1'b0;
+        d_sprite_torpedo_write_xy       = 1'b0;
 
-        d_sprite_target_write_dxy       <= 1'b0;
-        d_sprite_torpedo_write_dxy      <= 1'b0;
+        d_sprite_target_write_dxy       = 1'b0;
+        d_sprite_torpedo_write_dxy      = 1'b0;
 
-        d_sprite_target_enable_update   <= 1'b0;
-        d_sprite_torpedo_enable_update  <= 1'b0;
+        d_sprite_target_enable_update   = 1'b0;
+        d_sprite_torpedo_enable_update  = 1'b0;
 
-        d_end_of_game_timer_start       <= 1'b0;
-        d_game_won                      <= game_won;
-       
+        d_end_of_game_timer_start       = 1'b0;
+        d_game_won                      = game_won;
+
         //--------------------------------------------------------------------
 
         case (state)
 
         STATE_START:
         begin
-            d_sprite_target_write_xy    <= 1'b1;
-            d_sprite_torpedo_write_xy   <= 1'b1;
-            d_sprite_target_write_dxy   <= 1'b1;
-            d_game_won                  <= 1'b0;
-               
+            d_sprite_target_write_xy        = 1'b1;
+            d_sprite_torpedo_write_xy       = 1'b1;
+
+            d_sprite_target_write_dxy       = 1'b1;
+
+            d_game_won                      = 1'b0;
+
             d_state = STATE_AIM;
         end
 
         STATE_AIM:
         begin
-            d_sprite_target_enable_update  <= 1'b1;
+            d_sprite_target_enable_update   = 1'b1;
 
             if (key)
             begin
@@ -96,19 +98,25 @@ module game_master_fsm
             end
             else if (end_of_game)
             begin
-                d_end_of_game_timer_start <= 1'b1;
+                d_end_of_game_timer_start   = 1'b1;
+
                 d_state = STATE_END;
             end
         end
-        
+
         STATE_SHOOT:
         begin
-            d_sprite_torpedo_write_dxy <= 1'b1;
-            d_game_won                 <= collision;
+            d_sprite_torpedo_write_dxy      = 1'b1;
+
+            d_sprite_target_enable_update   = 1'b1;
+            d_sprite_torpedo_enable_update  = 1'b1;
+
+            d_game_won = 1'b1;  // collision;
 
             if (end_of_game)
             begin
-                d_end_of_game_timer_start <= 1'b1;
+                d_end_of_game_timer_start   = 1'b1;
+
                 d_state = STATE_END;
             end
         end
@@ -118,7 +126,7 @@ module game_master_fsm
             if (! end_of_game_timer_running)
                 d_state = STATE_START;
         end
-                
+
         endcase
     end
 
