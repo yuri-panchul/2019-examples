@@ -124,6 +124,9 @@ module game_master_fsm
 
         STATE_END:
         begin
+            // TODO: Investigate why it needs collision detection here
+            // and not in previous state
+
             if (collision)
                 d_game_won = 1'b1;
 
