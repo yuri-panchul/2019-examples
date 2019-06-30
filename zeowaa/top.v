@@ -122,6 +122,9 @@ module top
 
     //------------------------------------------------------------------------
 
+    wire       start      = ~ key [1] | ~ key [0];
+    wire [1:0] left_right = ~ key [1:0];
+
     game_top
     # (
         .strobe_to_update_xy_counter_width
@@ -129,15 +132,15 @@ module top
     )
     i_game_top
     (
-        .clk   (   clk       ),
-        .reset (   reset     ),
+        .clk   ( clk        ),
+        .reset ( reset      ),
 
-        .key   ( ~ key [1]   ),
-        .sw    ( ~ sw  [1:0] ),
+        .key   ( start      ),
+        .sw    ( left_right ),
 
-        .hsync (   hsync     ),
-        .vsync (   vsync     ),
-        .rgb   (   rgb       )
+        .hsync ( hsync      ),
+        .vsync ( vsync      ),
+        .rgb   ( rgb        )
     );
 
     /*
