@@ -61,77 +61,77 @@ module game_master_fsm_alt_2
 
     always @*
     begin
-       d_state = 0;
+        d_state = 0;
 
-            if (      state [ STATE_START_TARGET    ] )
-       begin
-                    d_state [ STATE_WAIT_KEY        ] = 1;
-       end
+             if (      state [ STATE_START_TARGET    ] )
+        begin
+                     d_state [ STATE_WAIT_KEY        ] = 1;
+        end
 
-       //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
 
-       else if (      state [ STATE_WAIT_KEY        ] )
-       begin
+        else if (      state [ STATE_WAIT_KEY        ] )
+        begin
             if ( key )
-                    d_state [ STATE_START_TORPEDO   ] = 1;
+                     d_state [ STATE_START_TORPEDO   ] = 1;
             else if ( end_of_game )
-                    d_state [ STATE_START_END_TIMER ] = 1;
+                     d_state [ STATE_START_END_TIMER ] = 1;
             else
-                    d_state [ STATE_WAIT_KEY        ] = 1;
-       end
+                     d_state [ STATE_WAIT_KEY        ] = 1;
+        end
 
-       //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
 
-       else if (      state [ STATE_START_TORPEDO   ] )
-       begin
-                    d_state [ STATE_WAIT_COLLISION  ] = 1;
-       end
+        else if (      state [ STATE_START_TORPEDO   ] )
+        begin
+                     d_state [ STATE_WAIT_COLLISION  ] = 1;
+        end
 
-       //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
 
-       else if (      state [ STATE_WAIT_COLLISION  ] )
-       begin
+        else if (      state [ STATE_WAIT_COLLISION  ] )
+        begin
             if ( end_of_game )
-                    d_state [ STATE_START_END_TIMER ] = 1;
+                     d_state [ STATE_START_END_TIMER ] = 1;
             else
-                    d_state [ STATE_WAIT_COLLISION  ] = 1;
-       end
+                     d_state [ STATE_WAIT_COLLISION  ] = 1;
+        end
 
-       //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
 
-       else if (      state [ STATE_START_END_TIMER ] )
-       begin
+        else if (      state [ STATE_START_END_TIMER ] )
+        begin
             if ( collision_reg )
-                    d_state [ STATE_GAME_WON        ] = 1;
+                     d_state [ STATE_GAME_WON        ] = 1;
             else
-                    d_state [ STATE_GAME_LOST       ] = 1;
-       end
+                     d_state [ STATE_GAME_LOST       ] = 1;
+        end
 
-       //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
 
-       else if (      state [ STATE_GAME_WON        ] )
-       begin
+        else if (      state [ STATE_GAME_WON        ] )
+        begin
 
             if ( end_of_game_timer_running )
-                    d_state [ STATE_GAME_WON        ] = 1;
+                     d_state [ STATE_GAME_WON        ] = 1;
             else
-                    d_state [ STATE_START_TARGET    ] = 1;
-       end
+                     d_state [ STATE_START_TARGET    ] = 1;
+        end
 
-       //---------------------------------------------------------------------
+        //---------------------------------------------------------------------
 
-       else if (      state [ STATE_GAME_LOST       ] )
-       begin
+        else if (      state [ STATE_GAME_LOST       ] )
+        begin
 
             if ( end_of_game_timer_running )
-                    d_state [ STATE_GAME_LOST       ] = 1;
+                     d_state [ STATE_GAME_LOST       ] = 1;
             else
-                    d_state [ STATE_START_TARGET    ] = 1;
-       end
-       else
-       begin
-                    d_state [ STATE_START_TARGET    ] = 1;
-       end
+                     d_state [ STATE_START_TARGET    ] = 1;
+        end
+        else
+        begin
+                     d_state [ STATE_START_TARGET    ] = 1;
+        end
     end
 
     //------------------------------------------------------------------------
