@@ -2,7 +2,7 @@
 
 TOP=../../game/game_top.v
 BOARD=../top.v
-TB=../../testbench.v
+TB=../testbench.v
 
 SRC=../..
 
