@@ -148,8 +148,8 @@ module game_sprite_display_alt_1
     // TODO: instantiate here a more generic mux that is handled by all
     // synthesis tools well
 
-    wire [2:0] row_index    = y_pixel_minus_sprite [2:0];
-    wire [2:0] column_index = x_pixel_minus_sprite [2:0];
+    wire [2:0] row_index    = reg_y_pixel_minus_sprite [2:0];
+    wire [2:0] column_index = reg_x_pixel_minus_sprite [2:0];
 
     reg [SPRITE_WIDTH * ERGB_WIDTH - 1:0] row;
 
