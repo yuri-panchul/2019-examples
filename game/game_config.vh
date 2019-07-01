@@ -11,6 +11,7 @@
 
 `define RGB_WIDTH      3
 
-`define GAME_MASTER_FSM_MODULE  game_master_fsm_alt_4
+`define GAME_MASTER_FSM_MODULE      game_master_fsm_alt_4
+`define GAME_SPRITE_DISPLAY_MODULE  game_sprite_display
 
 `endif

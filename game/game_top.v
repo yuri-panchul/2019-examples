@@ -16,7 +16,7 @@ module game_top
     output [2:0] rgb
 );
 
-    localparam N_MIXER_PIPE_STAGES = 3;
+    localparam N_MIXER_PIPE_STAGES = 1;
 
     //------------------------------------------------------------------------
 
