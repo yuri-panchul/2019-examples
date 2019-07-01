@@ -1,6 +1,6 @@
 `include "game_config.vh"
 
-module game_sprite_display
+module game_sprite_display_wrapper
 #(
     parameter SPRITE_WIDTH  = 8,
               SPRITE_HEIGHT = 8,
