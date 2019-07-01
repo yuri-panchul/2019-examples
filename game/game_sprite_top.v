@@ -82,7 +82,7 @@ module game_sprite_top
         .sprite_y              ( sprite_y              )
     );
 
-    `GAME_SPITE_DISPLAY_MODULE
+    `GAME_SPRITE_DISPLAY_MODULE
     #(
         .SPRITE_WIDTH          ( SPRITE_WIDTH          ),
         .SPRITE_HEIGHT         ( SPRITE_HEIGHT         ),

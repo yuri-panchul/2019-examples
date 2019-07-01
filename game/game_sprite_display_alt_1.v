@@ -81,6 +81,9 @@ module game_sprite_display_alt_1
     reg [`X_WIDTH - 1:0] reg_pixel_x;
     reg [`Y_WIDTH - 1:0] reg_pixel_y;
 
+    reg [`X_WIDTH - 1:0] reg_sprite_x;
+    reg [`Y_WIDTH - 1:0] reg_sprite_y;
+
     reg [`X_WIDTH    :0] reg_x_sprite_plus_w_1;
     reg                  reg_x_sprite_within_screen;
     reg [`X_WIDTH    :0] reg_x_pixel_minus_sprite;
@@ -95,6 +98,9 @@ module game_sprite_display_alt_1
             reg_pixel_x                 <= 1'b0;
             reg_pixel_y                 <= 1'b0;
 
+            reg_sprite_x                <= 1'b0;
+            reg_sprite_y                <= 1'b0;
+
             reg_x_sprite_plus_w_1       <= 1'b0;
             reg_x_sprite_within_screen  <= 1'b0;
             reg_x_pixel_minus_sprite    <= 1'b0;
@@ -107,6 +113,9 @@ module game_sprite_display_alt_1
         begin
             reg_pixel_x                 <= pixel_x;
             reg_pixel_y                 <= pixel_y;
+
+            reg_sprite_x                <= sprite_x;
+            reg_sprite_y                <= sprite_y;
 
             reg_x_sprite_plus_w_1       <= x_sprite_plus_w_1;
             reg_x_sprite_within_screen  <= x_sprite_within_screen;
@@ -128,7 +137,7 @@ module game_sprite_display_alt_1
     //------------------------------------------------------------------------
 
     wire [`Y_WIDTH:0] y_sprite_plus_h_1_minus_pixel
-        = reg_y_sprite_plus_h_1 - { 1'b0, reg_pixel_y_reg };
+        = reg_y_sprite_plus_h_1 - { 1'b0, reg_pixel_y };
 
     wire y_hit =    reg_y_pixel_minus_sprite      [`Y_WIDTH] == 1'b0
                  && y_sprite_plus_h_1_minus_pixel [`Y_WIDTH] == 1'b0;
