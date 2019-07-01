@@ -1,0 +1,86 @@
+ 
+****************************************
+Report : qor
+Design : game_master_fsm_wrapper
+Version: P-2019.03
+Date   : Sun Jun 30 21:32:20 2019
+****************************************
+
+
+
+  Cell Count
+  -----------------------------------
+  Hierarchical Cell Count:          0
+  Hierarchical Port Count:          0
+  Leaf Cell Count:                  1
+  Buf/Inv Cell Count:               0
+  Buf Cell Count:                   0
+  Inv Cell Count:                   0
+  CT Buf/Inv Cell Count:            0
+  Combinational Cell Count:         1
+  Sequential Cell Count:            0
+  Macro Count:                      0
+  -----------------------------------
+
+
+  Area
+  -----------------------------------
+  Combinational Area:        0.207360
+  Noncombinational Area:     0.000000
+  Buf/Inv Area:              0.000000
+  Total Buffer Area:             0.00
+  Total Inverter Area:           0.00
+  Macro/Black Box Area:      0.000000
+  Net Area:                  0.000000
+  -----------------------------------
+  Cell Area:                 0.207360
+  Design Area:               0.207360
+
+
+  Design Rules
+  -----------------------------------
+  Total Number of Nets:             1
+  Nets With Violations:             0
+  Max Trans Violations:             0
+  Max Cap Violations:               0
+  -----------------------------------
+
+
+  Hostname: scgw10
+
+  Compile CPU Statistics
+  -----------------------------------------
+  Resource Sharing:                    0.02
+  Logic Optimization:                  0.25
+  Mapping Optimization:                3.21
+  -----------------------------------------
+  Overall Compile Time:               44.64
+  Overall Compile Wall Clock Time:    45.88
+
+  --------------------------------------------------------------------
+
+  Design  WNS: 0.00  TNS: 0.00  Number of Violating Paths: 0
+
+
+  Design (Hold)  WNS: 0.00  TNS: 0.00  Number of Violating Paths: 0
+
+  --------------------------------------------------------------------
+
+
+1
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : game_master_fsm_wrapper
+Version: P-2019.03
+Date   : Sun Jun 30 21:32:20 2019
+****************************************
+
+Operating Conditions: SSGNP0P72V0C   Library: ts16ncpllogl16hdl090f_ssgnp0p72v0c
+Wire Load Model Mode: enclosed
+No paths.
+
+1

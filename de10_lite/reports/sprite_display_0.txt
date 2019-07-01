@@ -1,0 +1,145 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : game_sprite_display_wrapper
+Version: P-2019.03
+Date   : Sun Jun 30 19:12:47 2019
+****************************************
+
+Operating Conditions: SSGNP0P72V0C   Library: ts16ncpllogl16hdl090f_ssgnp0p72v0c
+Wire Load Model Mode: enclosed
+
+  Startpoint: reg_sprite_x_reg[0]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: sprite_display/rgb_reg[2]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  game_sprite_display_wrapper
+                     ZeroWLM               ts16ncpllogl16hdl090f_ssgnp0p72v0c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  reg_sprite_x_reg[0]/CK (HDBLVT16_FDPRBQ_V2_1)           0.00       0.00 r
+  reg_sprite_x_reg[0]/Q (HDBLVT16_FDPRBQ_V2_1)            0.06       0.06 r
+  U63/X (HDBLVT16_NR2B_V1_2)                              0.03       0.10 r
+  U24/X (HDBLVT16_MAJI3_0P75)                             0.02       0.12 f
+  U122/X (HDBLVT16_MAJI3_0P5)                             0.03       0.15 r
+  U145/X (HDBLVT16_AOI21_0P75)                            0.02       0.16 f
+  U51/X (HDBLVT16_OAI21_0P75)                             0.01       0.18 r
+  U147/X (HDBLVT16_AN2_0P5)                               0.03       0.21 r
+  U81/X (HDBLVT16_MAJ3_1)                                 0.04       0.25 r
+  U47/X (HDBLVT16_MAJI3_0P5)                              0.02       0.27 f
+  U42/X (HDBLVT16_NR2_0P75)                               0.02       0.29 r
+  U78/X (HDBLVT16_MAJ3_1)                                 0.04       0.32 r
+  U77/X (HDBLVT16_EN2_0P5)                                0.04       0.37 f
+  U155/X (HDBLVT16_AOI211_0P75)                           0.02       0.39 r
+  U40/X (HDBLVT16_ND3_0P75)                               0.02       0.41 f
+  U163/X (HDBLVT16_OR2_U_0P75)                            0.03       0.44 f
+  sprite_display/rgb_reg[2]/EN (HDBLVT16_FDPHQ_1)         0.00       0.44 f
+  data arrival time                                                  0.44
+
+  clock clk (rise edge)                                   0.50       0.50
+  clock network delay (ideal)                             0.00       0.50
+  sprite_display/rgb_reg[2]/CK (HDBLVT16_FDPHQ_1)         0.00       0.50 r
+  library setup time                                     -0.06       0.44
+  data required time                                                 0.44
+  --------------------------------------------------------------------------
+  data required time                                                 0.44
+  data arrival time                                                 -0.44
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+
+1
+ 
+****************************************
+Report : qor
+Design : game_sprite_display_wrapper
+Version: P-2019.03
+Date   : Sun Jun 30 19:12:47 2019
+****************************************
+
+
+  Timing Path Group 'clk'
+  -----------------------------------
+  Levels of Logic:              14.00
+  Critical Path Length:          0.44
+  Critical Path Slack:           0.00
+  Critical Path Clk Period:      0.50
+  Total Negative Slack:          0.00
+  No. of Violating Paths:        0.00
+  Worst Hold Violation:          0.00
+  Total Hold Violation:          0.00
+  No. of Hold Violations:        0.00
+  -----------------------------------
+
+
+  Cell Count
+  -----------------------------------
+  Hierarchical Cell Count:          0
+  Hierarchical Port Count:          0
+  Leaf Cell Count:                230
+  Buf/Inv Cell Count:              38
+  Buf Cell Count:                   1
+  Inv Cell Count:                  37
+  CT Buf/Inv Cell Count:            0
+  Combinational Cell Count:       147
+  Sequential Cell Count:           83
+  Macro Count:                      0
+  -----------------------------------
+
+
+  Area
+  -----------------------------------
+  Combinational Area:       39.864960
+  Noncombinational Area:    86.261762
+  Buf/Inv Area:              4.147200
+  Total Buffer Area:             0.21
+  Total Inverter Area:           3.94
+  Macro/Black Box Area:      0.000000
+  Net Area:                  0.000000
+  -----------------------------------
+  Cell Area:               126.126723
+  Design Area:             126.126723
+
+
+  Design Rules
+  -----------------------------------
+  Total Number of Nets:           296
+  Nets With Violations:             0
+  Max Trans Violations:             0
+  Max Cap Violations:               0
+  -----------------------------------
+
+
+  Hostname: scgw10
+
+  Compile CPU Statistics
+  -----------------------------------------
+  Resource Sharing:                    0.26
+  Logic Optimization:                  0.65
+  Mapping Optimization:                3.23
+  -----------------------------------------
+  Overall Compile Time:               41.22
+  Overall Compile Wall Clock Time:    42.66
+
+  --------------------------------------------------------------------
+
+  Design  WNS: 0.00  TNS: 0.00  Number of Violating Paths: 0
+
+
+  Design (Hold)  WNS: 0.00  TNS: 0.00  Number of Violating Paths: 0
+
+  --------------------------------------------------------------------
+
+
+1

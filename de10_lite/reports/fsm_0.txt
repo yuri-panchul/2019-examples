@@ -1,0 +1,136 @@
+ 
+****************************************
+Report : qor
+Design : game_master_fsm_wrapper
+Version: P-2019.03
+Date   : Sun Jun 30 21:13:58 2019
+****************************************
+
+
+  Timing Path Group 'clk'
+  -----------------------------------
+  Levels of Logic:               5.00
+  Critical Path Length:          0.20
+  Critical Path Slack:           0.27
+  Critical Path Clk Period:      0.50
+  Total Negative Slack:          0.00
+  No. of Violating Paths:        0.00
+  Worst Hold Violation:          0.00
+  Total Hold Violation:          0.00
+  No. of Hold Violations:        0.00
+  -----------------------------------
+
+
+  Cell Count
+  -----------------------------------
+  Hierarchical Cell Count:          0
+  Hierarchical Port Count:          0
+  Leaf Cell Count:                 30
+  Buf/Inv Cell Count:               4
+  Buf Cell Count:                   0
+  Inv Cell Count:                   4
+  CT Buf/Inv Cell Count:            0
+  Combinational Cell Count:        18
+  Sequential Cell Count:           12
+  Macro Count:                      0
+  -----------------------------------
+
+
+  Area
+  -----------------------------------
+  Combinational Area:        3.576960
+  Noncombinational Area:    12.441600
+  Buf/Inv Area:              0.466560
+  Total Buffer Area:             0.00
+  Total Inverter Area:           0.47
+  Macro/Black Box Area:      0.000000
+  Net Area:                  0.000000
+  -----------------------------------
+  Cell Area:                16.018560
+  Design Area:              16.018560
+
+
+  Design Rules
+  -----------------------------------
+  Total Number of Nets:            37
+  Nets With Violations:             0
+  Max Trans Violations:             0
+  Max Cap Violations:               0
+  -----------------------------------
+
+
+  Hostname: scgw10
+
+  Compile CPU Statistics
+  -----------------------------------------
+  Resource Sharing:                    0.03
+  Logic Optimization:                  0.26
+  Mapping Optimization:                3.23
+  -----------------------------------------
+  Overall Compile Time:               45.35
+  Overall Compile Wall Clock Time:    46.70
+
+  --------------------------------------------------------------------
+
+  Design  WNS: 0.00  TNS: 0.00  Number of Violating Paths: 0
+
+
+  Design (Hold)  WNS: 0.00  TNS: 0.00  Number of Violating Paths: 0
+
+  --------------------------------------------------------------------
+
+
+1
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : game_master_fsm_wrapper
+Version: P-2019.03
+Date   : Sun Jun 30 21:13:58 2019
+****************************************
+
+Operating Conditions: SSGNP0P72V0C   Library: ts16ncpllogl16hdl090f_ssgnp0p72v0c
+Wire Load Model Mode: enclosed
+
+  Startpoint: master_fsm/state_reg[1]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: master_fsm/state_reg[0]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  game_master_fsm_wrapper
+                     ZeroWLM               ts16ncpllogl16hdl090f_ssgnp0p72v0c
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  master_fsm/state_reg[1]/CK (HDBLVT16_FDPRBQ_V2_1)       0.00       0.00 r
+  master_fsm/state_reg[1]/Q (HDBLVT16_FDPRBQ_V2_1)        0.07       0.07 f
+  U30/X (HDBLVT16_ND2B_U_0P5)                             0.03       0.10 f
+  U29/X (HDBLVT16_OA21B_0P5)                              0.03       0.14 f
+  U21/X (HDBLVT16_NR2_0P5)                                0.02       0.16 r
+  U31/X (HDBLVT16_AOI31_0P5)                              0.02       0.18 f
+  U37/X (HDBLVT16_AO2BB2_0P5)                             0.02       0.20 r
+  master_fsm/state_reg[0]/D (HDBLVT16_FDPRBQ_V2_1)        0.00       0.20 r
+  data arrival time                                                  0.20
+
+  clock clk (rise edge)                                   0.50       0.50
+  clock network delay (ideal)                             0.00       0.50
+  master_fsm/state_reg[0]/CK (HDBLVT16_FDPRBQ_V2_1)       0.00       0.50 r
+  library setup time                                     -0.03       0.47
+  data required time                                                 0.47
+  --------------------------------------------------------------------------
+  data required time                                                 0.47
+  data arrival time                                                 -0.20
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.27
+
+
+1
