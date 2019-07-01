@@ -18,24 +18,24 @@ module game_sprite_display
 //----------------------------------------------------------------------------
 
 (
-    input                         clk,
-    input                         reset,
+    input                     clk,
+    input                     reset,
 
-    input      [`X_WIDTH   - 1:0] pixel_x,
-    input      [`Y_WIDTH   - 1:0] pixel_y,
+    input  [`X_WIDTH   - 1:0] pixel_x,
+    input  [`Y_WIDTH   - 1:0] pixel_y,
 
-    input      [`X_WIDTH   - 1:0] sprite_x,
-    input      [`Y_WIDTH   - 1:0] sprite_y,
+    input  [`X_WIDTH   - 1:0] sprite_x,
+    input  [`Y_WIDTH   - 1:0] sprite_y,
 
-    output reg                    sprite_within_screen,
+    output                    sprite_within_screen,
 
-    output reg [`X_WIDTH   - 1:0] sprite_out_left,
-    output reg [`X_WIDTH   - 1:0] sprite_out_right,
-    output reg [`Y_WIDTH   - 1:0] sprite_out_top,
-    output reg [`Y_WIDTH   - 1:0] sprite_out_bottom,
+    output [`X_WIDTH   - 1:0] sprite_out_left,
+    output [`X_WIDTH   - 1:0] sprite_out_right,
+    output [`Y_WIDTH   - 1:0] sprite_out_top,
+    output [`Y_WIDTH   - 1:0] sprite_out_bottom,
 
-    output reg                    rgb_en,
-    output reg [`RGB_WIDTH - 1:0] rgb
+    output                    rgb_en,
+    output [`RGB_WIDTH - 1:0] rgb
 );
 
     //------------------------------------------------------------------------
@@ -87,11 +87,11 @@ module game_sprite_display
         .clk                   ( clk                   ),
         .reset                 ( reset                 ),
 
-        .pixel_x               ( pixel_x               ),
-        .pixel_y               ( pixel_y               ),
+        .pixel_x               ( reg_pixel_x           ),
+        .pixel_y               ( reg_pixel_y           ),
 
-        .sprite_x              ( sprite_x              ),
-        .sprite_y              ( sprite_y              ),
+        .sprite_x              ( reg_sprite_x          ),
+        .sprite_y              ( reg_sprite_y          ),
 
         .sprite_within_screen  ( sprite_within_screen  ),
 
