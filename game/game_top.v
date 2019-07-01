@@ -16,8 +16,6 @@ module game_top
     output [2:0] rgb
 );
 
-    localparam N_MIXER_PIPE_STAGES = 1;
-
     //------------------------------------------------------------------------
 
     wire                  display_on;
@@ -26,10 +24,10 @@ module game_top
 
     vga
     # (
-        .N_MIXER_PIPE_STAGES ( N_MIXER_PIPE_STAGES ),
+        .N_MIXER_PIPE_STAGES ( `N_MIXER_PIPE_STAGES ),
 
-        .HPOS_WIDTH          ( `X_WIDTH            ),
-        .VPOS_WIDTH          ( `Y_WIDTH            )
+        .HPOS_WIDTH          ( `X_WIDTH             ),
+        .VPOS_WIDTH          ( `Y_WIDTH             )
     )
     i_vga
     (
