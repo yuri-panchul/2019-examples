@@ -11,9 +11,11 @@
 
 `define RGB_WIDTH      3
 
-`define N_MIXER_PIPE_STAGES         2
-
 `define GAME_MASTER_FSM_MODULE      game_master_fsm_alt_4
-`define GAME_SPRITE_DISPLAY_MODULE  game_sprite_display_alt_1
+
+`define N_MIXER_PIPE_STAGES         1
+
+//`define GAME_SPRITE_DISPLAY_MODULE  game_sprite_display_alt_1
+`define GAME_SPRITE_DISPLAY_MODULE  game_sprite_display
 
 `endif
