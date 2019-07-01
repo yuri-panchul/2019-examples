@@ -63,7 +63,7 @@ module game_master_fsm_alt_3
     begin
         d_state = 0;
 
-        case (1'b1)  // synopsys full_case parallel_case
+        case (1'b1)  // synopsys parallel_case
 
                        state [ STATE_START_TARGET    ] :
         begin
