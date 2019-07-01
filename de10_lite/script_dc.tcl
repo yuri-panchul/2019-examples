@@ -1,6 +1,8 @@
 #!dc_shell -f
 
-set DESIGN_TOP     game_top
+#set DESIGN_TOP     game_top
+set DESIGN_TOP     game_sprite_display_wrapper
+
 set SRC            ../..
 
 set ASIC_LIBRARY   /projects/mips/cad/links/libraries/tsmc/16nm/synopsys/FFplusLL/LVT/HD_9tr_CPODE/C16/ts16ncpllogl16hdl090f_base_3.01A/DesignWare_logic_libs/tsmc16nllp/16hd/hdl/lvt/3.01a/liberty/ccs
