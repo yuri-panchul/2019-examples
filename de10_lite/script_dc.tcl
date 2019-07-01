@@ -1,7 +1,8 @@
 #!dc_shell -f
 
 #set DESIGN_TOP     game_top
-set DESIGN_TOP     game_sprite_display_wrapper
+#set DESIGN_TOP     game_sprite_display_wrapper
+set DESIGN_TOP     game_master_fsm_wrapper
 
 set SRC            ../..
 
