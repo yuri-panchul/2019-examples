@@ -106,7 +106,7 @@ module game_master_fsm_alt_2
             end
             else
             begin
-                state [STATE_AIM] = 1;
+                d_state [STATE_AIM] = 1;
             end
         end
 
