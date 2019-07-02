@@ -138,7 +138,7 @@ module game_master_fsm_alt_3
 
     always @ (posedge clk or posedge reset)
         if (reset)
-            state <= 0;
+            state <= 1 << STATE_START_TARGET;
         else
             state <= d_state;
 
