@@ -12,7 +12,7 @@
 `define RGB_WIDTH      3
 
 // `define GAME_MASTER_FSM_MODULE      game_master_fsm
-`define GAME_MASTER_FSM_MODULE      game_master_fsm_alt_2
+`define GAME_MASTER_FSM_MODULE      game_master_fsm_alt_7
 
 `define N_MIXER_PIPE_STAGES         1
 
