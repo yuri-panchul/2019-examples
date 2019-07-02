@@ -1,6 +1,6 @@
 `include "game_config.vh"
 
-module game_master_fsm_alt_2
+module game_master_fsm_alt_1
 (
     input      clk,
     input      reset,
@@ -27,10 +27,12 @@ module game_master_fsm_alt_2
     input      end_of_game_timer_running
 );
 
-    localparam [3:0] STATE_START  = 4'b0001,
-                     STATE_AIM    = 4'b0010,
-                     STATE_SHOOT  = 4'b0100,
-                     STATE_END    = 4'b1000;
+    // Using one-hot
+
+    localparam STATE_START  = 0,
+               STATE_AIM    = 1,
+               STATE_SHOOT  = 2,
+               STATE_END    = 3;
 
     reg [3:0] state;
     reg [3:0] d_state;
@@ -58,7 +60,7 @@ module game_master_fsm_alt_2
 
     always @*
     begin
-        d_state = state;
+        d_state = 4'b0;
 
         d_sprite_target_write_xy        = 1'b0;
         d_sprite_torpedo_write_xy       = 1'b0;
@@ -74,9 +76,9 @@ module game_master_fsm_alt_2
 
         //--------------------------------------------------------------------
 
-        case (state)  // synopsys full_case parallel_case
+        case (1'b1)  // synopsys parallel_case
 
-        STATE_START:
+        state [STATE_START]:
         begin
             d_sprite_target_write_xy        = 1'b1;
             d_sprite_torpedo_write_xy       = 1'b1;
@@ -85,26 +87,30 @@ module game_master_fsm_alt_2
 
             d_game_won                      = 1'b0;
 
-            d_state = STATE_AIM;
+            d_state [STATE_AIM] = 1;
         end
 
-        STATE_AIM:
+        state [STATE_AIM]:
         begin
             d_sprite_target_enable_update   = 1'b1;
 
             if (key)
             begin
-                d_state = STATE_SHOOT;
+                d_state [STATE_SHOOT] = 1;
             end
             else if (end_of_game)
             begin
                 d_end_of_game_timer_start   = 1'b1;
 
-                d_state = STATE_END;
+                d_state [STATE_END] = 1;
+            end
+            else
+            begin
+                d_state [STATE_AIM] = 1;
             end
         end
 
-        STATE_SHOOT:
+        state [STATE_SHOOT]:
         begin
             d_sprite_torpedo_write_dxy      = 1'b1;
 
@@ -118,11 +124,15 @@ module game_master_fsm_alt_2
             begin
                 d_end_of_game_timer_start   = 1'b1;
 
-                d_state = STATE_END;
+                d_state [STATE_END] = 1;
+            end
+            else
+            begin
+                d_state [STATE_SHOOT] = 1;
             end
         end
 
-        STATE_END:
+        state [STATE_END]:
         begin
             // TODO: Investigate why it needs collision detection here
             // and not in previous state
@@ -131,7 +141,9 @@ module game_master_fsm_alt_2
                 d_game_won = 1'b1;
 
             if (! end_of_game_timer_running)
-                d_state = STATE_START;
+                d_state [STATE_START] = 1;
+            else
+                d_state [STATE_END] = 1;
         end
 
         endcase
@@ -142,7 +154,7 @@ module game_master_fsm_alt_2
     always @ (posedge clk or posedge reset)
         if (reset)
         begin
-            state                         <= STATE_START;
+            state                         <= (1 << STATE_START);
 
             sprite_target_write_xy        <= 1'b0;
             sprite_torpedo_write_xy       <= 1'b0;
