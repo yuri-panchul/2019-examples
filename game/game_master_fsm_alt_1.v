@@ -2,42 +2,52 @@
 
 module game_master_fsm_alt_1
 (
-    input  clk,
-    input  reset,
+    input      clk,
+    input      reset,
 
-    input  key,
+    input      key,
 
-    output sprite_target_write_xy,
-    output sprite_torpedo_write_xy,
+    output reg sprite_target_write_xy,
+    output reg sprite_torpedo_write_xy,
 
-    output sprite_target_write_dxy,
-    output sprite_torpedo_write_dxy,
+    output reg sprite_target_write_dxy,
+    output reg sprite_torpedo_write_dxy,
 
-    output sprite_target_enable_update,
-    output sprite_torpedo_enable_update,
+    output reg sprite_target_enable_update,
+    output reg sprite_torpedo_enable_update,
 
-    input  sprite_target_within_screen,
-    input  sprite_torpedo_within_screen,
+    input      sprite_target_within_screen,
+    input      sprite_torpedo_within_screen,
 
-    input  collision,
+    input      collision,
 
-    output end_of_game_timer_start,
-    output game_won,
+    output reg end_of_game_timer_start,
+    output reg game_won,
 
-    input  end_of_game_timer_running
+    input      end_of_game_timer_running
 );
 
-    localparam [2:0] STATE_START_TARGET     = 0,
-                     STATE_WAIT_KEY         = 1,
-                     STATE_START_TORPEDO    = 2,
-                     STATE_WAIT_COLLISION   = 3,
-                     STATE_START_END_TIMER  = 4,
-                     STATE_GAME_WON         = 5,
-                     STATE_GAME_LOST        = 6,
-                     N_STATES               = 7;
+    // Using one-hot
 
-    reg [2:0] state;
-    reg [2:0] d_state;
+    localparam STATE_START  = 0,
+               STATE_AIM    = 1,
+               STATE_SHOOT  = 2,
+               STATE_END    = 3;
+
+    reg [3:0] state;
+    reg [3:0] d_state;
+
+    reg d_sprite_target_write_xy;
+    reg d_sprite_torpedo_write_xy;
+
+    reg d_sprite_target_write_dxy;
+    reg d_sprite_torpedo_write_dxy;
+
+    reg d_sprite_target_enable_update;
+    reg d_sprite_torpedo_enable_update;
+
+    reg d_end_of_game_timer_start;
+    reg d_game_won;
 
     //------------------------------------------------------------------------
 
@@ -48,57 +58,84 @@ module game_master_fsm_alt_1
 
     //------------------------------------------------------------------------
 
-    reg collision_reg;
-
-    always @ (posedge clk)
-        collision_reg <= collision;
-
-    //------------------------------------------------------------------------
-
     always @*
     begin
         d_state = state;
-       
-        case (state)
 
-        STATE_START_TARGET:
-       
-            d_state = STATE_WAIT_KEY;
+        d_sprite_target_write_xy        = 1'b0;
+        d_sprite_torpedo_write_xy       = 1'b0;
 
+        d_sprite_target_write_dxy       = 1'b0;
+        d_sprite_torpedo_write_dxy      = 1'b0;
 
-        STATE_WAIT_KEY:
+        d_sprite_target_enable_update   = 1'b0;
+        d_sprite_torpedo_enable_update  = 1'b0;
 
-             if (key)
-                 d_state = STATE_START_TORPEDO;
-             else if (end_of_game)
-                 d_state = STATE_START_END_TIMER;
+        d_end_of_game_timer_start       = 1'b0;
+        d_game_won                      = game_won;
 
-        STATE_START_TORPEDO:
+        //--------------------------------------------------------------------
 
-             d_state = STATE_WAIT_COLLISION;
+        case (1'b1)  // synopsys parallel_case
 
-        STATE_WAIT_COLLISION:
+        state [STATE_START]:
+        begin
+            d_sprite_target_write_xy        = 1'b1;
+            d_sprite_torpedo_write_xy       = 1'b1;
 
-             if (end_of_game)
-                 d_state = STATE_START_END_TIMER;
+            d_sprite_target_write_dxy       = 1'b1;
 
-        STATE_START_END_TIMER:
+            d_game_won                      = 1'b0;
 
-            if (collision_reg)
-                d_state = STATE_GAME_WON;
-            else
-                d_state = STATE_GAME_LOST;
+            d_state [STATE_AIM] = 1;
+        end
 
-        STATE_GAME_WON:
+        state [STATE_AIM]:
+        begin
+            d_sprite_target_enable_update   = 1'b1;
+
+            if (key)
+            begin
+                d_state [STATE_SHOOT] = 1;
+            end
+            else if (end_of_game)
+            begin
+                d_end_of_game_timer_start   = 1'b1;
+
+                d_state [STATE_END] = 1;
+            end
+        end
+
+        state [STATE_SHOOT]:
+        begin
+            d_sprite_torpedo_write_dxy      = 1'b1;
+
+            d_sprite_target_enable_update   = 1'b1;
+            d_sprite_torpedo_enable_update  = 1'b1;
+
+            if (collision)
+                d_game_won = 1'b1;
+
+            if (end_of_game)
+            begin
+                d_end_of_game_timer_start   = 1'b1;
+
+                d_state [STATE_END] = 1;
+            end
+        end
+
+        state [STATE_END]:
+        begin
+            // TODO: Investigate why it needs collision detection here
+            // and not in previous state
+
+            if (collision)
+                d_game_won = 1'b1;
 
             if (! end_of_game_timer_running)
-                d_state = STATE_START_TARGET;
+                d_state [STATE_START] = 1;
+        end
 
-        STATE_GAME_LOST:
-
-            if (! end_of_game_timer_running)
-                d_state = STATE_START_TARGET;
-                
         endcase
     end
 
@@ -106,26 +143,36 @@ module game_master_fsm_alt_1
 
     always @ (posedge clk or posedge reset)
         if (reset)
-            state <= STATE_START_TARGET;
+        begin
+            state                         <= (1 << STATE_START);
+
+            sprite_target_write_xy        <= 1'b0;
+            sprite_torpedo_write_xy       <= 1'b0;
+
+            sprite_target_write_dxy       <= 1'b0;
+            sprite_torpedo_write_dxy      <= 1'b0;
+
+            sprite_target_enable_update   <= 1'b0;
+            sprite_torpedo_enable_update  <= 1'b0;
+
+            end_of_game_timer_start       <= 1'b0;
+            game_won                      <= 1'b0;
+        end
         else
-            state <= d_state;
+        begin
+            state                         <= d_state;
 
-    //------------------------------------------------------------------------
+            sprite_target_write_xy        <= d_sprite_target_write_xy;
+            sprite_torpedo_write_xy       <= d_sprite_torpedo_write_xy;
 
-    assign sprite_target_write_xy       =   state == STATE_START_TARGET    ;
-    assign sprite_torpedo_write_xy      =   state == STATE_START_TARGET    ;
+            sprite_target_write_dxy       <= d_sprite_target_write_dxy;
+            sprite_torpedo_write_dxy      <= d_sprite_torpedo_write_dxy;
 
-    assign sprite_target_write_dxy      =   state == STATE_START_TARGET    ;
+            sprite_target_enable_update   <= d_sprite_target_enable_update;
+            sprite_torpedo_enable_update  <= d_sprite_torpedo_enable_update;
 
-    assign sprite_torpedo_write_dxy     =   state == STATE_WAIT_KEY
-                                          | state == STATE_WAIT_COLLISION  ;
-
-    assign sprite_target_enable_update  =   state == STATE_WAIT_KEY
-                                          | state == STATE_WAIT_COLLISION  ;
-
-    assign sprite_torpedo_enable_update =   state == STATE_WAIT_COLLISION  ;
-
-    assign end_of_game_timer_start      =   state == STATE_START_END_TIMER ;
-    assign game_won                     =   state == STATE_GAME_WON        ;
+            end_of_game_timer_start       <= d_end_of_game_timer_start;
+            game_won                      <= d_game_won;
+        end
 
 endmodule

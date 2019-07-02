@@ -1,6 +1,6 @@
 `include "game_config.vh"
 
-module game_master_fsm_alt_4
+module game_master_fsm_alt_5
 (
     input  clk,
     input  reset,
@@ -63,14 +63,16 @@ module game_master_fsm_alt_4
     begin
         d_state = 0;
 
-             if (      state [ STATE_START_TARGET    ] )
+        case (1'b1)  // synopsys parallel_case
+
+                       state [ STATE_START_TARGET    ] :
         begin
                      d_state [ STATE_WAIT_KEY        ] = 1;
         end
 
         //---------------------------------------------------------------------
 
-        else if (      state [ STATE_WAIT_KEY        ] )
+                       state [ STATE_WAIT_KEY        ] :
         begin
             if ( key )
                      d_state [ STATE_START_TORPEDO   ] = 1;
@@ -82,14 +84,14 @@ module game_master_fsm_alt_4
 
         //---------------------------------------------------------------------
 
-        else if (      state [ STATE_START_TORPEDO   ] )
+                       state [ STATE_START_TORPEDO   ] :
         begin
                      d_state [ STATE_WAIT_COLLISION  ] = 1;
         end
 
         //---------------------------------------------------------------------
 
-        else if (      state [ STATE_WAIT_COLLISION  ] )
+                       state [ STATE_WAIT_COLLISION  ] :
         begin
             if ( end_of_game )
                      d_state [ STATE_START_END_TIMER ] = 1;
@@ -99,7 +101,7 @@ module game_master_fsm_alt_4
 
         //---------------------------------------------------------------------
 
-        else if (      state [ STATE_START_END_TIMER ] )
+                       state [ STATE_START_END_TIMER ] :
         begin
             if ( collision_reg )
                      d_state [ STATE_GAME_WON        ] = 1;
@@ -109,7 +111,7 @@ module game_master_fsm_alt_4
 
         //---------------------------------------------------------------------
 
-        else if (      state [ STATE_GAME_WON        ] )
+                       state [ STATE_GAME_WON        ] :
         begin
 
             if ( end_of_game_timer_running )
@@ -120,7 +122,7 @@ module game_master_fsm_alt_4
 
         //---------------------------------------------------------------------
 
-        else if (      state [ STATE_GAME_LOST       ] )
+                       state [ STATE_GAME_LOST       ] :
         begin
 
             if ( end_of_game_timer_running )
@@ -128,17 +130,15 @@ module game_master_fsm_alt_4
             else
                      d_state [ STATE_START_TARGET    ] = 1;
         end
-        else
-        begin
-                     d_state [ STATE_START_TARGET    ] = 1;
-        end
+
+        endcase
     end
 
     //------------------------------------------------------------------------
 
     always @ (posedge clk or posedge reset)
         if (reset)
-            state <= 0;
+            state <= 1 << STATE_START_TARGET;
         else
             state <= d_state;
 
