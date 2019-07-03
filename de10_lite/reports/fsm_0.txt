@@ -2,8 +2,8 @@
 ****************************************
 Report : qor
 Design : game_master_fsm_wrapper
-Version: P-2019.03
-Date   : Sun Jun 30 21:13:58 2019
+Version: P-2019.03-SP2
+Date   : Tue Jul  2 17:40:57 2019
 ****************************************
 
 
@@ -64,11 +64,11 @@ Date   : Sun Jun 30 21:13:58 2019
   Compile CPU Statistics
   -----------------------------------------
   Resource Sharing:                    0.03
-  Logic Optimization:                  0.26
-  Mapping Optimization:                3.23
+  Logic Optimization:                  0.30
+  Mapping Optimization:                3.46
   -----------------------------------------
-  Overall Compile Time:               45.35
-  Overall Compile Wall Clock Time:    46.70
+  Overall Compile Time:               46.55
+  Overall Compile Wall Clock Time:    48.91
 
   --------------------------------------------------------------------
 
@@ -88,8 +88,8 @@ Report : timing
         -delay max
         -max_paths 1
 Design : game_master_fsm_wrapper
-Version: P-2019.03
-Date   : Sun Jun 30 21:13:58 2019
+Version: P-2019.03-SP2
+Date   : Tue Jul  2 17:40:57 2019
 ****************************************
 
 Operating Conditions: SSGNP0P72V0C   Library: ts16ncpllogl16hdl090f_ssgnp0p72v0c

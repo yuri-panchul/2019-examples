@@ -2,16 +2,16 @@
 ****************************************
 Report : qor
 Design : game_master_fsm_wrapper
-Version: P-2019.03
-Date   : Sun Jun 30 21:30:36 2019
+Version: P-2019.03-SP2
+Date   : Tue Jul  2 17:52:27 2019
 ****************************************
 
 
   Timing Path Group 'clk'
   -----------------------------------
-  Levels of Logic:               5.00
-  Critical Path Length:          0.18
-  Critical Path Slack:           0.28
+  Levels of Logic:               3.00
+  Critical Path Length:          0.12
+  Critical Path Slack:           0.36
   Critical Path Clk Period:      0.50
   Total Negative Slack:          0.00
   No. of Violating Paths:        0.00
@@ -23,36 +23,36 @@ Date   : Sun Jun 30 21:30:36 2019
 
   Cell Count
   -----------------------------------
-  Hierarchical Cell Count:          0
-  Hierarchical Port Count:          0
-  Leaf Cell Count:                 36
-  Buf/Inv Cell Count:               7
+  Hierarchical Cell Count:          1
+  Hierarchical Port Count:          4
+  Leaf Cell Count:                 30
+  Buf/Inv Cell Count:               3
   Buf Cell Count:                   0
-  Inv Cell Count:                   7
+  Inv Cell Count:                   3
   CT Buf/Inv Cell Count:            0
-  Combinational Cell Count:        23
-  Sequential Cell Count:           13
+  Combinational Cell Count:        12
+  Sequential Cell Count:           18
   Macro Count:                      0
   -----------------------------------
 
 
   Area
   -----------------------------------
-  Combinational Area:        4.510080
-  Noncombinational Area:    13.322880
-  Buf/Inv Area:              0.777600
+  Combinational Area:        2.384640
+  Noncombinational Area:    18.506880
+  Buf/Inv Area:              0.362880
   Total Buffer Area:             0.00
-  Total Inverter Area:           0.78
+  Total Inverter Area:           0.36
   Macro/Black Box Area:      0.000000
   Net Area:                  0.000000
   -----------------------------------
-  Cell Area:                17.832960
-  Design Area:              17.832960
+  Cell Area:                20.891521
+  Design Area:              20.891521
 
 
   Design Rules
   -----------------------------------
-  Total Number of Nets:            43
+  Total Number of Nets:            37
   Nets With Violations:             0
   Max Trans Violations:             0
   Max Cap Violations:               0
@@ -63,12 +63,12 @@ Date   : Sun Jun 30 21:30:36 2019
 
   Compile CPU Statistics
   -----------------------------------------
-  Resource Sharing:                    0.03
-  Logic Optimization:                  0.30
-  Mapping Optimization:                3.44
+  Resource Sharing:                    0.02
+  Logic Optimization:                  0.27
+  Mapping Optimization:                3.28
   -----------------------------------------
-  Overall Compile Time:               43.46
-  Overall Compile Wall Clock Time:    44.87
+  Overall Compile Time:               45.14
+  Overall Compile Wall Clock Time:    46.43
 
   --------------------------------------------------------------------
 
@@ -88,17 +88,17 @@ Report : timing
         -delay max
         -max_paths 1
 Design : game_master_fsm_wrapper
-Version: P-2019.03
-Date   : Sun Jun 30 21:30:36 2019
+Version: P-2019.03-SP2
+Date   : Tue Jul  2 17:52:27 2019
 ****************************************
 
 Operating Conditions: SSGNP0P72V0C   Library: ts16ncpllogl16hdl090f_ssgnp0p72v0c
 Wire Load Model Mode: enclosed
 
-  Startpoint: master_fsm/state_reg[1]
+  Startpoint: master_fsm/state_reg[2]
               (rising edge-triggered flip-flop clocked by clk)
-  Endpoint: master_fsm/state_reg[6]
-            (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: master_fsm/clk_gate_state_reg/latch
+            (gating element for clock clk)
   Path Group: clk
   Path Type: max
 
@@ -111,26 +111,28 @@ Wire Load Model Mode: enclosed
   --------------------------------------------------------------------------
   clock clk (rise edge)                                   0.00       0.00
   clock network delay (ideal)                             0.00       0.00
-  master_fsm/state_reg[1]/CK (HDBLVT16_FDPRBQ_V2_1)       0.00       0.00 r
-  master_fsm/state_reg[1]/Q (HDBLVT16_FDPRBQ_V2_1)        0.07       0.07 f
-  U34/X (HDBLVT16_INV_1)                                  0.01       0.08 r
-  U27/X (HDBLVT16_ND2_MM_0P5)                             0.02       0.10 f
-  U45/X (HDBLVT16_NR4_0P75)                               0.04       0.14 r
-  U31/X (HDBLVT16_ND2_0P75)                               0.02       0.16 f
-  U29/X (HDBLVT16_OAI22_0P5)                              0.02       0.18 r
-  master_fsm/state_reg[6]/D (HDBLVT16_FDPRBQ_V2_1)        0.00       0.18 r
-  data arrival time                                                  0.18
+  master_fsm/state_reg[2]/CK (HDBLVT16_FDPRBQ_V2_1)       0.00       0.00 r
+  master_fsm/state_reg[2]/Q (HDBLVT16_FDPRBQ_V2_1)        0.07       0.07 f
+  U25/X (HDBLVT16_INV_1)                                  0.01       0.08 r
+  U17/X (HDBLVT16_OAI21_0P75)                             0.02       0.10 f
+  U20/X (HDBLVT16_AOI22_0P5)                              0.03       0.12 r
+  master_fsm/clk_gate_state_reg/EN (SNPS_CLOCK_GATE_HIGH_game_master_fsm_alt_2)
+                                                          0.00       0.12 r
+  master_fsm/clk_gate_state_reg/latch/EN (HDBLVT16_CKGTPLT_V5_0P75)
+                                                          0.00       0.12 r
+  data arrival time                                                  0.12
 
   clock clk (rise edge)                                   0.50       0.50
   clock network delay (ideal)                             0.00       0.50
-  master_fsm/state_reg[6]/CK (HDBLVT16_FDPRBQ_V2_1)       0.00       0.50 r
-  library setup time                                     -0.03       0.47
-  data required time                                                 0.47
+  master_fsm/clk_gate_state_reg/latch/CK (HDBLVT16_CKGTPLT_V5_0P75)
+                                                          0.00       0.50 r
+  clock gating setup time                                -0.02       0.48
+  data required time                                                 0.48
   --------------------------------------------------------------------------
-  data required time                                                 0.47
-  data arrival time                                                 -0.18
+  data required time                                                 0.48
+  data arrival time                                                 -0.12
   --------------------------------------------------------------------------
-  slack (MET)                                                        0.28
+  slack (MET)                                                        0.36
 
 
 1

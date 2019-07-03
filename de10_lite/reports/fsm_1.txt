@@ -2,15 +2,15 @@
 ****************************************
 Report : qor
 Design : game_master_fsm_wrapper
-Version: P-2019.03
-Date   : Sun Jun 30 21:28:11 2019
+Version: P-2019.03-SP2
+Date   : Tue Jul  2 17:49:33 2019
 ****************************************
 
 
   Timing Path Group 'clk'
   -----------------------------------
-  Levels of Logic:               5.00
-  Critical Path Length:          0.16
+  Levels of Logic:               3.00
+  Critical Path Length:          0.18
   Critical Path Slack:           0.31
   Critical Path Clk Period:      0.50
   Total Negative Slack:          0.00
@@ -23,36 +23,36 @@ Date   : Sun Jun 30 21:28:11 2019
 
   Cell Count
   -----------------------------------
-  Hierarchical Cell Count:          1
-  Hierarchical Port Count:          4
-  Leaf Cell Count:                 34
-  Buf/Inv Cell Count:               6
+  Hierarchical Cell Count:          0
+  Hierarchical Port Count:          0
+  Leaf Cell Count:                 33
+  Buf/Inv Cell Count:               4
   Buf Cell Count:                   0
-  Inv Cell Count:                   6
+  Inv Cell Count:                   4
   CT Buf/Inv Cell Count:            0
-  Combinational Cell Count:        24
-  Sequential Cell Count:           10
+  Combinational Cell Count:        16
+  Sequential Cell Count:           17
   Macro Count:                      0
   -----------------------------------
 
 
   Area
   -----------------------------------
-  Combinational Area:        4.717440
-  Noncombinational Area:    10.056960
-  Buf/Inv Area:              0.725760
+  Combinational Area:        3.369600
+  Noncombinational Area:    17.625600
+  Buf/Inv Area:              0.466560
   Total Buffer Area:             0.00
-  Total Inverter Area:           0.73
+  Total Inverter Area:           0.47
   Macro/Black Box Area:      0.000000
   Net Area:                  0.000000
   -----------------------------------
-  Cell Area:                14.774400
-  Design Area:              14.774400
+  Cell Area:                20.995201
+  Design Area:              20.995201
 
 
   Design Rules
   -----------------------------------
-  Total Number of Nets:            41
+  Total Number of Nets:            40
   Nets With Violations:             0
   Max Trans Violations:             0
   Max Cap Violations:               0
@@ -63,12 +63,12 @@ Date   : Sun Jun 30 21:28:11 2019
 
   Compile CPU Statistics
   -----------------------------------------
-  Resource Sharing:                    0.01
-  Logic Optimization:                  0.30
-  Mapping Optimization:                3.44
+  Resource Sharing:                    0.03
+  Logic Optimization:                  0.29
+  Mapping Optimization:                3.45
   -----------------------------------------
-  Overall Compile Time:               45.88
-  Overall Compile Wall Clock Time:    47.10
+  Overall Compile Time:               45.81
+  Overall Compile Wall Clock Time:    47.23
 
   --------------------------------------------------------------------
 
@@ -88,16 +88,16 @@ Report : timing
         -delay max
         -max_paths 1
 Design : game_master_fsm_wrapper
-Version: P-2019.03
-Date   : Sun Jun 30 21:28:11 2019
+Version: P-2019.03-SP2
+Date   : Tue Jul  2 17:49:33 2019
 ****************************************
 
 Operating Conditions: SSGNP0P72V0C   Library: ts16ncpllogl16hdl090f_ssgnp0p72v0c
 Wire Load Model Mode: enclosed
 
-  Startpoint: master_fsm/state_reg[2]
+  Startpoint: reg_collision_reg
               (rising edge-triggered flip-flop clocked by clk)
-  Endpoint: master_fsm/state_reg[1]
+  Endpoint: master_fsm/state_reg[3]
             (rising edge-triggered flip-flop clocked by clk)
   Path Group: clk
   Path Type: max
@@ -111,24 +111,22 @@ Wire Load Model Mode: enclosed
   --------------------------------------------------------------------------
   clock clk (rise edge)                                   0.00       0.00
   clock network delay (ideal)                             0.00       0.00
-  master_fsm/state_reg[2]/CK (HDBLVT16_FDPRBQ_V2_1)       0.00       0.00 r
-  master_fsm/state_reg[2]/Q (HDBLVT16_FDPRBQ_V2_1)        0.07       0.07 f
-  U44/X (HDBLVT16_INV_1)                                  0.01       0.08 r
-  U31/X (HDBLVT16_ND2_0P75)                               0.02       0.10 f
-  U49/X (HDBLVT16_INV_1)                                  0.01       0.12 r
-  U50/X (HDBLVT16_AOI32_0P5)                              0.03       0.15 f
-  U28/X (HDBLVT16_OAI211_0P75)                            0.02       0.16 r
-  master_fsm/state_reg[1]/D (HDBLVT16_FDPRBQ_V2_1)        0.00       0.16 r
-  data arrival time                                                  0.16
+  reg_collision_reg/CK (HDBLVT16_FDPRBQ_V2_1)             0.00       0.00 r
+  reg_collision_reg/Q (HDBLVT16_FDPRBQ_V2_1)              0.06       0.06 f
+  U31/X (HDBLVT16_ND3B_0P5)                               0.04       0.11 f
+  U33/X (HDBLVT16_AOI21B_0P5)                             0.04       0.14 f
+  U27/X (HDBLVT16_AO21_0P5)                               0.04       0.18 f
+  master_fsm/state_reg[3]/D (HDBLVT16_FDPRBQ_V2_1)        0.00       0.18 f
+  data arrival time                                                  0.18
 
   clock clk (rise edge)                                   0.50       0.50
   clock network delay (ideal)                             0.00       0.50
-  master_fsm/state_reg[1]/CK (HDBLVT16_FDPRBQ_V2_1)       0.00       0.50 r
-  library setup time                                     -0.03       0.47
-  data required time                                                 0.47
+  master_fsm/state_reg[3]/CK (HDBLVT16_FDPRBQ_V2_1)       0.00       0.50 r
+  library setup time                                     -0.01       0.49
+  data required time                                                 0.49
   --------------------------------------------------------------------------
-  data required time                                                 0.47
-  data arrival time                                                 -0.16
+  data required time                                                 0.49
+  data arrival time                                                 -0.18
   --------------------------------------------------------------------------
   slack (MET)                                                        0.31
 
