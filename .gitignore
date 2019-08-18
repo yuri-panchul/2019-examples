@@ -1,6 +1,7 @@
 project/
 sim/
 syn/
+*~
 *.bak
 *.swp
 *.swo
