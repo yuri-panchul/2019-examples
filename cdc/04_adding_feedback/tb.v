@@ -23,15 +23,11 @@ module tb;
     tb_receiver fast_receiver (f_clk, rst, f_en, data, f_expected, f_failure);
     tb_receiver slow_receiver (s_clk, rst, s_en, data, s_expected, s_failure);
 
-    wire toggle, f_toggle, s_toggle;
+    wire toggle;
 
-    pulse_to_toggle i_pulse_to_toggle    (clk, rst, en, toggle);
-
-    sync2           i_f_sync2            (f_clk, rst, toggle, f_toggle);
-    toggle_to_pulse i_f_toggle_to_pulse  (f_clk, rst, f_toggle, f_en);
-
-    sync2           i_s_sync2            (s_clk, rst, toggle, s_toggle);
-    toggle_to_pulse i_s_toggle_to_pulse  (s_clk, rst, s_toggle, s_en);
+    pulse_to_toggle       i_pulse_to_toggle         (clk, rst, en, toggle);
+    sync2_toggle_to_pulse i_f_sync2_toggle_to_pulse (f_clk, rst, toggle, f_en, );
+    sync2_toggle_to_pulse i_s_sync2_toggle_to_pulse (s_clk, rst, toggle, s_en, );
 
     initial
     begin
