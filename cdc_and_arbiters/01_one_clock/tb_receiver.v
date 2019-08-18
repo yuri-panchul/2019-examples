@@ -1,4 +1,4 @@
-module tb_sender
+module tb_receiver
 (
     input            clk,
     input            rst,
