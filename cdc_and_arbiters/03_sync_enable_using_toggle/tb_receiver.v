@@ -8,7 +8,7 @@ module tb_receiver
     output reg       failure
 );
 
-    always @ (posedge clk or negedge rst)
+    always @ (posedge clk or posedge rst)
         if (rst)
         begin
             expected <= 1;

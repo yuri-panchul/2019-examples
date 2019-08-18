@@ -6,7 +6,7 @@ module tb_sender
     output reg       en
 );
 
-    always @ (posedge clk or negedge rst)
+    always @ (posedge clk or posedge rst)
         if (rst)
         begin
             data <= 0;

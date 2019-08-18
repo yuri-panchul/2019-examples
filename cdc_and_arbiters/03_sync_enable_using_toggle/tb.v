@@ -17,6 +17,15 @@ module tb;
         .en       ( en       )
     );
 
+    wire s_pulse = en;
+    wire toggle;
+    wire r_pulse;
+    wire toggle_2;
+
+    pulse_to_toggle i_pulse_to_toggle   (s_clk, rst, s_pulse, toggle);
+    toggle_to_pulse i_toggle_to_pulse   (r_clk, rst, toggle, r_pulse);
+    pulse_to_toggle i_pulse_to_toggle_2 (r_clk, rst, toggle, toggle_2);
+
     tb_receiver receiver
     (
         .clk      ( r_clk    ),
