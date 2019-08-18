@@ -73,7 +73,7 @@ module tb;
 
         repeat (50) @ (posedge clk);
 
-        // Ramdon sender
+        // Random sender
 
         gap_from <= 0;
         gap_to   <= 10;
