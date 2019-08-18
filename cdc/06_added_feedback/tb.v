@@ -1,6 +1,6 @@
 module tb;
 
-    localparam n_cycles_in_series = 100;
+    localparam n_cycles_in_series = 1000;
 
     integer s_clk_period;
     integer r_clk_period;

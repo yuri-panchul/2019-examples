@@ -10,6 +10,16 @@ module tb_sender
     input      [7:0] gap_to
 );
 
+    reg can_send;
+
+    always @ (posedge clk or posedge rst)
+        if (rst)
+            can_send <= 1;
+        else if (ack)
+            can_send <= 1;
+        else if (en)
+            can_send <= 0;
+
     reg [7:0] cnt;
 
     always @ (posedge clk or posedge rst)
@@ -24,7 +34,7 @@ module tb_sender
             cnt  <= cnt - 1;
             en   <= 0;
         end
-        else
+        else if (! en && can_send)
         begin
             $display ("Sending %d", data + 1);
 
@@ -32,6 +42,10 @@ module tb_sender
             en   <= 1;
 
             cnt  <= $urandom_range (gap_from, gap_to);
+        end
+        else
+        begin
+            en   <= 0;
         end
 
 endmodule
