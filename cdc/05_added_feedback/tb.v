@@ -1,6 +1,6 @@
 module tb;
 
-    localparam n_cycles_in_series = 1000;
+    localparam n_cycles_in_series = 100;
 
     integer s_clk_period;
     integer r_clk_period;
@@ -41,43 +41,47 @@ module tb;
             # (r_clk_period / 2) r_clk = ! r_clk;
     end
 
-    task test_for_receiver_clock_period (integer period);
+    task run_series;
     begin
-        r_clk_period = period;
-
-        s_gap_from <= 0;
-        s_gap_to   <= 0;
-
         rst <= 1;
         repeat (10) @ (posedge s_clk);
         rst <= 0;
+        repeat (n_cycles_in_series) @ (posedge s_clk);
+    end
+    endtask
+
+    task test_for_receiver_clock_period (integer period);
+    begin
+        r_clk_period = period;
 
         // Slow sender
 
         s_gap_from <= 5;
         s_gap_to   <= 5;
 
-        repeat (n_cycles_in_series) @ (posedge s_clk);
+        run_series;
 
         // Fast sender
 
         s_gap_from <= 0;
         s_gap_to   <= 0;
 
-        repeat (n_cycles_in_series) @ (posedge s_clk);
+        run_series;
 
         // Random sender
 
         s_gap_from <= 0;
         s_gap_to   <= 10;
 
-        repeat (n_cycles_in_series) @ (posedge s_clk);
+        run_series;
     end
     endtask
 
     initial
     begin
         $dumpvars;
+
+        s_clk_period = 20;
 
         test_for_receiver_clock_period (20);
         test_for_receiver_clock_period (18);
