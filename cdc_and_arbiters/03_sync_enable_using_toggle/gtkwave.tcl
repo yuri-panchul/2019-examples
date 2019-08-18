@@ -1,6 +1,7 @@
 # gtkwave::loadFile "dump.vcd"
 
-lappend all_signals tb.clk
+lappend all_signals tb.s_clk
+lappend all_signals tb.r_clk
 lappend all_signals tb.rst
 lappend all_signals tb.en
 lappend all_signals tb.data
