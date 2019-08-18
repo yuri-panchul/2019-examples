@@ -1,61 +1,45 @@
 module tb;
 
-    reg         s_clk;
-    reg         r_clk;
+    reg         f_clk;
+    wire        f_en;
+
+    reg         t_clk;
+    wire        t_en;
 
     reg         rst;
-    wire        en;
     wire  [3:0] data;
     wire  [3:0] expected;
     wire        failure;
 
-    tb_sender sender
-    (
-        .clk      ( s_clk    ),
-        .rst      ( rst      ),
-        .data     ( data     ),
-        .en       ( en       )
-    );
+    tb_sender sender (f_clk, rst, data, f_en);
+    tb_receiver receiver (t_clk, rst, s_en, data, expected, failure);
 
-    wire s_pulse = en;
-    wire toggle;
-    wire r_pulse;
-    wire toggle_2;
+    wire f_toggle, t_toggle;
 
-    pulse_to_toggle i_pulse_to_toggle   (s_clk, rst, s_pulse, toggle);
-    toggle_to_pulse i_toggle_to_pulse   (r_clk, rst, toggle, r_pulse);
-    pulse_to_toggle i_pulse_to_toggle_2 (r_clk, rst, toggle, toggle_2);
-
-    tb_receiver receiver
-    (
-        .clk      ( r_clk    ),
-        .rst      ( rst      ),
-        .en       ( en       ),
-        .data     ( data     ),
-        .expected ( expected ),
-        .failure  ( failure  )
-    );
+    pulse_to_toggle i_pulse_to_toggle   (f_clk, rst, f_en,  f_toggle);
+    sync2           i_sync2             (t_clk, rst, f_toggle, t_toggle);
+    toggle_to_pulse i_toggle_to_pulse   (t_clk, rst, t_toggle, s_en);
 
     initial
     begin
-        s_clk = 0;
+        f_clk = 0;
 
         forever
-            # 10 s_clk = ! s_clk;
+            # 10 f_clk = ! f_clk;
     end
 
     initial
     begin
-        r_clk = 0;
+        t_clk = 0;
 
         forever
-            # 9 r_clk = ! r_clk;
+            # 9 t_clk = ! t_clk;
     end
 
     initial
     begin
         rst <= 1;
-        repeat (2) @ (posedge s_clk);
+        repeat (2) @ (posedge f_clk);
         rst <= 0;
     end
 
@@ -65,8 +49,8 @@ module tb;
 
         @ (negedge rst);
 
-        repeat (100)
-            @ (posedge s_clk);
+        repeat (30)
+            @ (posedge f_clk);
 
         `ifdef MODEL_TECH  // Mentor ModelSim and Questa
             $stop;

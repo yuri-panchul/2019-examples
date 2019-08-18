@@ -4,15 +4,20 @@ module tb;
     reg         rst;
     wire  [3:0] data;
     wire        en;
-
     reg   [7:0] gap_from;
     reg   [7:0] gap_to;
 
-    wire  [3:0] expected;
-    wire        failure;
+    reg         f_clk;
+    wire  [3:0] f_expected;
+    wire        f_failure;
 
-    tb_sender sender (clk, rst, data, en, gap_from, gap_to);
-    tb_receiver receiver (clk, rst, en, data, expected, failure);
+    reg         s_clk;
+    wire  [3:0] s_expected;
+    wire        s_failure;
+
+    tb_sender   sender        (clk, rst, data, en, gap_from, gap_to);
+    tb_receiver fast_receiver (f_clk, rst, en, data, f_expected, f_failure);
+    tb_receiver slow_receiver (s_clk, rst, en, data, s_expected, s_failure);
 
     initial
     begin
@@ -20,6 +25,22 @@ module tb;
 
         forever
             # 10 clk = ! clk;
+    end
+
+    initial
+    begin
+        f_clk = 0;
+
+        forever
+            # 9 f_clk = ! f_clk;
+    end
+
+    initial
+    begin
+        s_clk = 0;
+
+        forever
+            # 11 s_clk = ! s_clk;
     end
 
     initial
