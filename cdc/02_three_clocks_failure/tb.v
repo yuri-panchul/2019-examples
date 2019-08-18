@@ -1,5 +1,7 @@
 module tb;
 
+    localparam n = 50;
+
     reg         clk;
     reg         rst;
     wire  [3:0] data;
@@ -64,21 +66,21 @@ module tb;
         gap_from <= 5;
         gap_to   <= 5;
 
-        repeat (50) @ (posedge clk);
+        repeat (n) @ (posedge clk);
 
         // Fast sender
 
         gap_from <= 0;
         gap_to   <= 0;
 
-        repeat (50) @ (posedge clk);
+        repeat (n) @ (posedge clk);
 
         // Random sender
 
         gap_from <= 0;
         gap_to   <= 10;
 
-        repeat (50) @ (posedge clk);
+        repeat (n) @ (posedge clk);
 
         `ifdef MODEL_TECH  // Mentor ModelSim and Questa
             $stop;
