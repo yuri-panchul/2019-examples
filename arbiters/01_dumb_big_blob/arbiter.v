@@ -115,14 +115,14 @@ module arbiter
             ptr <= 3'b0;
         else
             case (1'b1)  // synopsys parallel_case
-            gnt [0]: ptr <= 2'd1;
-            gnt [1]: ptr <= 2'd2;
-            gnt [2]: ptr <= 2'd3;
-            gnt [3]: ptr <= 2'd0;
-            gnt [4]: ptr <= 2'd1;
-            gnt [5]: ptr <= 2'd2;
-            gnt [6]: ptr <= 2'd3;
-            gnt [7]: ptr <= 2'd0;
+            gnt [0]: ptr <= 3'd1;
+            gnt [1]: ptr <= 3'd2;
+            gnt [2]: ptr <= 3'd3;
+            gnt [3]: ptr <= 3'd4;
+            gnt [4]: ptr <= 3'd5;
+            gnt [5]: ptr <= 3'd6;
+            gnt [6]: ptr <= 3'd7;
+            gnt [7]: ptr <= 3'd0;
             endcase
 
 endmodule
