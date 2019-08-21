@@ -25,7 +25,7 @@ module arbiter
         3'd7: shift_req = { req [6:0], req [7:7] };
         endcase
 
-    // Priority arbiter using if
+    // Priority arbiter using case
 
     always @*
     begin

@@ -7,10 +7,7 @@ module arbiter
 );
 
     reg [2:0] ptr;
-
     reg [7:0] shift_req;
-    reg [7:0] shift_gnt;
-
     reg [7:0] d_gnt;
 
     always @*
@@ -25,22 +22,14 @@ module arbiter
         3'd7: shift_req = { req [6:0], req [7:7] };
         endcase
 
-    // Priority arbiter using if
+    // Priority arbiter using three assigns
 
-    always @*
-    begin
-        casez (shift_req)
-        8'b????_???1: shift_gnt = 8'b0000_0001;
-        8'b????_??10: shift_gnt = 8'b0000_0010;
-        8'b????_?100: shift_gnt = 8'b0000_0100;
-        8'b????_1000: shift_gnt = 8'b0000_1000;
-        8'b???1_0000: shift_gnt = 8'b0001_0000;
-        8'b??10_0000: shift_gnt = 8'b0010_0000;
-        8'b?100_0000: shift_gnt = 8'b0100_0000;
-        8'b1000_0000: shift_gnt = 8'b1000_0000;
-        8'b0000_0000: shift_gnt = 8'b0000_0000;
-        endcase
-    end
+    wire [7:0] higher_pri_reqs;
+
+    assign higher_pri_reqs [7:1] = higher_pri_reqs [6:0] | shift_req [6:0];
+    assign higher_pri_reqs [0]   = 0;
+
+    wire [7:0] shift_gnt = shift_req & ~ higher_pri_reqs;
 
     always @*
         case (ptr)
