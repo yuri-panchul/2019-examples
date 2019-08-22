@@ -7,14 +7,14 @@ module tb;
     reg inc;
     reg not_full_or_empty;
 
-    wire [N-2:0] bin_1;
+    wire [N-2:0] adr_1;
     wire [N-1:0] ptr_1;
 
     wire [N-2:0] bin_2;
     wire [N-1:0] ptr_2;
 
     gray_counter_1 cnt_1
-        (clk, rst, inc, not_full_or_empty, bin_1, ptr_1);
+        (clk, rst, inc, not_full_or_empty, adr_1, ptr_1);
 
     gray_counter_2 cnt_2
         (clk, rst, inc, not_full_or_empty, bin_2, ptr_2);
@@ -35,13 +35,16 @@ module tb;
     end
 
     integer i, n;
+    reg failure;
 
     initial
     begin
         $dumpvars;
 
         inc               <= 0;
-        not_full_or_empty <= 0;
+        not_full_or_empty <= 1;
+
+        failure <= 0;
 
         @ (negedge rst);
         @ (posedge clk);
@@ -57,6 +60,9 @@ module tb;
         begin
             @ (posedge clk);
             inc <= $urandom;
+
+            if (ptr_1 != ptr_2)
+                $display ("*** ptr_1 %b ptr_2 %b", ptr_1, ptr_2);
         end
 
         `ifdef MODEL_TECH  // Mentor ModelSim and Questa

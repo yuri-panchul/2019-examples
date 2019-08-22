@@ -7,7 +7,7 @@ module gray_counter_1
     input              rst,
     input              inc,
     input              not_full_or_empty,
-    output reg [N-2:0] bin,
+    output reg [N-2:0] adr,
     output reg [N-1:0] ptr
 );
 
@@ -25,17 +25,18 @@ module gray_counter_1
     end
     endfunction
 
-    wire [N-1:0] d_ptr = gray_to_bin (ptr) + (inc & not_full_or_empty);
-    
-    wire [N-1:0] d_bin
+    wire [N-1:0] d_ptr
+        = bin_to_gray (gray_to_bin (ptr) + (inc & not_full_or_empty));
+
+    wire [N-1:0] d_adr
         = { d_ptr [N-1], d_ptr [N-2] ^ d_ptr [N-1], d_ptr [N-3:0] };
 
     always @ (posedge clk or posedge rst)
-        if (reset) bin <= 0;
-        else       bin <= d_bin;
+        if (rst) adr <= 0;
+        else     adr <= d_adr;
             
     always @ (posedge clk or posedge rst)
-        if (reset) ptr <= 0;
-        else       ptr <= d_ptr;
+        if (rst) ptr <= 0;
+        else     ptr <= d_ptr;
         
 endmodule
