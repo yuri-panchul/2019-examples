@@ -1,0 +1,3 @@
+all:
+	tclsh babble.tcl
+	
