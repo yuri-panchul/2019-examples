@@ -1,3 +1,4 @@
 all:
-	tclsh babble.tcl
+	bash  babble.bash
+	# tclsh babble.tcl
 	

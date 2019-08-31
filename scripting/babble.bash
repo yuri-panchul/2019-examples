@@ -27,9 +27,9 @@ while $run
 do
     run=false
 
-    for i in $(seq 0 $(( ${#a[@]} - 2)) )
+    for i in $(seq 0 $((${#a[@]} - 2)) )
     do
-        i_1=$(( $i + 1 ))
+        i_1=$(($i + 1))
         
         if [ "${a[$i_1]}" \< "${a[$i]}" ]
         then
