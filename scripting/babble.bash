@@ -40,7 +40,6 @@ do
             run=true
         fi
     done
-
 done
 
 print_array After sort
