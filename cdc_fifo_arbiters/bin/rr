@@ -4,9 +4,17 @@ set +e  # Don't exit immediately if a command exits with a non-zero status
 
 #-----------------------------------------------------------------------------
 
+iverilog_has_priority=1
+vsim_has_priority=1
+
+#-----------------------------------------------------------------------------
+
 readonly script=$(basename "$0")
 
 #-----------------------------------------------------------------------------
+
+IVERILOG=iverilog
+VVP=vvp
 
 GTKWAVE=gtkwave
 
@@ -14,6 +22,8 @@ if [ ${OSTYPE/[0-9]*/} = "darwin" ]
 then
     GTKWAVE=/Applications/gtkwave.app/Contents/MacOS/gtkwave-bin
 fi
+
+VSIM=vsim
 
 #-----------------------------------------------------------------------------
 
@@ -38,34 +48,17 @@ is_number ()
     test -n "${1##*[!0-9]*}"
 }
 
-test_is_number ()
-{
-    is_number "$1" \
-        && echo "$1" is number \
-        || echo "$1" is not a number
-}
-
-test_is_number 123
-test_is_number abc
-test_is_number 123abc
-test_is_number abc123
-test_is_number 123abc123
-test_is_number
-
-exit
-
-is_number && echo empty is number || echo empty not
-is_number 123 && echo 123 is number || echo 123 not
-is_number abc && echo abc is number || echo abc not
-is_number abc123 && echo abc123 is number || echo abc123 not
-is_number 123abc && echo 123abc is number || echo 123abc not
-exit
-
+#-----------------------------------------------------------------------------
 
 error ()
 {
-    ec=$1
-    shift
+    if is_number $1
+    then
+        ec=$1
+        shift
+    else
+        ec=1
+    fi
 
     [ $ec != 0 ] || return
 
@@ -106,7 +99,7 @@ is_command_available ()
 is_command_available_or_error ()
 {
     is_command_available $1 ||  \
-        error 1 "program $1$2 is not in the path or cannot be run"
+        error "program $1$2 is not in the path or cannot be run"
 }
 
 #-----------------------------------------------------------------------------
@@ -126,38 +119,41 @@ guarded cd        $SIM_DIR
 #-----------------------------------------------------------------------------
 
 run_iverilog=0
-run_gtkwave=1
+run_gtkwave=0
 run_vsim=0
 
-is_command_available iverilog && run_iverilog=1
-is_command_available gtkwave  && run_gtkwave=1
-is_command_available vsim     && run_vsim=1
+is_command_available $IVERILOG && run_iverilog=1
+is_command_available $GTKWAVE  && run_gtkwave=1
+is_command_available $VSIM     && run_vsim=1
 
 #-----------------------------------------------------------------------------
 
 if [ $run_iverilog = 1 ] && [ $run_vsim = 1 ]
 then
-    # Icarus has priority
-    run_vsim=0
-fi
+    if [ $iverilog_has_priority = 1 ]
+    then
+        run_vsim=0
 
-if [ $run_iverilog = 1 ] && [ $run_vsim = 1 ]
-then
-    printf "Two Verilog simulators are available to run:"
-    printf " Icarus Verilog and Mentor ModelSim\n"
-    printf "Which do you want to run?\n"
+    elif [ $vsim_has_priority = 1 ]
+    then
+        run_iverilog=0
+    else
+        printf "Two Verilog simulators are available to run:"
+        printf " Icarus Verilog and Mentor ModelSim\n"
+        printf "Which do you want to run?\n"
 
-    options="Icarus ModelSim Both"
-    PS3="Your choice: "
+        options="Icarus ModelSim Both"
+        PS3="Your choice: "
 
-    select simulator in $options
-    do
-        case $simulator in
-        Icarus)   run_vsim=0     ; break ;;
-        ModelSim) run_iverilog=0 ; break ;;
-        Both)                      break ;;
-        esac
-    done
+        select simulator in $options
+        do
+            case $simulator in
+            Icarus)   run_vsim=0     ; break ;;
+            ModelSim) run_iverilog=0 ; break ;;
+            Both)                      break ;;
+            esac
+        done
+    fi
 fi
 
 if [ $run_iverilog = 0 ] && [ $run_gtkwave = 1 ]
@@ -166,15 +162,15 @@ then
 fi
 
 [ $run_iverilog = 0 ] && [ $run_vsim = 0 ] &&  \
-    error 1 "No Verilog simulator is available to run."  \
-            "You need to install either Icarus Verilog"  \
-            "or Mentor Questa / ModelSim."
+    error "No Verilog simulator is available to run."  \
+          "You need to install either Icarus Verilog"  \
+          "or Mentor Questa / ModelSim."
 
 #-----------------------------------------------------------------------------
 
 if [ $run_iverilog = 1 ]
 then
-    iverilog -g2005 -I .. ../*.v &> icarus.compile.log
+    $IVERILOG -g2005 -I .. ../*.v &> icarus.compile.log
     ec=$?
 
     if [ $ec != 0 ]
@@ -183,11 +179,11 @@ then
         error $ec Icarus Verilog compiler errors
     fi
 
-    vvp a.out &> icarus.simulate.log
+    $VVP a.out &> icarus.simulate.log
     ec=$?
 
-    # sed -i '/^VCD info: dumpfile dump.vcd opened for output.$/d'  \
-    #     icarus.simulate.log
+    sed -i .bak '/^VCD info: dumpfile dump.vcd opened for output.$/d'  \
+        icarus.simulate.log
 
     if [ $ec != 0 ]
     then
@@ -204,32 +200,7 @@ fi
 
 if [ $run_gtkwave = 1 ]
 then
-    ec=0
-
-    if    [ "$OSTYPE" = "linux-gnu" ]  \
-       || [ "$OSTYPE" = "cygwin"    ]  \
-       || [ "$OSTYPE" = "msys"      ]
-    then
-        gtkwave --dump dump.vcd --script ../gtkwave.tcl &> waveform.log
-
-    elif [ ${OSTYPE/[0-9]*/} = "darwin" ]
-    # elif [[ "$OSTYPE" = "darwin"* ]]  # Alternative way
-    then
-        # For some reason the following way of opening the application
-        # does not read the script file:
-        #
-        # open -a gtkwave dump.vcd --args --script $PWD/../gtkwave.tcl
-        #
-        # This way works:
-
-echo OPENING
-
-        /Applications/gtkwave.app/Contents/MacOS/gtkwave-bin  \
-            --dump dump.vcd --script ../gtkwave.tcl &> waveform.log
-    else
-        error 1 "don't know how to run GTKWave on your OS $OSTYPE"
-    fi
-
+    $GTKWAVE --dump dump.vcd --script ../gtkwave.tcl &> waveform.log
     ec=$?
 
     if [ $ec != 0 ]
@@ -243,17 +214,7 @@ fi
 
 if [ $run_vsim = 1 ]
 then
-    ec=0
-
-    if    [ "$OSTYPE" = "linux-gnu" ]  \
-       || [ "$OSTYPE" = "cygwin"    ]  \
-       || [ "$OSTYPE" = "msys"      ]
-    then
-        vsim -do ../modelsim.tcl &> modelsim.log
-    else
-        error 1 "don't know how to run ModelSim on your OS $OSTYPE"
-    fi
-
+    $VSIM -do ../modelsim.tcl &> modelsim.log
     ec=$?
 
     if [ $ec != 0 ]
