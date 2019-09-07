@@ -1,7 +1,7 @@
 #!/usr/bin/tclsh
 
 array set a {
-	0  "Palo Alto"
+    0  "Palo Alto"
     1  "Fremont"
     2  "Mountain View"
     3  "Milpitas"
