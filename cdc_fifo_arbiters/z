@@ -1,0 +1,19 @@
+#!/bin/sh
+
+for i in \
+./arbiters/01_dumb_big_blob \
+./arbiters/02_rotate_priority_rotate_verbose \
+./arbiters/03_rotate_priority_case_rotate \
+./arbiters/04_rotate_priority_3_assigns_rotate \
+./arbiters/05_rotate_priority_rotate_brief \
+./cdc/01_one_clock \
+./cdc/02_three_clocks_failure \
+./cdc/03_sync_enable_using_toggle \
+./cdc/04_added_hier_sync2_toggle_to_pulse \
+./cdc/05_restructured_code \
+./cdc/06_added_feedback \
+./fifo/01_gray_counters
+do
+    cd $i
+    ln -s -f ../bin/* .
+done
