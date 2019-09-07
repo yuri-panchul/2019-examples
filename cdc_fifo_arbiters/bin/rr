@@ -250,6 +250,8 @@ fi
 
 if [ $run_iverilog = 1 ]
 then
+    # TODO --extra-dir option support
+
     $IVERILOG -g2005 -I .. ../*.v &> icarus.compile.log
     ec=$?
 
