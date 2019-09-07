@@ -4,6 +4,7 @@ for i in $(find . -type d -mindepth 2 -maxdepth 2)
 do
     pushd $i > /dev/null
     pwd
+	rm -rf sim syn *~
     ln -s -f ../../bin/* .
     popd > /dev/null
 done
