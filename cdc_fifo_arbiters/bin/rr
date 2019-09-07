@@ -4,11 +4,6 @@ set +e  # Don't exit immediately if a command exits with a non-zero status
 
 #-----------------------------------------------------------------------------
 
-iverilog_has_priority=1
-vsim_has_priority=1
-
-#-----------------------------------------------------------------------------
-
 readonly script=$(basename "$0")
 
 #-----------------------------------------------------------------------------
@@ -40,11 +35,11 @@ SYN_DIR=${PWD}/syn
 
 is_number ()
 {
-    # Работает в sh?
+    # Is it working in POSIX sh?
     # [ "$1" != "" ] && echo $1 | grep -q ^[0-9]*$
-    # Работает только в bash
+    # Is it working only in bash?
     # [ "$1" != "" ] && grep -q <<< "$1" ^[0-9]*$
-    # Работает только в bash ?
+    # Is it working only in bash?
     test -n "${1##*[!0-9]*}"
 }
 
@@ -96,9 +91,9 @@ is_command_available ()
 
 #-----------------------------------------------------------------------------
 
-is_command_available_or_error ()
+command_is_available_or_error ()
 {
-    is_command_available $1 ||  \
+    is_command_available $1 || \
         error "program $1$2 is not in the path or cannot be run"
 }
 
@@ -106,9 +101,92 @@ is_command_available_or_error ()
 
 guarded ()
 {
-    is_command_available_or_error $1
+    command_is_available_or_error $1
     eval "$*" || error $? "cannot $*"
 }
+
+#-----------------------------------------------------------------------------
+
+command_is_available_or_error getopt
+
+getopt_version=$(getopt -V | sed 's/getopt //')
+
+getopt -T &>/dev/null
+
+[ $? -eq 4 ] || error \
+    "\"$(which getopt)\" program is too old;" \
+    "its version is \"$getopt_version\"."
+
+#-----------------------------------------------------------------------------
+
+getopt_result=$(eval $(tr -d '\n' <<END
+getopt
+ --name $script
+ --options hd:ivw
+ --longoptions
+ help,
+extra-dir:,
+iverilog-priority,
+vsim-priority,
+no-waves
+ --
+ $*
+END
+)) || error "failed parsing options. Run $script -h for more information."
+
+set -- $getopt_result
+
+#-----------------------------------------------------------------------------
+
+readonly help_text=$(cat <<END_HELP
+
+Usage: $script [POSIX or GNU style options]
+
+-h        --help
+-d <dir>  --extra-dir <dir>
+-i        --iverilog-priority
+-v        --vsim-priority
+-w        --no-waves
+
+END_HELP
+)
+
+#-----------------------------------------------------------------------------
+
+show_help=0
+extra_dirs=()
+iverilog_has_priority=0
+vsim_has_priority=0
+display_waves=1
+
+#-----------------------------------------------------------------------------
+
+while true
+do
+    [ $# -gt 0 ] || error "internal error parsing arguments." \
+              "getopt should return \"--\" at the end of its result."
+
+    case "$1" in
+    -h | --help              ) show_help=1             ; shift   ;;
+    -d | --extra-dir         ) extra_dirs+=($2)        ; shift 2 ;;
+    -i | --iverilog-priority ) iverilog_has_priority=1 ; shift   ;;
+    -v | --vsim-priority     ) vsim_has_priority=1     ; shift   ;;
+    -w | --no-waves          ) display_waves=0         ; shift   ;;
+    -- ) shift ; break ;;
+    *  )
+         error "internal error parsing argument \"$1\"." \
+               "getopt should check the options earlier."
+         ;;
+    esac
+done
+
+#-----------------------------------------------------------------------------
+
+if [ $show_help = 1 ]
+then
+    echo "$help_text"
+    exit 0
+fi
 
 #-----------------------------------------------------------------------------
 
@@ -156,14 +234,16 @@ then
     fi
 fi
 
-if [ $run_iverilog = 0 ] && [ $run_gtkwave = 1 ]
+# TODO: Consider removing check for run_iverilog
+
+if [ $run_iverilog = 0 ] || [ $display_waves = 0 ]
 then
     run_gtkwave=0
 fi
 
-[ $run_iverilog = 0 ] && [ $run_vsim = 0 ] &&  \
-    error "No Verilog simulator is available to run."  \
-          "You need to install either Icarus Verilog"  \
+[ $run_iverilog = 0 ] && [ $run_vsim = 0 ] && \
+    error "No Verilog simulator is available to run." \
+          "You need to install either Icarus Verilog" \
           "or Mentor Questa / ModelSim."
 
 #-----------------------------------------------------------------------------
@@ -182,7 +262,7 @@ then
     $VVP a.out &> icarus.simulate.log
     ec=$?
 
-    sed -i .bak '/^VCD info: dumpfile dump.vcd opened for output.$/d'  \
+    sed -i .bak '/^VCD info: dumpfile dump.vcd opened for output.$/d' \
         icarus.simulate.log
 
     if [ $ec != 0 ]
