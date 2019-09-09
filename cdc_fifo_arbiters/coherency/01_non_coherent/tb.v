@@ -1,23 +1,43 @@
 module tb;
 
-    localparam N = 4;
-
     reg clk;
     reg rst;
-    reg inc;
-    reg not_full_or_empty;
 
-    wire [N-2:0] adr_1;
-    wire [N-1:0] ptr_1;
+    reg        i_rd_0;
+    reg        i_wr_0;
+    wire       rd_0;
+    wire       wr_0;
+    wire       rdy_0;
+    wire [7:0] wdata_0;
+    wire [7:0] rdata_0;
 
-    wire [N-2:0] bin_2;
-    wire [N-1:0] ptr_2;
+    reg        i_rd_1;
+    reg        i_wr_1;
+    wire       rd_1;
+    wire       wr_1;
+    wire       rdy_1;
+    wire [7:0] wdata_1;
+    wire [7:0] rdata_1;
 
-    gray_counter_1 cnt_1
-        (clk, rst, inc, not_full_or_empty, adr_1, ptr_1);
+    reg        i_rd_2;
+    reg        i_wr_2;
+    wire       rd_2;
+    wire       wr_2;
+    wire       rdy_2;
+    wire [7:0] wdata_2;
+    wire [7:0] rdata_2;
 
-    gray_counter_2 cnt_2
-        (clk, rst, inc, not_full_or_empty, bin_2, ptr_2);
+    reg        i_rd_3;
+    reg        i_wr_3;
+    wire       rd_3;
+    wire       wr_3;
+    wire       rdy_3;
+    wire [7:0] wdata_3;
+    wire [7:0] rdata_3;
+
+    wire [3:0] p_rdy;
+
+    system sys (.*);
 
     initial
     begin
@@ -34,37 +54,38 @@ module tb;
         rst <= 0;
     end
 
-    integer i, n;
-    reg failure;
-
     initial
     begin
         $dumpvars;
 
-        inc               <= 0;
-        not_full_or_empty <= 1;
-
-        failure <= 0;
+        { i_rd_0, i_wr_0,
+          i_rd_1, i_wr_1,
+          i_rd_2, i_wr_2,
+          i_rd_3, i_wr_3 } <= 8'b0;
 
         @ (negedge rst);
         @ (posedge clk);
 
-        repeat (10) @ (posedge clk);
-
-        inc <= 1;
-
-        repeat (2 ** (N + 2)) @ (posedge clk);
-        repeat (10) @ (posedge clk);
-
-        repeat (2 ** (N + 2))
+        repeat (20)
         begin
             @ (posedge clk);
-            inc <= $urandom;
 
-            if (ptr_1 != ptr_2)
-                $display ("*** ptr_1 %b ptr_2 %b", ptr_1, ptr_2);
+            { i_rd_0, i_wr_0,
+              i_rd_1, i_wr_1,
+              i_rd_2, i_wr_2,
+              i_rd_3, i_wr_3 } <= 8'b10101001;
         end
+/*
+        repeat (20)
+        begin
+            @ (posedge clk);
 
+            { i_rd_0, i_wr_0,
+              i_rd_1, i_wr_1,
+              i_rd_2, i_wr_2,
+              i_rd_3, i_wr_3 } <= $urandom;
+        end
+*/
         `ifdef MODEL_TECH  // Mentor ModelSim and Questa
             $stop;
         `else

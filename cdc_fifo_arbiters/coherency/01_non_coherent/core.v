@@ -10,13 +10,12 @@ module core
     output reg       rd,
     output reg       wr,
     input            rdy,
-    output reg [7:0] wdata,
+    output     [7:0] wdata,
     input      [7:0] rdata
 );
 
-    reg       n_rd;
-    reg       n_wr;
-    reg [7:0] n_wdata;
+    reg [7:0] data;
+    assign wdata = data;
 
     always @ (posedge clk or posedge rst)
         if (rst)
@@ -30,11 +29,20 @@ module core
             wr <= i_wr;
         end
 
-    wire [7:0] n_wdata
-        = i_wr ? { id, wdata [3:0] + 4'b1 } : wdata;
-        
-    always @ (posedge clk)
-        if (rdy)
-            wdata <= n_wdata;
-        
+    reg [7:0] n_data;
+
+    always @*
+        if (rd)
+            n_data = rdata;
+        else if (i_wr)
+            n_data = { id, data [3:0] + 4'b1 };
+        else
+            n_data = data;
+
+    always @ (posedge clk or posedge rst)
+        if (rst)
+            data <= { id, 4'd1 };
+        else if (rdy)
+            data <= n_data;
+
 endmodule

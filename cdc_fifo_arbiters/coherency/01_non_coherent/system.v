@@ -93,12 +93,12 @@ module system
     wire [3:0] req;
     wire [3:0] gnt;
 
-    arbiter i_arbiter (clk, rst, req, gnt);
+    arbiter arb (clk, rst, req, gnt);
 
-    wire       rd_m;
-    wire       wr_m;
+    reg        rd_m;
+    reg        wr_m;
     wire       rdy_m;
-    wire [7:0] wdata_m;
+    reg  [7:0] wdata_m;
     wire [7:0] rdata_m;
 
     mem i_mem
@@ -120,21 +120,50 @@ module system
         rd_3 | wr_3
     };
 
-    assign rdy_0 = rdy_m & gnt [0];
-    assign rdy_1 = rdy_m & gnt [1];
-    assign rdy_2 = rdy_m & gnt [2];
-    assign rdy_3 = rdy_m & gnt [3];
+    assign rdy_0 = rdy_m & ~ (|   gnt [3:1]              );
+    assign rdy_1 = rdy_m & ~ (| { gnt [3:2] , gnt [  0] });
+    assign rdy_2 = rdy_m & ~ (| { gnt [3  ] , gnt [1:0] });
+    assign rdy_3 = rdy_m & ~ (|               gnt [2:0]  );
 
     always @*
         case (1'b1)  // synopsys parallel_case
-        gnt [0]: wdata_m = wdata_0;
-        gnt [1]: wdata_m = wdata_1;
-        gnt [2]: wdata_m = wdata_2;
-        gnt [3]: wdata_m = wdata_3;
-        default: wdata_m = 8'b0;
-        endcase
 
-    reg [3:0] p_rdy;
+        gnt [0]:
+        begin
+            rd_m    = rd_0;
+            wr_m    = wr_0;
+            wdata_m = wdata_0;
+        end
+
+        gnt [1]:
+        begin
+            rd_m    = rd_1;
+            wr_m    = wr_1;
+            wdata_m = wdata_1;
+        end
+
+        gnt [2]:
+        begin
+            rd_m    = rd_2;
+            wr_m    = wr_2;
+            wdata_m = wdata_2;
+        end
+
+        gnt [3]:
+        begin
+            rd_m    = rd_3;
+            wr_m    = wr_3;
+            wdata_m = wdata_3;
+        end
+
+        default:
+        begin
+            rd_m    = 0;
+            wr_m    = 0;
+            wdata_m = 8'b0;
+        end
+
+        endcase
 
     always @ (posedge clk or posedge rst)
         if (rst)
