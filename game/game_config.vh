@@ -11,12 +11,19 @@
 
 `define RGB_WIDTH      3
 
-// `define GAME_MASTER_FSM_MODULE      game_master_fsm
-`define GAME_MASTER_FSM_MODULE      game_master_fsm_alt_1
+   `define GAME_MASTER_FSM_MODULE   game_master_fsm_1_two_always
+// `define GAME_MASTER_FSM_MODULE   game_master_fsm_2_three_always
+// `define GAME_MASTER_FSM_MODULE   game_master_fsm_3_three_always_more_states
+// `define GAME_MASTER_FSM_MODULE   game_master_fsm_4_good_style_of_one_hot_two_always
+// `define GAME_MASTER_FSM_MODULE   game_master_fsm_5_good_style_of_one_hot_three_always
+// `define GAME_MASTER_FSM_MODULE   game_master_fsm_6_good_style_of_one_hot_three_always_more_states
+// `define GAME_MASTER_FSM_MODULE   game_master_fsm_7_signals_from_state
+// `define GAME_MASTER_FSM_MODULE   game_master_fsm_8_bad_style_of_one_hot
+// `define GAME_MASTER_FSM_MODULE   game_master_fsm_9_bad_priority_logic
 
-`define N_MIXER_PIPE_STAGES         1
+`define N_MIXER_PIPE_STAGES  1
 
 // `define GAME_SPRITE_DISPLAY_MODULE  game_sprite_display_alt_1
-`define GAME_SPRITE_DISPLAY_MODULE  game_sprite_display
+   `define GAME_SPRITE_DISPLAY_MODULE  game_sprite_display
 
 `endif
