@@ -5,8 +5,9 @@ module dff_using_mux
     output q
 );
 
-    mux_2_to_1 mux (1'b0, d, clk, q);
+    wire w;
+
+    mux_2_to_1 master (w, d, ~ clk, w);
+    mux_2_to_1 slave  (q, w,   clk, q);
 
 endmodule
-
-
