@@ -1,10 +1,25 @@
-module and_gate_using_mux
+module fsm_3_bits_coming_from_right
 (
-    input  a,
-    input  b,
-    output o
+    input            clk,
+    input            rst,
+    input            new_bit,
+    output reg [1:0] rem
 );
 
-    mux_2_to_1 mux (1'b0, a, b, o);
+    reg [1:0] n_rem;
+
+    always @ (posedge clk or posedge rst)
+        if (rst)
+            rem <= 0;
+        else
+            rem <= n_rem;
+
+    always @*
+        case (rem)
+        2'd0:    n_rem = new_bit ? 2'd1 : 2'd0;
+        2'd1:    n_rem = new_bit ? 2'd0 : 2'd2;
+        2'd2:    n_rem = new_bit ? 2'd2 : 2'd1;
+        default: n_rem = 2'bx;
+        endcase
 
 endmodule

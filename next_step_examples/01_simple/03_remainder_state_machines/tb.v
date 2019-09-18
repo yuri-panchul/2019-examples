@@ -1,54 +1,104 @@
 module tb;
 
-    reg        a, b, c;
-    wire [9:0] o, e;
+    parameter w = 8;
 
-    mux                  i_mux      ( a, b, c, o [0] );
-    and_gate_using_mux   i_and      ( a, b,    o [1] );
-    or_gate_using_mux    i_or       ( a, b,    o [2] );
-    not_using_mux        i_not      ( a,       o [3] );
-    xor_gate_using_mux   i_xor      ( a, b,    o [4] );
-    nand_gate_using_mux  i_nand     ( a, b,    o [5] );
-    nor_gate_using_mux   i_nor      ( a, b,    o [6] );
-    xnor_using_mux       i_xnor     ( a, b,    o [7] );
-    d_latch_using_mux    i_d_latch  ( a, b,    o [8] );
-    dff_using_mux        i_dff      ( a, b,    o [9] );
+    reg clk;
+    reg rst;
+    reg new_bit;
 
-    reg l, f;
+    wire [1:0] rem_3_bits_added_from_left;
+    wire [1:0] rem_3_bits_added_from_right;
+ 
+    fsm_3_bits_coming_from_left i_fsm_3_left
+    (
+        clk,
+        rst,
+        new_bit,
+        rem_3_bits_added_from_left
+    );
 
-    always_latch
-        if (a)
-           l = b;
+    fsm_3_bits_coming_from_right i_fsm_3_right
+    (
+        clk,
+        rst,
+        new_bit,
+        rem_3_bits_added_from_right
+    );
 
-    always_ff @ (posedge a)
-        f <= b;
+    initial
+    begin
+        clk = 0;
 
-    assign e [0] = c ? b : a;
-    assign e [1] =   a  & b;
-    assign e [2] =   a  | b;
-    assign e [3] = ~ a;
-    assign e [4] =   a  ^ b;
-    assign e [5] =   a ~& b;
-    assign e [6] =   a ~| b;
-    assign e [7] =   a ~^ b;
-    assign e [8] =   l;
-    assign e [9] =   f;
+        forever
+            # 5 clk = ! clk;
+    end
+
+    reg [w - 1:0] bits_added_from_left;
+    reg [w - 1:0] bits_added_from_right;
+
+    always @ (posedge rst) bits_added_from_left <= 0;
+    always @ (posedge rst) bits_added_from_right <= 0;
+
+    reg [1:0] expected_rem_3_bits_added_from_left;
+    reg [1:0] expected_rem_3_bits_added_from_right;
+
+    integer i;
 
     initial
     begin
         $dumpvars;
 
-        repeat (100)
+        repeat (4)
         begin
-            a = $urandom;
-            b = $urandom;
-            c = $urandom;
+            new_bit <= 0;
+            repeat (10) @ (posedge clk);
+            rst <= 1;
+            repeat (10) @ (posedge clk);
+            rst <= 0;
+            repeat (10) @ (posedge clk);
 
-            # 10
+            for (i = 0; i < w; i = i + 1)
+            begin
+                new_bit <= $urandom;
 
-            if (o !== e)
-                $display ("%d a=%b b=%b c=%b o=%b e=%b",
-                    a, b, c, o, e);
+                @ (posedge clk);
+                # 1
+
+                bits_added_from_left
+                    = bits_added_from_left | (new_bit << i);
+
+                bits_added_from_right
+                    = (bits_added_from_right << 1) | new_bit;
+
+                expected_rem_3_bits_added_from_left
+                    = bits_added_from_left % 3;
+
+                expected_rem_3_bits_added_from_right
+                    = bits_added_from_right % 3;
+
+                if (0 &&     rem_3_bits_added_from_left
+                     !== expected_rem_3_bits_added_from_left )
+                begin
+                    $display ("%d added from left  word=%b %d rem_3=%0d expected=%0d",
+                        $time,
+                        bits_added_from_left,
+                        bits_added_from_left,
+                        rem_3_bits_added_from_left,
+                        expected_rem_3_bits_added_from_left );
+                end
+
+                if (     rem_3_bits_added_from_right
+                     !== expected_rem_3_bits_added_from_right )
+                begin
+                    $display ("%d added from right new_bit %b word=%b %d rem_3=%0d expected=%0d",
+                        $time,
+                        new_bit,
+                        bits_added_from_right,
+                        bits_added_from_right,
+                        rem_3_bits_added_from_right,
+                        expected_rem_3_bits_added_from_right );
+                end
+            end
         end
 
         `ifdef MODEL_TECH  // Mentor ModelSim and Questa
