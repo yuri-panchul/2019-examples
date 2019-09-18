@@ -1,10 +1,16 @@
-module and_gate_using_mux
+module fibonacci
 (
-    input  a,
-    input  b,
-    output o
+    input            clk,
+    input            rst,
+    output reg [7:0] num
 );
 
-    mux_2_to_1 mux (1'b0, a, b, o);
+    reg [7:0] num2;
+
+    always @ (posedge clk or rst)
+        if (rst)
+            { num, num2 } <= { 8'b1, 8'b1 };
+        else
+            { num, num2 } <= { num2, num + num2 };
 
 endmodule
