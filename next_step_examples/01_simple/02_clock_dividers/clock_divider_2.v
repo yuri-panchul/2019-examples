@@ -1,4 +1,4 @@
-module clock_divider
+module clock_divider_2
 #
 (
     parameter [7:0] n = 3
@@ -9,23 +9,27 @@ module clock_divider
     output div_clk
 );
 
-    reg [7:0] cnt;
+    wire [7:0] n_1 = n - 1;
+
+    reg  [7:0] cnt;
 
     always @ (posedge clk or posedge rst)
         if (rst)
             cnt <= 0;
-        else if (cnt == 0)
-            cnt <= n - 1;
+        else if (cnt == n_1)
+            cnt <= 0;
         else
-            cnt <= cnt - 1;
+            cnt <= cnt + 1;
 
     reg div_clk_unadjusted;
 
     always @ (posedge clk or posedge rst)
         if (rst)
             div_clk_unadjusted <= 0;
-        else if (cnt == n - 1 || cnt == (n - 1) / 2)
-            div_clk_unadjusted <= ~ div_clk_unadjusted;
+        else if (cnt == n_1 [7:1])
+            div_clk_unadjusted <= 1;
+        else if (cnt == n_1)
+            div_clk_unadjusted <= 0;
 
     generate
 
