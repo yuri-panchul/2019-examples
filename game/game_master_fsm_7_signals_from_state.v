@@ -2,57 +2,51 @@
 
 module game_master_fsm
 (
-    input      clk,
-    input      reset,
+    input  clk,
+    input  reset,
 
-    input      key,
+    input  key,
 
-    output reg sprite_target_write_xy,
-    output reg sprite_torpedo_write_xy,
+    output sprite_target_write_xy,
+    output sprite_torpedo_write_xy,
 
-    output reg sprite_target_write_dxy,
-    output reg sprite_torpedo_write_dxy,
+    output sprite_target_write_dxy,
+    output sprite_torpedo_write_dxy,
 
-    output reg sprite_target_enable_update,
-    output reg sprite_torpedo_enable_update,
+    output sprite_target_enable_update,
+    output sprite_torpedo_enable_update,
 
-    input      sprite_target_within_screen,
-    input      sprite_torpedo_within_screen,
+    input  sprite_target_within_screen,
+    input  sprite_torpedo_within_screen,
 
-    input      collision,
+    input  collision,
 
-    output reg end_of_game_timer_start,
-    output reg game_won,
+    output end_of_game_timer_start,
+    output game_won,
 
-    input      end_of_game_timer_running
+    input  end_of_game_timer_running
 );
 
-    localparam [1:0] STATE_START  = 0,
-                     STATE_AIM    = 1,
-                     STATE_SHOOT  = 2,
-                     STATE_END    = 3;
+    localparam [5:0] STATE_START    = 6'b100000,
+                     STATE_AIM      = 6'b001000,
+                     STATE_SHOOT    = 6'b011100,
+                     STATE_WON      = 6'b000011,
+                     STATE_WON_END  = 6'b000001,
+                     STATE_LOST     = 6'b000010,
+                     STATE_LOST_END = 6'b000000;
+    
 
-    reg [1:0] state;
-    reg [1:0] d_state;
+    reg [5:0] state;
+    reg [5:0] n_state;
 
-    reg d_sprite_target_write_xy;
-    reg d_sprite_torpedo_write_xy;
-
-    reg d_sprite_target_write_dxy;
-    reg d_sprite_torpedo_write_dxy;
-
-    reg d_sprite_target_enable_update;
-    reg d_sprite_torpedo_enable_update;
-
-    reg d_end_of_game_timer_start;
-    reg d_game_won;
-
-    //------------------------------------------------------------------------
-
-    wire end_of_game
-        =   ~ sprite_target_within_screen
-          | ~ sprite_torpedo_within_screen
-          |   collision;
+    assign sprite_target_write_xy        = state [5];
+    assign sprite_torpedo_write_xy       = state [5];
+    assign sprite_target_write_dxy       = state [5];
+    assign sprite_torpedo_write_dxy      = state [4];
+    assign sprite_target_enable_update   = state [3];
+    assign sprite_torpedo_enable_update  = state [2];
+    assign end_of_game_timer_start       = state [1];
+    assign game_won                      = state [0];
 
     //------------------------------------------------------------------------
 
