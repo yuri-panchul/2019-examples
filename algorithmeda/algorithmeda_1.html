@@ -1,0 +1,105 @@
+<html>
+<body>
+
+<p></p>
+
+<img src="http://www.silicon-russia.com/wp-content/uploads/2019/10/Screenshot-2019-09-30-18.23.28.png">
+
+<p></p>
+
+<img src="http://www.silicon-russia.com/wp-content/uploads/2019/10/unit_1_05_adder_1_gates_schematics.png">
+
+<p></p>
+
+<img src="http://www.silicon-russia.com/wp-content/uploads/2019/03/4-Figure5-1.png">
+
+<p></p>
+
+<img src="http://www.silicon-russia.com/wp-content/uploads/2016/10/4-17.png">
+
+<p></p>
+
+<img src="http://www.silicon-russia.com/wp-content/uploads/2019/10/Screenshot-2019-09-30-19.18.23.png">
+
+<p></p>
+
+<img src="http://www.silicon-russia.com/wp-content/uploads/2017/07/45502_original.png">
+
+<p></p>
+
+<img src="http://www.silicon-russia.com/wp-content/uploads/2016/10/1-22.png">
+
+<p></p>
+
+<img src="http://www.silicon-russia.com/wp-content/uploads/2019/03/image010.gif">
+
+<p></p>
+
+<img src="http://www.silicon-russia.com/wp-content/uploads/2019/03/unit_3_20_maze_routing.png">
+
+<p></p>
+
+Input is a text file with Verilog netlist. It contains a list of inputs, outputs, wires and standard cell instantiations.
+Something like this (I will send an actual Verilog netlist for 14 or 7 nm design later):
+
+module top
+(
+    input  clock, reset, i1, i2,
+    output o1, o2
+);
+
+    wire w1, w2, w3, w4;
+
+    and  a1 (i1, i2, w1);
+    or   o1 (i2, w1, w3);
+    dffr f1 (clock, reset, w3, w4);
+    and  a2 (w4, i2, o1);
+    not  n1 (w1, o2);
+
+endmodule
+
+Output: placed and routed netlist. And, or, xor, not, dff elements should be put in rows and connected by wires. Something like this:
+
+What has to be done:
+
+1. One student writes a parser of Verilog netlist using (for example) Yacc and Lex. The result of parcing the text is a graph of standard cells and connections.
+
+2. Another student figures out the optimal placement and connections. The optimal placement should use the smallest number of layers of connectivity, as well as minimal overall length of the connections, with some restrictions on the longest path.
+
+3. A third students displays the intermediate (graph) and final (standard cells and connections) results in a window.
+
+
+
+In this exercise we don't pay attention to timing and physical properties of cells and the connecting wires.
+
+
+Я вам могу прислать сценарий моего курса для школьников, который я написал для Роснано, из него задача понятна. Но прошу это не распостранять. Мне бы лично хотелось, чтобы студенты в России заинтересовались задачами автоматизации проектирования микросхем и возможно нарушили через 10 лет монополию компаний Synopsys и Cadence, которые контролируют разработку во всех электронных компаниях мира (Intel, Apple, NVidia,...) и берут за средства проектирования сотни тысяч долларов на одно рабочее место проектировщика. На рынке нет адекватных open-source тулов для synthesis и place-and-route, поэтому если они будут сделаны, я смогу применять их в образовании вместо выцыганивания временных лицензий на эти тулы от Synopsys и Cadence.
+
+
+http://bit.ly/2019-08-29-verilog-1-innopolis-yuri-panchul
+
+http://bit.ly/2019-09-05-verilog-2-innopolis-yuri-panchul
+
+Вот еще релевантная информация -  курс для Роснано в трех частях
+
+https://stemford.org/#course?id=6410690722451343819
+https://stemford.org/#course?id=6410690722451344036
+https://stemford.org/#course?id=6410690722451344042
+
+И курс Игоря Маркова из университета Мичигана
+Этот курс он прочитал в МГУ
+
+http://vlsicad.eecs.umich.edu/KLMH/presentations.html
+
+Это непринципиально, но лучше повесте MIPS logo с пометкой MIPS Business Unit of Wave Computing. Сейчас в Wave изменение менеджмента, и если они увидят, я могу сказать что с MIPS было pre-existing relationship, а с Wave от меня захотят approval итд.
+Хорошо
+Дайте ваш емейл я напишу вам емейл с роснановцами и всех представлю
+A.sadovykh@innopolis.ru
+By the way, you don't need to know Verilog to do this. The only required skill is C or Python or Java programming and understanding of the concepts of graphs and algorithms.
+Хорошо я поправлю
+Там нужно понимание узкого подмножества верилога, которое учится за 5 минут. По сути это чисто задачка для Си-Java-Python программиста который понимает алгоритмы, алгоритмическую сложность, структуры данных итд.
+При этом используется немного навыков парсирования текста (Yacc, Lex) и графического вывода
+
+http://www.silicon-russia.com/public_materials/2016_11_04_one_day_mipsfpga_connected_mcu_materials_public_for_the_website/04_present_nanometer_asic_seminar/dna.rus.2016.MIPS.pdf
+
+</body></html>

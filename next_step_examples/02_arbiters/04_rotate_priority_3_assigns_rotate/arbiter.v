@@ -53,6 +53,19 @@ module arbiter
         if (rst)
             ptr <= 3'b0;
         else
+            // TODO: d_gnt or gnt?
+
+            case (1'b1)  // synopsys parallel_case
+            d_gnt [0]: ptr <= 3'd1;
+            d_gnt [1]: ptr <= 3'd2;
+            d_gnt [2]: ptr <= 3'd3;
+            d_gnt [3]: ptr <= 3'd4;
+            d_gnt [4]: ptr <= 3'd5;
+            d_gnt [5]: ptr <= 3'd6;
+            d_gnt [6]: ptr <= 3'd7;
+            d_gnt [7]: ptr <= 3'd0;
+            endcase
+/*
             case (1'b1)  // synopsys parallel_case
             gnt [0]: ptr <= 3'd1;
             gnt [1]: ptr <= 3'd2;
@@ -63,5 +76,5 @@ module arbiter
             gnt [6]: ptr <= 3'd7;
             gnt [7]: ptr <= 3'd0;
             endcase
-
+*/
 endmodule
