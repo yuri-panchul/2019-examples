@@ -58,49 +58,37 @@ module game_master_fsm_6_good_style_of_one_hot_three_always_more_states
 
         case (1'b1)  // synopsys parallel_case
 
-        n_state [STATE_START]:
-        begin
-            state [STATE_AIM] = 1'b1;
-        end
+        state [STATE_START]:                 n_state [ STATE_AIM      ] = 1'b1;
 
         state [STATE_AIM]:
-        begin
-            if (key)
-                state [STATE_SHOOT] = 1'b1;
-            else if (
-                                 : collision                 ? state [STATE_WON] = 1'b1;
-                                 : out_of_screen             ? state [STATE_LOST] = 1'b1;
-                                 :                             state [STATE_AIM] = 1'b1;
-        end
+
+            if      ( out_of_screen        ) n_state [ STATE_LOST     ] = 1'b1;
+            else if ( collision            ) n_state [ STATE_WON      ] = 1'b1;
+            else if ( key                  ) n_state [ STATE_SHOOT    ] = 1'b1;
+            else                             n_state [ STATE_AIM      ] = 1'b1;
 
         state [STATE_SHOOT]:
-        begin
-            : n_state = collision                 ? state [STATE_WON] = 1'b1;
-                                 : out_of_screen             ? state [STATE_LOST] = 1'b1;
-                                 :                             state [STATE_SHOOT] = 1'b1;
-        end
+
+            if      ( out_of_screen        ) n_state [ STATE_LOST     ] = 1'b1;
+            else if ( collision            ) n_state [ STATE_WON      ] = 1'b1;
+            else                             n_state [ STATE_SHOOT    ] = 1'b1;
 
         state [STATE_WON]:
-        begin
-              : n_state =                             state [STATE_WON_END] = 1'b1;
-        end
+                                             n_state [ STATE_WON_END  ] = 1'b1;
 
         state [STATE_WON_END]:
-        begin
-          : n_state = end_of_game_timer_running ? state [STATE_WON_END] = 1'b1;
-                                 :                             state [STATE_START] = 1'b1;
-        end
+
+            if ( end_of_game_timer_running ) n_state [ STATE_WON_END  ] = 1'b1;
+            else                             n_state [ STATE_START    ] = 1'b1;
 
         state [STATE_LOST]:
-        begin
-             : n_state =                             state [STATE_LOST_END] = 1'b1;
-        end
+
+                                             n_state [ STATE_LOST_END ] = 1'b1;
 
         state [STATE_LOST_END]:
-        begin
-         : n_state = end_of_game_timer_running ? state [STATE_LOST_END] = 1'b1;
-                                 :                             state [STATE_START] = 1'b1;
-        end
+
+            if ( end_of_game_timer_running ) n_state [ STATE_LOST_END ] = 1'b1;
+            else                             n_state [ STATE_START    ] = 1'b1;
 
         endcase
     end
@@ -109,7 +97,7 @@ module game_master_fsm_6_good_style_of_one_hot_three_always_more_states
 
     always @ (posedge clk or posedge reset)
         if (reset)
-            state <= STATE_START;
+            state <= (7'b1 << STATE_START);
         else
             state <= n_state;
 
