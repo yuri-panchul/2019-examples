@@ -60,27 +60,48 @@ module game_master_fsm_6_good_style_of_one_hot_three_always_more_states
 
         n_state [STATE_START]:
         begin
+            state [STATE_AIM] = 1'b1;
+        end
 
-        STATE_START    : n_state =                             STATE_AIM;
+        state [STATE_AIM]:
+        begin
+            if (key)
+                state [STATE_SHOOT] = 1'b1;
+            else if (
+                                 : collision                 ? state [STATE_WON] = 1'b1;
+                                 : out_of_screen             ? state [STATE_LOST] = 1'b1;
+                                 :                             state [STATE_AIM] = 1'b1;
+        end
 
-        STATE_AIM      : n_state = key                       ? STATE_SHOOT
-                                 : collision                 ? STATE_WON
-                                 : out_of_screen             ? STATE_LOST
-                                 :                             STATE_AIM;
+        state [STATE_SHOOT]:
+        begin
+            : n_state = collision                 ? state [STATE_WON] = 1'b1;
+                                 : out_of_screen             ? state [STATE_LOST] = 1'b1;
+                                 :                             state [STATE_SHOOT] = 1'b1;
+        end
 
-        STATE_SHOOT    : n_state = collision                 ? STATE_WON
-                                 : out_of_screen             ? STATE_LOST
-                                 :                             STATE_SHOOT;
+        state [STATE_WON]:
+        begin
+              : n_state =                             state [STATE_WON_END] = 1'b1;
+        end
 
-        STATE_WON      : n_state =                             STATE_WON_END;
+        state [STATE_WON_END]:
+        begin
+          : n_state = end_of_game_timer_running ? state [STATE_WON_END] = 1'b1;
+                                 :                             state [STATE_START] = 1'b1;
+        end
 
-        STATE_WON_END  : n_state = end_of_game_timer_running ? STATE_WON_END
-                                 :                             STATE_START;
+        state [STATE_LOST]:
+        begin
+             : n_state =                             state [STATE_LOST_END] = 1'b1;
+        end
 
-        STATE_LOST     : n_state =                             STATE_LOST_END;
+        state [STATE_LOST_END]:
+        begin
+         : n_state = end_of_game_timer_running ? state [STATE_LOST_END] = 1'b1;
+                                 :                             state [STATE_START] = 1'b1;
+        end
 
-        STATE_LOST_END : n_state = end_of_game_timer_running ? STATE_LOST_END
-                                 :                             STATE_START;
         endcase
     end
 

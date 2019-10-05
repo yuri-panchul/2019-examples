@@ -66,17 +66,17 @@ module game_master_fsm_5_good_style_of_one_hot_three_always  // tested
 
         case (1'b1)  // synopsys parallel_case
 
-        state [ STATE_START ]:                                   d_state [ STATE_AIM   ] = 1;
+        state [ STATE_START ]:                                   d_state [ STATE_AIM   ] = 1'b1;
 
-        state [ STATE_AIM   ]:  if      ( key                  ) d_state [ STATE_SHOOT ] = 1;
-                                else if ( end_of_game          ) d_state [ STATE_END   ] = 1;
-                                else                             d_state [ STATE_AIM   ] = 1;
+        state [ STATE_AIM   ]:  if      ( end_of_game          ) d_state [ STATE_END   ] = 1'b1;
+                                else if ( key                  ) d_state [ STATE_SHOOT ] = 1'b1;
+                                else                             d_state [ STATE_AIM   ] = 1'b1;
 
-        state [ STATE_SHOOT ]:  if (  end_of_game              ) d_state [ STATE_END   ] = 1;
-                                else                             d_state [ STATE_SHOOT ] = 1;
+        state [ STATE_SHOOT ]:  if (  end_of_game              ) d_state [ STATE_END   ] = 1'b1;
+                                else                             d_state [ STATE_SHOOT ] = 1'b1;
 
-        state [ STATE_END   ]:  if ( end_of_game_timer_running ) d_state [ STATE_END   ] = 1;
-                                else                             d_state [ STATE_START ] = 1;
+        state [ STATE_END   ]:  if ( end_of_game_timer_running ) d_state [ STATE_END   ] = 1'b1;
+                                else                             d_state [ STATE_START ] = 1'b1;
         endcase
     end
 

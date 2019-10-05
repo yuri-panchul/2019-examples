@@ -94,15 +94,15 @@ module game_master_fsm_9_bad_priority_logic  // tested
         begin
             d_sprite_target_enable_update   = 1'b1;
 
-            if (key)
-            begin
-                d_state [STATE_SHOOT] = 1;
-            end
-            else if (end_of_game)
+            if (end_of_game)
             begin
                 d_end_of_game_timer_start   = 1'b1;
 
                 d_state [STATE_END] = 1;
+            end
+            else if (key)
+            begin
+                d_state [STATE_SHOOT] = 1;
             end
             else
             begin

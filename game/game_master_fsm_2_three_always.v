@@ -1,6 +1,6 @@
 `include "game_config.vh"
 
-module game_master_fsm_2_three_always  // tested
+module game_master_fsm_2_three_always
 (
     input      clk,
     input      reset,
@@ -66,8 +66,8 @@ module game_master_fsm_2_three_always  // tested
 
         STATE_START:                                   d_state = STATE_AIM;
 
-        STATE_AIM:    if      ( key                  ) d_state = STATE_SHOOT;
-                      else if ( end_of_game          ) d_state = STATE_END;
+        STATE_AIM:    if      ( end_of_game          ) d_state = STATE_END;
+                      else if ( key                  ) d_state = STATE_SHOOT;
                       else                             d_state = STATE_AIM;
 
         STATE_SHOOT:  if (  end_of_game              ) d_state = STATE_END;

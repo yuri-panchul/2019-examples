@@ -67,13 +67,13 @@ module game_master_fsm_7_signals_from_state_var_3  // tested
 
         STATE_START    : n_state =                             STATE_AIM;
 
-        STATE_AIM      : n_state = key                       ? STATE_SHOOT
+        STATE_AIM      : n_state = out_of_screen             ? STATE_LOST
                                  : collision                 ? STATE_WON
-                                 : out_of_screen             ? STATE_LOST
+                                 : key                       ? STATE_SHOOT
                                  :                             STATE_AIM;
 
-        STATE_SHOOT    : n_state = collision                 ? STATE_WON
-                                 : out_of_screen             ? STATE_LOST
+        STATE_SHOOT    : n_state = out_of_screen             ? STATE_LOST
+                                 : collision                 ? STATE_WON
                                  :                             STATE_SHOOT;
 
         STATE_WON      : n_state =                             STATE_WON_END;
