@@ -62,90 +62,21 @@ module game_master_fsm_5_good_style_of_one_hot_three_always
     begin
         d_state = 4'b0;
 
-        d_sprite_target_write_xy        = 1'b0;
-        d_sprite_torpedo_write_xy       = 1'b0;
-
-        d_sprite_target_write_dxy       = 1'b0;
-        d_sprite_torpedo_write_dxy      = 1'b0;
-
-        d_sprite_target_enable_update   = 1'b0;
-        d_sprite_torpedo_enable_update  = 1'b0;
-
-        d_end_of_game_timer_start       = 1'b0;
-        d_game_won                      = game_won;
-
         //--------------------------------------------------------------------
 
         case (1'b1)  // synopsys parallel_case
 
-        state [STATE_START]:
-        begin
-            d_sprite_target_write_xy        = 1'b1;
-            d_sprite_torpedo_write_xy       = 1'b1;
+        state [ STATE_START ]:                                   d_state [ STATE_AIM   ] = 1;
 
-            d_sprite_target_write_dxy       = 1'b1;
+        state [ STATE_AIM   ]:  if      ( key                  ) d_state [ STATE_SHOOT ] = 1;
+                                else if ( end_of_game          ) d_state [ STATE_END   ] = 1;
+                                else                             d_state [ STATE_AIM   ] = 1;
 
-            d_game_won                      = 1'b0;
+        state [ STATE_SHOOT ]:  if (  end_of_game              ) d_state [ STATE_END   ] = 1;
+                                else                             d_state [ STATE_SHOOT ] = 1;
 
-            d_state [STATE_AIM] = 1;
-        end
-
-        state [STATE_AIM]:
-        begin
-            d_sprite_target_enable_update   = 1'b1;
-
-            if (key)
-            begin
-                d_state [STATE_SHOOT] = 1;
-            end
-            else if (end_of_game)
-            begin
-                d_end_of_game_timer_start   = 1'b1;
-
-                d_state [STATE_END] = 1;
-            end
-            else
-            begin
-                d_state [STATE_AIM] = 1;
-            end
-        end
-
-        state [STATE_SHOOT]:
-        begin
-            d_sprite_torpedo_write_dxy      = 1'b1;
-
-            d_sprite_target_enable_update   = 1'b1;
-            d_sprite_torpedo_enable_update  = 1'b1;
-
-            if (collision)
-                d_game_won = 1'b1;
-
-            if (end_of_game)
-            begin
-                d_end_of_game_timer_start   = 1'b1;
-
-                d_state [STATE_END] = 1;
-            end
-            else
-            begin
-                d_state [STATE_SHOOT] = 1;
-            end
-        end
-
-        state [STATE_END]:
-        begin
-            // TODO: Investigate why it needs collision detection here
-            // and not in previous state
-
-            if (collision)
-                d_game_won = 1'b1;
-
-            if (! end_of_game_timer_running)
-                d_state [STATE_START] = 1;
-            else
-                d_state [STATE_END] = 1;
-        end
-
+        state [ STATE_END   ]:  if ( end_of_game_timer_running ) d_state [ STATE_END   ] = 1;
+                                else                             d_state [ STATE_START ] = 1;
         endcase
     end
 
@@ -153,9 +84,15 @@ module game_master_fsm_5_good_style_of_one_hot_three_always
 
     always @ (posedge clk or posedge reset)
         if (reset)
-        begin
-            state                         <= (1 << STATE_START);
+            state <= (1 << STATE_START);
+        else
+            state <= d_state;
 
+    //------------------------------------------------------------------------
+
+    always @ (posedge clk or posedge reset)
+        if (reset)
+        begin
             sprite_target_write_xy        <= 1'b0;
             sprite_torpedo_write_xy       <= 1'b0;
 
@@ -170,19 +107,63 @@ module game_master_fsm_5_good_style_of_one_hot_three_always
         end
         else
         begin
-            state                         <= d_state;
+            sprite_target_write_xy        <= 1'b0;
+            sprite_torpedo_write_xy       <= 1'b0;
 
-            sprite_target_write_xy        <= d_sprite_target_write_xy;
-            sprite_torpedo_write_xy       <= d_sprite_torpedo_write_xy;
+            sprite_target_write_dxy       <= 1'b0;
+            sprite_torpedo_write_dxy      <= 1'b0;
 
-            sprite_target_write_dxy       <= d_sprite_target_write_dxy;
-            sprite_torpedo_write_dxy      <= d_sprite_torpedo_write_dxy;
+            sprite_target_enable_update   <= 1'b0;
+            sprite_torpedo_enable_update  <= 1'b0;
 
-            sprite_target_enable_update   <= d_sprite_target_enable_update;
-            sprite_torpedo_enable_update  <= d_sprite_torpedo_enable_update;
+            end_of_game_timer_start       <= 1'b0;
 
-            end_of_game_timer_start       <= d_end_of_game_timer_start;
-            game_won                      <= d_game_won;
+            //--------------------------------------------------------------------
+
+            case (1'b1)  // synopsys parallel_case
+
+            d_state [STATE_START]:
+            begin
+                sprite_target_write_xy        <= 1'b1;
+                sprite_torpedo_write_xy       <= 1'b1;
+
+                sprite_target_write_dxy       <= 1'b1;
+
+                game_won                      <= 1'b0;
+            end
+
+            d_state [STATE_AIM]:
+            begin
+                sprite_target_enable_update   <= 1'b1;
+
+                if (end_of_game)
+                    end_of_game_timer_start   <= 1'b1;
+            end
+
+            d_state [STATE_SHOOT]:
+            begin
+                sprite_torpedo_write_dxy      <= 1'b1;
+
+                sprite_target_enable_update   <= 1'b1;
+                sprite_torpedo_enable_update  <= 1'b1;
+
+                if (collision)
+                    game_won <= 1'b1;
+
+                if (end_of_game)
+                    end_of_game_timer_start   <= 1'b1;
+            end
+
+            d_state [STATE_END]:
+            begin
+                // TODO: Investigate why it needs collision detection here
+                // and not in previous state
+
+                if (collision)
+                    game_won <= 1'b1;
+            end
+
+            endcase
         end
 
 endmodule
