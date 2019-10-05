@@ -1,6 +1,6 @@
 `include "game_config.vh"
 
-module game_master_fsm_7_signals_from_state  // tested
+module game_master_fsm_7_signals_from_state_var_2  // tested
 (
     input  clk,
     input  reset,
@@ -63,7 +63,7 @@ module game_master_fsm_7_signals_from_state  // tested
 
     always @*
     begin
-        n_state = 6'bx;  // For debug and "don't care" directive for synthesis
+        n_state = state;
 
         case (state)
 

@@ -1,6 +1,6 @@
 `include "game_config.vh"
 
-module game_master_fsm_alt_2
+module game_master_fsm_8_bad_style_of_one_hot  // testsed
 (
     input      clk,
     input      reset,

@@ -1,6 +1,6 @@
 `include "game_config.vh"
 
-module game_master_fsm_alt_1
+module game_master_fsm_6_good_style_of_one_hot_three_always_more_states
 (
     input      clk,
     input      reset,

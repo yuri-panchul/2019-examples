@@ -1,6 +1,6 @@
 `include "game_config.vh"
 
-module game_master_fsm_7_signals_from_state  // tested
+module game_master_fsm_7_signals_from_state_var_1  // tested
 (
     input  clk,
     input  reset,
@@ -63,8 +63,6 @@ module game_master_fsm_7_signals_from_state  // tested
 
     always @*
     begin
-        n_state = 6'bx;  // For debug and "don't care" directive for synthesis
-
         case (state)
 
         STATE_START    : n_state =                             STATE_AIM;
@@ -87,6 +85,9 @@ module game_master_fsm_7_signals_from_state  // tested
 
         STATE_LOST_END : n_state = end_of_game_timer_running ? STATE_LOST_END
                                  :                             STATE_START;
+
+        default        : n_state =                             6'bx;
+
         endcase
     end
 

@@ -1,6 +1,6 @@
 `include "game_config.vh"
 
-module game_master_fsm
+module game_master_fsm_3_three_always_more_states
 (
     input      clk,
     input      reset,
