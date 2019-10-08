@@ -1,6 +1,6 @@
 `include "game_config.vh"
 
-module game_master_fsm_9_bad_priority_logic  // tested
+module game_master_fsm_9_bad_priority_logic
 (
     input      clk,
     input      reset,

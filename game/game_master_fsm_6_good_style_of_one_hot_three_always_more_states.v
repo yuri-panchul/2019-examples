@@ -106,31 +106,31 @@ module game_master_fsm_6_good_style_of_one_hot_three_always_more_states
     always @ (posedge clk or posedge reset)
         if (reset)
         begin
-            sprite_target_write_xy           <= 1'b0;
-            sprite_torpedo_write_xy          <= 1'b0;
+            sprite_target_write_xy            <= 1'b0;
+            sprite_torpedo_write_xy           <= 1'b0;
 
-            sprite_target_write_dxy          <= 1'b0;
-            sprite_torpedo_write_dxy         <= 1'b0;
+            sprite_target_write_dxy           <= 1'b0;
+            sprite_torpedo_write_dxy          <= 1'b0;
 
-            sprite_target_enable_update      <= 1'b0;
-            sprite_torpedo_enable_update     <= 1'b0;
+            sprite_target_enable_update       <= 1'b0;
+            sprite_torpedo_enable_update      <= 1'b0;
 
-            end_of_game_timer_start          <= 1'b0;
-            game_won                         <= 1'b0;
+            end_of_game_timer_start           <= 1'b0;
+            game_won                          <= 1'b0;
         end
         else
         begin
-            sprite_target_write_xy           <= 1'b0;
-            sprite_torpedo_write_xy          <= 1'b0;
+            sprite_target_write_xy            <= 1'b0;
+            sprite_torpedo_write_xy           <= 1'b0;
 
-            sprite_target_write_dxy          <= 1'b0;
-            sprite_torpedo_write_dxy         <= 1'b0;
+            sprite_target_write_dxy           <= 1'b0;
+            sprite_torpedo_write_dxy          <= 1'b0;
 
-            sprite_target_enable_update      <= 1'b0;
-            sprite_torpedo_enable_update     <= 1'b0;
+            sprite_target_enable_update       <= 1'b0;
+            sprite_torpedo_enable_update      <= 1'b0;
 
-            end_of_game_timer_start          <= 1'b0;
-        
+            end_of_game_timer_start           <= 1'b0;
+            game_won                          <= 1'b0;
 
             //--------------------------------------------------------------------
 
@@ -138,39 +138,39 @@ module game_master_fsm_6_good_style_of_one_hot_three_always_more_states
 
             n_state [STATE_START]:
             begin
-                sprite_target_write_xy       <= 1'b1;
-                sprite_torpedo_write_xy      <= 1'b1;
+                sprite_target_write_xy        <= 1'b1;
+                sprite_torpedo_write_xy       <= 1'b1;
 
-                sprite_target_write_dxy      <= 1'b1;
+                sprite_target_write_dxy       <= 1'b1;
             end
 
             n_state [STATE_AIM]:
             begin
-                sprite_target_enable_update  <= 1'b1;
+                sprite_target_enable_update   <= 1'b1;
             end
 
             n_state [STATE_SHOOT]:
             begin
-                sprite_torpedo_write_dxy     <= 1'b1;
+                sprite_torpedo_write_dxy      <= 1'b1;
 
-                sprite_target_enable_update  <= 1'b1;
-                sprite_target_enable_update  <= 1'b1;
+                sprite_target_enable_update   <= 1'b1;
+                sprite_torpedo_enable_update  <= 1'b1;
             end
 
             n_state [STATE_WON]:
             begin
-                end_of_game_timer_start      <= 1'b1;
-                game_won                     <= 1'b1;
+                end_of_game_timer_start       <= 1'b1;
+                game_won                      <= 1'b1;
             end
 
             n_state [STATE_WON_END]:
             begin
-                game_won                     <= 1'b1;
+                game_won                      <= 1'b1;
             end
 
             n_state [STATE_LOST]:
             begin
-                end_of_game_timer_start      <= 1'b1;
+                end_of_game_timer_start       <= 1'b1;
             end
 
             n_state [STATE_LOST_END]:

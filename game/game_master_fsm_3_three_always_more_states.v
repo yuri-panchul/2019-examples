@@ -2,29 +2,29 @@
 
 module game_master_fsm_3_three_always_more_states
 (
-    input  clk,
-    input  reset,
+    input      clk,
+    input      reset,
 
-    input  key,
+    input      key,
 
-    output sprite_target_write_xy,
-    output sprite_torpedo_write_xy,
+    output reg sprite_target_write_xy,
+    output reg sprite_torpedo_write_xy,
 
-    output sprite_target_write_dxy,
-    output sprite_torpedo_write_dxy,
+    output reg sprite_target_write_dxy,
+    output reg sprite_torpedo_write_dxy,
 
-    output sprite_target_enable_update,
-    output sprite_torpedo_enable_update,
+    output reg sprite_target_enable_update,
+    output reg sprite_torpedo_enable_update,
 
-    input  sprite_target_within_screen,
-    input  sprite_torpedo_within_screen,
+    input      sprite_target_within_screen,
+    input      sprite_torpedo_within_screen,
 
-    input  collision,
+    input      collision,
 
-    output end_of_game_timer_start,
-    output game_won,
+    output reg end_of_game_timer_start,
+    output reg game_won,
 
-    input  end_of_game_timer_running
+    input      end_of_game_timer_running
 );
 
     //------------------------------------------------------------------------
@@ -92,31 +92,31 @@ module game_master_fsm_3_three_always_more_states
     always @ (posedge clk or posedge reset)
         if (reset)
         begin
-            sprite_target_write_xy           <= 1'b0;
-            sprite_torpedo_write_xy          <= 1'b0;
+            sprite_target_write_xy            <= 1'b0;
+            sprite_torpedo_write_xy           <= 1'b0;
 
-            sprite_target_write_dxy          <= 1'b0;
-            sprite_torpedo_write_dxy         <= 1'b0;
+            sprite_target_write_dxy           <= 1'b0;
+            sprite_torpedo_write_dxy          <= 1'b0;
 
-            sprite_target_enable_update      <= 1'b0;
-            sprite_torpedo_enable_update     <= 1'b0;
+            sprite_target_enable_update       <= 1'b0;
+            sprite_torpedo_enable_update      <= 1'b0;
 
-            end_of_game_timer_start          <= 1'b0;
-            game_won                         <= 1'b0;
+            end_of_game_timer_start           <= 1'b0;
+            game_won                          <= 1'b0;
         end
         else
         begin
-            sprite_target_write_xy           <= 1'b0;
-            sprite_torpedo_write_xy          <= 1'b0;
+            sprite_target_write_xy            <= 1'b0;
+            sprite_torpedo_write_xy           <= 1'b0;
 
-            sprite_target_write_dxy          <= 1'b0;
-            sprite_torpedo_write_dxy         <= 1'b0;
+            sprite_target_write_dxy           <= 1'b0;
+            sprite_torpedo_write_dxy          <= 1'b0;
 
-            sprite_target_enable_update      <= 1'b0;
-            sprite_torpedo_enable_update     <= 1'b0;
+            sprite_target_enable_update       <= 1'b0;
+            sprite_torpedo_enable_update      <= 1'b0;
 
-            end_of_game_timer_start          <= 1'b0;
-        
+            end_of_game_timer_start           <= 1'b0;
+            game_won                          <= 1'b0;
 
             //--------------------------------------------------------------------
 
@@ -124,39 +124,39 @@ module game_master_fsm_3_three_always_more_states
 
             STATE_START:
             begin
-                sprite_target_write_xy       <= 1'b1;
-                sprite_torpedo_write_xy      <= 1'b1;
+                sprite_target_write_xy        <= 1'b1;
+                sprite_torpedo_write_xy       <= 1'b1;
 
-                sprite_target_write_dxy      <= 1'b1;
+                sprite_target_write_dxy       <= 1'b1;
             end
 
             STATE_AIM:
             begin
-                sprite_target_enable_update  <= 1'b1;
+                sprite_target_enable_update   <= 1'b1;
             end
 
             STATE_SHOOT:
             begin
-                sprite_torpedo_write_dxy     <= 1'b1;
+                sprite_torpedo_write_dxy      <= 1'b1;
 
-                sprite_target_enable_update  <= 1'b1;
-                sprite_target_enable_update  <= 1'b1;
+                sprite_target_enable_update   <= 1'b1;
+                sprite_torpedo_enable_update  <= 1'b1;
             end
 
             STATE_WON:
             begin
-                end_of_game_timer_start      <= 1'b1;
-                game_won                     <= 1'b1;
+                end_of_game_timer_start       <= 1'b1;
+                game_won                      <= 1'b1;
             end
 
             STATE_WON_END:
             begin
-                game_won                     <= 1'b1;
+                game_won                      <= 1'b1;
             end
 
             STATE_LOST:
             begin
-                end_of_game_timer_start      <= 1'b1;
+                end_of_game_timer_start       <= 1'b1;
             end
 
             STATE_LOST_END:

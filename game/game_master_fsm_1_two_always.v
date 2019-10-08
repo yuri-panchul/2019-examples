@@ -1,6 +1,6 @@
 `include "game_config.vh"
 
-module game_master_fsm_1_two_always  // tested
+module game_master_fsm_1_two_always
 (
     input      clk,
     input      reset,

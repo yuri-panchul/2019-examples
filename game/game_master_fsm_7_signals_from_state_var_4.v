@@ -1,6 +1,6 @@
 `include "game_config.vh"
 
-module game_master_fsm_7_signals_from_state_var_4  // tested
+module game_master_fsm_7_signals_from_state_var_4
 (
     input  clk,
     input  reset,
