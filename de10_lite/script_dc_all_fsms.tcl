@@ -1,7 +1,8 @@
 #!dc_shell -f
 
-#set DESIGN_TOP     game_top
-#set DESIGN_TOP     game_sprite_display_wrapper
+# set DESIGN_TOP     game_top
+# set DESIGN_TOP     game_sprite_display_wrapper
+
 set DESIGN_TOP     game_master_fsm_wrapper
 
 set SRC            ../..
@@ -15,41 +16,8 @@ set FAST_FAST      ts16ncpllogl16hdl090f_ffgnp0p88v0c.db
 # set FAST_FAST      tcbn28hpmbwp12t35cdm4nmff0p99vm40c_ccs.db
 
 set VERILOG_FILES  ""
-
-set VERILOG_FILES  "$VERILOG_FILES game_master_fsm_alt_1.v"
-set VERILOG_FILES  "$VERILOG_FILES game_master_fsm_alt_2.v"
-set VERILOG_FILES  "$VERILOG_FILES game_master_fsm_alt_3_bad.v"
-set VERILOG_FILES  "$VERILOG_FILES game_master_fsm.v"
-set VERILOG_FILES  "$VERILOG_FILES game_master_fsm_wrapper.v"
-set VERILOG_FILES  "$VERILOG_FILES game_mixer.v"
-set VERILOG_FILES  "$VERILOG_FILES game_overlap.v"
-set VERILOG_FILES  "$VERILOG_FILES game_random.v"
-set VERILOG_FILES  "$VERILOG_FILES game_sprite_control.v"
-set VERILOG_FILES  "$VERILOG_FILES game_sprite_display.v"
-set VERILOG_FILES  "$VERILOG_FILES game_sprite_display_alt_1.v"
-set VERILOG_FILES  "$VERILOG_FILES game_sprite_display_wrapper.v"
-set VERILOG_FILES  "$VERILOG_FILES game_sprite_top.v"
-set VERILOG_FILES  "$VERILOG_FILES game_strobe.v"
-set VERILOG_FILES  "$VERILOG_FILES game_timer.v"
-set VERILOG_FILES  "$VERILOG_FILES game_top.v"
-
-set VERILOG_FILES  "$VERILOG_FILES counter.v"
-set VERILOG_FILES  "$VERILOG_FILES lfsr.v"
-set VERILOG_FILES  "$VERILOG_FILES light_sensor.v"
-set VERILOG_FILES  "$VERILOG_FILES mealy_fsm.v"
-set VERILOG_FILES  "$VERILOG_FILES moore_fsm.v"
-set VERILOG_FILES  "$VERILOG_FILES register_no_rst.v"
-set VERILOG_FILES  "$VERILOG_FILES register.v"
-set VERILOG_FILES  "$VERILOG_FILES rotary_encoder.v"
-set VERILOG_FILES  "$VERILOG_FILES selector.v"
-set VERILOG_FILES  "$VERILOG_FILES seven_segment_digit.v"
-set VERILOG_FILES  "$VERILOG_FILES seven_segment.v"
-set VERILOG_FILES  "$VERILOG_FILES shift_register.v"
-set VERILOG_FILES  "$VERILOG_FILES strobe_gen.v"
-set VERILOG_FILES  "$VERILOG_FILES sync_and_debounce_one.v"
-set VERILOG_FILES  "$VERILOG_FILES sync_and_debounce.v"
-set VERILOG_FILES  "$VERILOG_FILES ultrasonic_distance_sensor.v"
-set VERILOG_FILES  "$VERILOG_FILES vga.v"
+set VERILOG_FILES  "$VERILOG_FILES [glob -tails -directory $SRC/game   *.v]"
+set VERILOG_FILES  "$VERILOG_FILES [glob -tails -directory $SRC/common *.v]"
 
 set SEARCH_PATH    ..
 set SEARCH_PATH    "$SEARCH_PATH $SRC/game"
@@ -66,30 +34,53 @@ set_app_var target_library $SLOW_SLOW
 
 set_app_var link_library "* $target_library"
 
-analyze -format sverilog $VERILOG_FILES
+#-----------------------------------------------------------------------------
 
-elaborate $DESIGN_TOP
+proc synthesize_variant { variant } {
 
-link
+    global DESIGN_TOP VERILOG_FILES
 
-#exit
+    analyze -define GAME_MASTER_FSM_MODULE=game_master_fsm_$variant  \
+        -format sverilog $VERILOG_FILES
 
-create_clock -period 0.5 clk  
+    elaborate $DESIGN_TOP
 
-compile_ultra -gate_clock
+    link
 
-write -format ddc     -hierarchy -output ${DESIGN_TOP}.ddc
-write -format verilog -hierarchy -output ${DESIGN_TOP}.vg
-write_parasitics                 -output ${DESIGN_TOP}.spef
+    create_clock -period 0.5 clk  
 
-report_timing -max_path 5
-report_area
-report_power
-report_reference
-report_resources
-report_qor
+    compile_ultra -gate_clock
 
-report_qor > dc.summary
-report_timing -max_path 1 > dc.longest_path
+    write -format ddc     -hierarchy -output ${DESIGN_TOP}_${variant}.ddc
+    write -format verilog -hierarchy -output ${DESIGN_TOP}_${variant}.vg
+    write_parasitics                 -output ${DESIGN_TOP}_${variant}.spef
+
+    report_timing -max_path 5
+    report_area
+    report_power
+    report_reference
+    report_resources
+    report_qor
+
+    report_qor > dc.summary_${variant}
+    report_timing -max_path 1 > dc.longest_path_${variant}
+}
+
+#-----------------------------------------------------------------------------
+
+synthesize_variant 1_two_always
+synthesize_variant 2_three_always
+synthesize_variant 3_three_always_more_states
+synthesize_variant 4_good_style_of_one_hot_two_always
+synthesize_variant 5_good_style_of_one_hot_three_always
+synthesize_variant 6_good_style_of_one_hot_three_always_more_states
+synthesize_variant 7_signals_from_state
+synthesize_variant 7_signals_from_state_var_1
+synthesize_variant 7_signals_from_state_var_2
+synthesize_variant 7_signals_from_state_var_3
+synthesize_variant 7_signals_from_state_var_4
+synthesize_variant 8_bad_style_of_one_hot
+synthesize_variant 9_bad_priority_logic
 
 exit
+
