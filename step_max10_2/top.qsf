@@ -14,8 +14,6 @@ set_global_assignment   -name VERILOG_FILE ../top.v
 set_global_assignment   -name SDC_FILE     ../top.sdc
 
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
-set_instance_assignment -name IO_STANDARD "3.3 V Schmitt Trigger" -to key[0]
-set_instance_assignment -name IO_STANDARD "3.3 V Schmitt Trigger" -to key[1]
 
 set_location_assignment PIN_J5  -to clk
 

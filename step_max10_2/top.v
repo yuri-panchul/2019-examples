@@ -1,59 +1,28 @@
 module top
 #(
-    parameter debounce_depth                     = 8,
-              shift_strobe_width                 = 23,
-              seven_segment_strobe_width         = 10,
-              strobe_to_update_xy_counter_width  = 20
+    parameter debounce_depth                     = 6,
+              shift_strobe_width                 = 21,
+              seven_segment_strobe_width         = 8,
+              strobe_to_update_xy_counter_width  = 18
 )
 (
-    input           adc_clk_10,
-    input           max10_clk1_50,
-    input           max10_clk2_50,
+    input         clk,
 
-    input   [ 1:0]  key,
-    input   [ 9:0]  sw,
-    output  [ 9:0]  ledr,
+    input  [ 3:0] key,
+    input  [ 3:0] sw,
+    output [ 7:0] led,
 
-    output  [ 7:0]  hex0,
-    output  [ 7:0]  hex1,
-    output  [ 7:0]  hex2,
-    output  [ 7:0]  hex3,
-    output  [ 7:0]  hex4,
-    output  [ 7:0]  hex5,
+    output [ 8:0] hex0,
+    output [ 8:0] hex1,
 
-    output  [ 3:0]  vga_b,
-    output  [ 3:0]  vga_g,
-    output          vga_hs,
-    output  [ 3:0]  vga_r,
-    output          vga_vs,
-
-    output  [12:0]  dram_addr,
-    output  [ 1:0]  dram_ba,
-    output          dram_cas_n,
-    output          dram_cke,
-    output          dram_clk,
-    output          dram_cs_n,
-    inout   [15:0]  dram_dq,
-    output          dram_ldqm,
-    output          dram_ras_n,
-    output          dram_udqm,
-    output          dram_we_n,
-
-    output          gsensor_cs_n,
-    input   [ 2:1]  gsensor_int,
-    output          gsensor_sclk,
-    inout           gsensor_sdi,
-    inout           gsensor_sdo,
-
-    inout   [15:0]  arduino_io,
-    inout           arduino_reset_n,
-
-    inout   [35:0]  gpio
+    output [ 2:0] rgb0,
+    output [ 2:0] rgb1,
+    
+    inout  [35:0] gpio
 );
 
     //------------------------------------------------------------------------
 
-    wire clk   = max10_clk1_50;
     wire reset = ~ key [0];
 
     //------------------------------------------------------------------------
@@ -76,9 +45,9 @@ module top
     strobe_gen # (.w (shift_strobe_width)) i_shift_strobe
         (clk, reset, shift_strobe);
 
-    wire [9:0] out_reg;
+    wire [7:0] out_reg;
 
-    shift_register # (.w (10)) i_shift_reg
+    shift_register # (.w (8)) i_shift_reg
     (
         .clk     ( clk          ),
         .reset   ( reset        ),
@@ -87,7 +56,7 @@ module top
         .out_reg ( out_reg      )
     );
 
-    assign ledr = out_reg;
+    assign led = out_reg;
 
     //------------------------------------------------------------------------
 
@@ -149,6 +118,7 @@ module top
 
     //------------------------------------------------------------------------
 
+    /*
     wire [2:0] rgb;
 
     assign vga_r = { 4 { rgb [2] } };
@@ -172,6 +142,7 @@ module top
         .vsync (   vga_vs    ),
         .rgb   (   rgb       )
     );
+    */
 
     /*
     wire       display_on;
@@ -277,14 +248,9 @@ module top
 
     //------------------------------------------------------------------------
 
-    seven_segment_digit i_digit_0 ( number_to_display [ 3: 0], hex0 [6:0]);
-    seven_segment_digit i_digit_1 ( number_to_display [ 7: 4], hex1 [6:0]);
-    seven_segment_digit i_digit_2 ( number_to_display [11: 8], hex2 [6:0]);
-    seven_segment_digit i_digit_3 ( number_to_display [15:12], hex3 [6:0]);
-    seven_segment_digit i_digit_4 ( number_to_display [19:16], hex4 [6:0]);
-    seven_segment_digit i_digit_5 ( number_to_display [23:20], hex5 [6:0]);
+    seven_segment_digit i_digit_0 (number_to_display [3:0], hex0 [6:0]);
+    seven_segment_digit i_digit_1 (number_to_display [7:4], hex1 [6:0]);
 
-    assign { hex5 [7], hex4 [7], hex3 [7], hex2 [7], hex1 [7], hex0 [7] }
-        = ~ sw_db [5:0];
+    assign { hex1 [8:7], hex0 [8:7] } = ~ sw_db [3:0];
 
 endmodule
