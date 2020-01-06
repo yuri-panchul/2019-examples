@@ -21,6 +21,10 @@ module top
     inout  [35:0] gpio
 );
 
+assign led = { key, sw };
+
+`ifdef UNDEF
+
     //------------------------------------------------------------------------
 
     wire reset = ~ key [0];
@@ -252,5 +256,7 @@ module top
     seven_segment_digit i_digit_1 (number_to_display [7:4], hex1 [6:0]);
 
     assign { hex1 [8:7], hex0 [8:7] } = ~ sw_db [3:0];
+
+`endif
 
 endmodule
