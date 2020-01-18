@@ -7,7 +7,7 @@ module top
 )
 (
     input        clk,
-    input        reset,
+    input        reset_n,
     
     input  [3:0] key_sw,
     output [3:0] led,
@@ -15,12 +15,14 @@ module top
     output [7:0] abcdefgh,
     output [3:0] digit,
 
-    output       buzzer,
+    output       buzzer /*,
 
     output       hsync,
     output       vsync,
-    output [2:0] rgb
+    output [2:0] rgb */
 );
+
+    wire reset = ~ reset_n;
 
     //------------------------------------------------------------------------
 
@@ -46,7 +48,7 @@ module top
         .clk     ( clk          ),
         .reset   ( reset        ),
         .en      ( shift_strobe ),
-        .in      ( key_db [1]   ),
+        .in      ( key_db [3]   ),
         .out_reg ( out_reg      )
     );
 
@@ -115,9 +117,9 @@ module top
     assign buzzer = 1'b1; // ~ key_db [0];
 
     //------------------------------------------------------------------------
-
-    wire       start      = ~ key_db [1] | ~ key_db [0];
-    wire [1:0] left_right = ~ key_db [1:0];
+/*
+    wire       start      =   key_db [3] | key_db [0];
+    wire [1:0] left_right = { key_db [3] , key_db [0] };
 
     game_top
     # (
@@ -136,7 +138,7 @@ module top
         .vsync ( vsync      ),
         .rgb   ( rgb        )
     );
-
+*/
     /*
     wire       display_on;
     wire [9:0] hpos;
