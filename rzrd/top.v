@@ -114,58 +114,36 @@ module top
 
     //------------------------------------------------------------------------
 
-    parameter clock_frequency = 50000000;
-
-    parameter frequency_c4_mul_100 = 26163,  // Частота ноты До первой октавы * 100
-                                             // C4 frequency * 100
-                                             
-              frequency_e4_mul_100 = 32963,  // Частота ноты Ми первой октавы * 100
-                                             // E4 frequency * 100
-                                             
-              frequency_g4_mul_100 = 39200;  // Частота ноты Соль первой октавы * 100
-                                             // G4 frequency * 100
+    parameter frequency_c4_mul_100 = 26163,
+              frequency_g4_mul_100 = 39200;
     
-    wire button_c4 = key_db [3];
-    wire button_e4 = key_db [2];
-    wire button_g4 = key_db [1];
-    wire buzzer_on = key_db [0];
-
-    wire note_c4, note_e4, note_g4;
+    wire note_c4, note_g4;
 
     frequency_gen
     # (
-        .clock_frequency          ( clock_frequency      ),
         .output_frequency_mul_100 ( frequency_c4_mul_100 )
     )
+    gen_c4
     (
-        .clock   ( clk     ),
-        .reset_n ( button_c4 ),
-        .out     ( note_c4   )
+        .clk    ( clk        ),
+        .reset  ( reset      ),
+        .enable ( key_db [2] ),
+        .out    ( note_c4    )
     );
 
     frequency_gen
     # (
-        .clock_frequency          ( clock_frequency      ),
-        .output_frequency_mul_100 ( frequency_e4_mul_100 )
-    )
-    (
-        .clock   ( clk     ),
-        .reset_n ( button_e4 ),
-        .out     ( note_e4   )
-    );
-
-    frequency_gen
-    # (
-        .clock_frequency          ( clock_frequency      ),
         .output_frequency_mul_100 ( frequency_g4_mul_100 )
     )
+    gen_g4
     (
-        .clock   ( clk     ),
-        .reset_n ( button_g4 ),
-        .out     ( note_g4   )
+        .clk    ( clk        ),
+        .reset  ( reset      ),
+        .enable ( key_db [1] ),
+        .out    ( note_g4    )
     );
 
-    assign buzzer = (note_c4 | note_e4 | note_g4) & buzzer_on;
+    assign buzzer = note_c4 | note_g4;
 
     //------------------------------------------------------------------------
 
