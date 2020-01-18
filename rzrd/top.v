@@ -6,37 +6,29 @@ module top
               strobe_to_update_xy_counter_width  = 20
 )
 (
-    input         clk,
-    input  [ 3:0] key,
-    input  [ 7:0] sw,
-    output [11:0] led,
+    input        clk,
+    input        reset,
+    
+    input  [3:0] key_sw,
+    output [3:0] led,
 
-    output [ 7:0] abcdefgh,
-    output [ 7:0] digit,
+    output [7:0] abcdefgh,
+    output [3:0] digit,
 
-    output        buzzer,
+    output       buzzer,
 
-    output        vsync,
-    output        hsync,
-    output [ 2:0] rgb,
-
-    inout  [18:0] gpio
+    output       hsync,
+    output       vsync,
+    output [1:0] rgb
 );
-
-    wire reset = ~ key [3];
 
     //------------------------------------------------------------------------
 
     wire [3:0] key_db;
-    wire [7:0] sw_db;
 
     sync_and_debounce # (.w (4), .depth (debounce_depth))
         i_sync_and_debounce_key
-            (clk, reset, ~ key, key_db);
-    
-    sync_and_debounce # (.w (8), .depth (debounce_depth))
-        i_sync_and_debounce_sw
-            (clk, reset, ~ sw, sw_db);
+            (clk, reset, ~ key_sw, key_db);
 
     //------------------------------------------------------------------------
 
@@ -45,9 +37,9 @@ module top
     strobe_gen # (.w (shift_strobe_width)) i_shift_strobe
         (clk, reset, shift_strobe);
 
-    wire [11:0] out_reg;
+    wire [3:0] out_reg;
 
-    shift_register # (.w (12)) i_shift_reg
+    shift_register # (.w (4)) i_shift_reg
     (
         .clk     ( clk          ),
         .reset   ( reset        ),
@@ -60,9 +52,9 @@ module top
 
     //------------------------------------------------------------------------
 
-    wire [15:0] shift_strobe_count;
+    wire [7:0] shift_strobe_count;
 
-    counter # (16) i_shift_strobe_counter
+    counter # (8) i_shift_strobe_counter
     (
         .clk   ( clk                ),
         .reset ( reset              ),
@@ -83,9 +75,9 @@ module top
         .y     ( out_moore_fsm )
     );
     
-    wire [7:0] moore_fsm_out_count;
+    wire [3:0] moore_fsm_out_count;
 
-    counter # (8) i_moore_fsm_out_counter
+    counter # (4) i_moore_fsm_out_counter
     (
         .clk   ( clk                          ),
         .reset ( reset                        ),
@@ -106,9 +98,9 @@ module top
         .y     ( out_mealy_fsm )
     );
     
-    wire [7:0] mealy_fsm_out_count;
+    wire [3:0] mealy_fsm_out_count;
 
-    counter # (8) i_mealy_fsm_out_counter
+    counter # (4) i_mealy_fsm_out_counter
     (
         .clk   ( clk                          ),
         .reset ( reset                        ),
@@ -186,60 +178,12 @@ module top
 
     //------------------------------------------------------------------------
 
-    wire enc_a   = gpio [14];
-    wire enc_b   = gpio [15];
-    wire enc_btn = gpio [16];
-    wire enc_swt = gpio [17];
-
-    assign gpio [18] = 1;
-
-    wire enc_a_db;
-    wire enc_b_db;
-    wire enc_btn_db;
-    wire enc_swt_db;
-
-    sync_and_debounce # (.w (4), .depth (debounce_depth))
-        i_sync_and_debounce_enc
-        (
-            clk,
-            reset,
-            { enc_a    , enc_b    , enc_btn    , enc_swt    },
-            { enc_a_db , enc_b_db , enc_btn_db , enc_swt_db }
-        );
-
-    wire [15:0] enc_value;
-
-    rotary_encoder i_rotary_encoder
-    (
-        .clk        ( clk       ),
-        .reset      ( reset     ),
-        .a          ( enc_a_db  ),
-        .b          ( enc_b_db  ),
-        .value      ( enc_value )
-    );
-
-    //------------------------------------------------------------------------
-
-    reg [31:0] number_to_display;
-
-    always @*
-        case (sw_db [0])
-
-        1'b1:    number_to_display =
-                 {
-                     { 8 { enc_btn_db } },
-                     { 8 { enc_swt_db } },
-                     enc_value
-                 };
-
-        default: number_to_display =
-                 {
-                     shift_strobe_count,
-                     moore_fsm_out_count,
-                     mealy_fsm_out_count
-                 };
-
-        endcase
+    wire [15:0] number_to_display =
+    {
+        shift_strobe_count,
+        moore_fsm_out_count,
+        mealy_fsm_out_count
+    };
 
     //------------------------------------------------------------------------
 
@@ -249,7 +193,7 @@ module top
         i_seven_segment_strobe
             (clk, reset, seven_segment_strobe);
 
-    seven_segment #(.w (32)) i_seven_segment
+    seven_segment #(.w (16)) i_seven_segment
     (
         .clk     ( clk                  ),
         .reset   ( reset                ),
