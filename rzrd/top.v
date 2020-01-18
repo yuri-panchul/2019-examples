@@ -132,7 +132,7 @@ module top
 
     wire note_c4, note_e4, note_g4;
 
-    frequency_generator
+    frequency_gen
     # (
         .clock_frequency          ( clock_frequency      ),
         .output_frequency_mul_100 ( frequency_c4_mul_100 )
@@ -143,7 +143,7 @@ module top
         .out     ( note_c4   )
     );
 
-    frequency_generator
+    frequency_gen
     # (
         .clock_frequency          ( clock_frequency      ),
         .output_frequency_mul_100 ( frequency_e4_mul_100 )
@@ -154,7 +154,7 @@ module top
         .out     ( note_e4   )
     );
 
-    frequency_generator
+    frequency_gen
     # (
         .clock_frequency          ( clock_frequency      ),
         .output_frequency_mul_100 ( frequency_g4_mul_100 )
