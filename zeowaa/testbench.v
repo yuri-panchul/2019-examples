@@ -2,9 +2,9 @@
 
 module testbench;
 
-    reg         clk;
-    reg  [ 1:0] key;
-    reg  [ 9:0] sw;
+    reg        clk;
+    reg  [3:0] key;
+    reg  [7:0] sw;
 
     top
     # (
@@ -15,9 +15,9 @@ module testbench;
     )
     i_top
     (
-        .max10_clk1_50 ( clk ),
-        .key           ( key ),
-        .sw            ( sw  )
+        .clk ( clk ),
+        .key ( key ),
+        .sw  ( sw  )
     );
 
     initial
@@ -52,7 +52,7 @@ module testbench;
 
         @ (negedge reset);
 
-        repeat (100000)
+        repeat (1000)
         begin
             @ (posedge clk);
 

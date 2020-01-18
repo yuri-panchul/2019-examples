@@ -19,7 +19,7 @@ module top
 
     output       hsync,
     output       vsync,
-    output [1:0] rgb
+    output [2:0] rgb
 );
 
     //------------------------------------------------------------------------
@@ -29,6 +29,8 @@ module top
     sync_and_debounce # (.w (4), .depth (debounce_depth))
         i_sync_and_debounce_key
             (clk, reset, ~ key_sw, key_db);
+
+    wire [3:0] sw_db = key_db;
 
     //------------------------------------------------------------------------
 
@@ -114,8 +116,8 @@ module top
 
     //------------------------------------------------------------------------
 
-    wire       start      = ~ key [1] | ~ key [0];
-    wire [1:0] left_right = ~ key [1:0];
+    wire       start      = ~ key_db [1] | ~ key_db [0];
+    wire [1:0] left_right = ~ key_db [1:0];
 
     game_top
     # (
