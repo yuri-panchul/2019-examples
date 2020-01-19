@@ -3,7 +3,7 @@
 module testbench;
 
     reg       clk;
-    reg       reset;
+    reg       reset_n;
     reg [3:0] key_sw;
 
     top
@@ -15,9 +15,9 @@ module testbench;
     )
     i_top
     (
-        .clk     ( clk    ),
-        .reset   ( reset  ),
-        .key_sw  ( key_sw )
+        .clk     ( clk     ),
+        .reset_n ( reset_n ),
+        .key_sw  ( key_sw  )
     );
 
     initial
@@ -30,11 +30,11 @@ module testbench;
 
     initial
     begin
-        reset <= 1'bx;
+        reset_n <= 1'bx;
         repeat (2) @ (posedge clk);
-        reset <= 1'b1;
+        reset_n <= 1'b0;
         repeat (2) @ (posedge clk);
-        reset <= 0;
+        reset_n <= 1'b1;
     end
 
     initial
@@ -44,7 +44,7 @@ module testbench;
 
         key_sw <= 4'b0;
 
-        @ (negedge reset);
+        @ (posedge reset_n);
 
         repeat (1000)
         begin

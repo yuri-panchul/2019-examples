@@ -3,7 +3,7 @@
 set all_signals [list]
 
 lappend all_signals testbench.clk
-lappend all_signals testbench.reset
+lappend all_signals testbench.reset_n
 lappend all_signals testbench.key_sw
 lappend all_signals testbench.i_top.led
 lappend all_signals testbench.i_top.abcdefgh
