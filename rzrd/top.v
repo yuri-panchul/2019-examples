@@ -125,10 +125,9 @@ module top
     )
     gen_c4
     (
-        .clk    ( clk        ),
-        .reset  ( reset      ),
-        .enable ( key_db [2] ),
-        .out    ( note_c4    )
+        .clk ( clk        ),
+        .en  ( key_db [2] ),
+        .out ( note_c4    )
     );
 
     frequency_gen
@@ -137,10 +136,9 @@ module top
     )
     gen_g4
     (
-        .clk    ( clk        ),
-        .reset  ( reset      ),
-        .enable ( key_db [1] ),
-        .out    ( note_g4    )
+        .clk ( clk        ),
+        .en  ( key_db [1] ),
+        .out ( note_g4    )
     );
 
     assign buzzer = note_c4 | note_g4;
